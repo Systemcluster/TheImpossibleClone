@@ -1,5 +1,8 @@
+package sound;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -16,6 +19,10 @@ public class AudioSource {
 	public AudioSource(String path) throws LineUnavailableException, UnsupportedAudioFileException, IOException{
 		clip = AudioSystem.getClip();
 		ais = AudioSystem.getAudioInputStream(new File(path));
+	}
+	public AudioSource(InputStream is) throws LineUnavailableException, UnsupportedAudioFileException, IOException{
+		clip = AudioSystem.getClip();
+		ais = AudioSystem.getAudioInputStream(is);
 	}
 	public void open() throws LineUnavailableException, IOException{
 		clip.open(ais);

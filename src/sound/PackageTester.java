@@ -1,3 +1,5 @@
+package sound;
+
 import java.io.IOException;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -10,7 +12,7 @@ public class PackageTester {
 	public static void main(String args[]){
 		ResourceLoader rl = new ResourceLoader();
 		try {
-			AudioSource clip = (AudioSource) rl.load("C:\\Users\\Vinzenz\\Dropbox\\Java\\ResourceLoader\\src\\thissucks.wav");
+			AudioSource clip = (AudioSource) rl.load("res/sound.wav");
 			clip.open();
 			clip.start();
 			SwingUtilities.invokeLater(new Runnable() {
@@ -18,7 +20,7 @@ public class PackageTester {
 	                // A GUI element to prevent the Clip's daemon Thread
 	                // from terminating at the end of the main()
 	            	// Not needed for further implementation 
-	                JOptionPane.showMessageDialog(null, "Dis Sux");
+	                JOptionPane.showMessageDialog(null, "Yep");
 	            }
 	        });
 		} catch (IOException | LineUnavailableException
