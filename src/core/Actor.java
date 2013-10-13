@@ -10,27 +10,34 @@ import javax.swing.JComponent;
  * Actor class.
  */
 public class Actor extends JComponent {
-	private double x = 14;
-	private double y = 4;
-	private double w = 3;
-	private double h = 3;
+	protected double x = 1;
+	protected double y = 0.8;
+	protected double w = 0.05;
+	protected double h = 0.05;
 	
-	Scene parent;
+	protected Scene parent;
 	
 	public Actor(Scene parent) {
 		super();
-		
 		this.parent = parent;
+	}
+	public Actor(Scene parent, double x, double y) {
+		this(parent);
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void update() {
+		
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		
 		Graphics2D g2D = (Graphics2D) g;
-		// x += 1.0;
 		
 		g2D.setColor(Color.black);
-		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h));
+		System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
 		g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h));
 		
 		

@@ -8,23 +8,35 @@ import java.util.HashSet;
 
 import javax.swing.JPanel;
 
+import actors.Player;
+
 /**
  * Scene class. Base class for Scenes to hold and display actors.
  */
 public class Scene extends JPanel {
 
-	private double ytiles = 12;
+	private double ytiles = 1;
 	private HashSet<Actor> childs;
+	Actor player;
 	
 	private double xposition = 0;
-	private double xscrollspeed = 2;
+	private double xscrollspeed = 0.005;
+	
+	private double xsize = 2.3;
 
 	public Scene() {
 		super();
 		
 		childs = new HashSet<Actor>();
 		
-		addActor(new Actor(this));
+		// -- test --
+		player = new Player(this);
+		addActor(player);
+		addActor(new Actor(this, 1.0, 0.8));
+		addActor(new Actor(this, 2.0, 0.8));
+		addActor(new Actor(this, 1.24, 0.7));
+		addActor(new Actor(this, 1.9, 0.8));
+		// -- /test --
 	}
 	
 	/**
@@ -35,7 +47,10 @@ public class Scene extends JPanel {
 	 * The real position calculated from grid position x.
 	 */
 	public int getCoordX(double x) {
-		return  (int) (-getPosition() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
+		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
+		double coord = (double) getWidth() * (x / ytiles);
+		double scroll = (double) getWidth() * (xposition / ytiles);
+		return (int)(coord - scroll);
 	}
 	/**
 	 * Returns the real position from grid position y.
@@ -74,7 +89,14 @@ public class Scene extends JPanel {
 	 * @return
 	 * The x position of the scene (the scroll).
 	 */
-	public int getPosition() { return (int) xposition; }
+	public double getPosition() { return xposition; }
+	
+	/**
+	 * Returns the x scroll speed.
+	 * @return
+	 * The x scroll speed.
+	 */
+	public double getScrollSpeed() { return xscrollspeed; }
 	
 	/**
 	 * Adds an actor to the scene.
@@ -92,6 +114,16 @@ public class Scene extends JPanel {
 		
 		//--update--
 		xposition += xscrollspeed;
+		
+		if(xposition > xsize) {
+			xposition = 0;
+			xscrollspeed += 0.002;
+			player.x = 0.1;
+		}
+		
+		for(Actor c: childs) {
+			c.update();
+		}
 		//--/update--
 		
 		g.setColor(Color.white);
