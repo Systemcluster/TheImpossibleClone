@@ -15,9 +15,10 @@ import actors.Player;
  */
 public class Scene extends JPanel {
 
+	
 	private double ytiles = 1;
 	private HashSet<Actor> childs;
-	Actor player;
+	private Actor player;
 	
 	private double xposition = 0;
 	private double xscrollspeed = 0.005;
@@ -71,7 +72,9 @@ public class Scene extends JPanel {
 	 * The real width calculated from grid width w.
 	 */
 	public int getWidth(double w) {
-		return (int) ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * w);
+		//return (int) ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * w);
+		double coord = (double) getWidth() * (w / ytiles);
+		return (int) coord;
 	}
 	/**
 	 * Returns the real height from grid height h.
