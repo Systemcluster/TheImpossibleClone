@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashSet;
 
 import javax.swing.JPanel;
@@ -15,29 +17,61 @@ import actors.Player;
  */
 public class Scene extends JPanel {
 
-	
 	private double ytiles = 1;
 	private HashSet<Actor> childs;
 	private Actor player;
 	
 	private double xposition = 0;
-	private double xscrollspeed = 0.005;
+	private double xscrollspeed = 0.01;
 	
 	private double xsize = 2.3;
+	private double ground = 0.8;
+	
+	private double jumpforce = -0.026;
+	
+	private int round = 1;
+	private boolean paused = false;
 
 	public Scene() {
 		super();
 		
 		childs = new HashSet<Actor>();
 		
-		// -- test --
+		this.setFocusable(true);
+		this.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(paused) paused = false;
+				else {
+					((Player)player).addForce(jumpforce);
+					// TODO: change jump mechanic (long press = higher jump)
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+		});
+		
 		player = new Player(this);
-		addActor(player);
+		
+		// -- test --
 		addActor(new Actor(this, 1.0, 0.8));
 		addActor(new Actor(this, 2.0, 0.8));
 		addActor(new Actor(this, 1.24, 0.7));
 		addActor(new Actor(this, 1.9, 0.8));
 		// -- /test --
+	}
+	
+	/**
+	 * Returns the grid position of the ground.
+	 * @return
+	 * The grid position of the ground.
+	 */
+	public double getGround() {
+		return ground;
 	}
 	
 	/**
@@ -49,8 +83,8 @@ public class Scene extends JPanel {
 	 */
 	public int getCoordX(double x) {
 		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
-		double coord = (double) getWidth() * (x / ytiles);
-		double scroll = (double) getWidth() * (xposition / ytiles);
+		double coord = getWidth() * (x / ytiles);
+		double scroll = getWidth() * (xposition / ytiles);
 		return (int)(coord - scroll);
 	}
 	/**
@@ -116,21 +150,38 @@ public class Scene extends JPanel {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		//--update--
-		xposition += xscrollspeed;
 		
-		if(xposition > xsize) {
-			xposition = 0;
-			xscrollspeed += 0.002;
-			player.x = 0.1;
-		}
-		
-		for(Actor c: childs) {
-			c.update();
+		// TODO: smooth fast movement so intersections aren't skipped
+		if(!paused) {
+			if(xposition >= xsize) {
+				xposition = 0.0;
+				xscrollspeed += 0.002;
+				player.x = 0.1;
+				round += 1;
+				// TODO: fix player position reset bug
+			}
+			else xposition += xscrollspeed;
+			
+			player.update();
+			for(Actor c: childs) {
+				c.update();
+			}
+			
+			for(Actor c: childs) {
+				if(player.intersects(c)) {
+					//System.out.println(player+" intersects with "+c);
+					paused = true;
+				}
+			}
 		}
 		//--/update--
 		
+		
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		g.setColor(Color.red);
+		((Graphics2D)g).drawString("Round "+round, 10, 20);
+		player.paintComponent(g);
 		for(Actor c: childs) {
 			c.paintComponent(g);
 		}

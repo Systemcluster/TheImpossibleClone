@@ -2,7 +2,7 @@ package main;
 
 import javax.swing.JFrame;
 
-import core.*;
+import core.Scene;
 
 public class Main extends JFrame {
 
@@ -17,10 +17,11 @@ public class Main extends JFrame {
 		
 		setTitle("The Impossible Test");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(800, 600);
+		setSize(800, 800);
 		
 		//add(new TestParent());
 		add(new Scene());
+
 
 		setVisible(true);
 		

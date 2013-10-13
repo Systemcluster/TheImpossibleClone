@@ -19,7 +19,7 @@ public class PackageTester {
 	            public void run() {
 	                // A GUI element to prevent the Clip's daemon Thread
 	                // from terminating at the end of the main()
-	            	// Not needed for further implementation 
+	            	// Not needed for further implementations
 	                JOptionPane.showMessageDialog(null, "Yep");
 	            }
 	        });
