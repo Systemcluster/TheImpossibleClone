@@ -21,12 +21,24 @@ public class Scene extends JPanel {
 	private HashSet<Actor> childs;
 	private Actor player;
 	
+	// current scroll position
 	private double xposition = 0;
-	private double xscrollspeed = 0.01;
 	
+	// initial scroll speed
+	private double xscrollspeed = 0.012;
+	// scroll increment each round
+	private double xscrollinc = 0.0025;
+	// steps to perform scrolling in (for collision)
+	private double xscrollsteps = 0.01;
+	// value that holds current scroll speed (for stepwise movement)
+	private double xscrolltmp = 0;
+	
+	// with of the scene
 	private double xsize = 2.3;
+	// position of the ground (0 to 1)
 	private double ground = 0.8;
 	
+	// force to add to the player on button press (jump)
 	private double jumpforce = -0.026;
 	
 	private int round = 1;
@@ -133,7 +145,7 @@ public class Scene extends JPanel {
 	 * @return
 	 * The x scroll speed.
 	 */
-	public double getScrollSpeed() { return xscrollspeed; }
+	public double getScrollSpeed() { return xscrolltmp<xscrollsteps?xscrolltmp:xscrollsteps; }
 	
 	/**
 	 * Adds an actor to the scene.
@@ -149,41 +161,51 @@ public class Scene extends JPanel {
 	public void paintComponent(Graphics g) {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		//--update--
-		
-		// TODO: smooth fast movement so intersections aren't skipped
-		if(!paused) {
-			if(xposition >= xsize) {
-				xposition = 0.0;
-				xscrollspeed += 0.002;
-				player.x = 0.1;
-				round += 1;
-				// TODO: fix player position reset bug
-			}
-			else xposition += xscrollspeed;
-			
-			player.update();
-			for(Actor c: childs) {
-				c.update();
-			}
-			
-			for(Actor c: childs) {
-				if(player.intersects(c)) {
-					//System.out.println(player+" intersects with "+c);
-					paused = true;
-				}
-			}
-		}
-		//--/update--
-		
-		
+		//--paint--
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.red);
-		((Graphics2D)g).drawString("Round "+round, 10, 20);
+		((Graphics2D)g).drawString("Round: "+round, 10, 20);
+		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
+		
 		player.paintComponent(g);
 		for(Actor c: childs) {
 			c.paintComponent(g);
 		}
+		//--/paint--
+		
+		//--update--
+		
+		if(!paused) {
+			if(xposition >= xsize) {
+				xposition = 0.0;
+				xscrollspeed += xscrollinc;
+				player.x = 0.1;
+				round += 1;
+				// TODO: fix player position reset bug
+			}
+		
+			// smooth fast movement so intersections aren't skipped
+			for(xscrolltmp = xscrollspeed; xscrolltmp > 0.000001 && !paused; xscrolltmp -= xscrollsteps) {
+				xposition += getScrollSpeed();
+			
+				// update the actors (movement)
+				player.update();
+				for(Actor c: childs) {
+					c.update();
+				}
+				// check if the player intersects with an obstacle
+				for(Actor c: childs) {
+					if(player.intersects(c)) {
+						//System.out.println(player+" intersects with "+c);
+						paused = true;
+					}
+				}
+				
+			}
+			xscrolltmp = 0;
+			
+		}
+		//--/update--
 	}
 }
