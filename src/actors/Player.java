@@ -18,13 +18,13 @@ public class Player extends Actor {
 	}
 	public boolean isGrounded() {
 		// TODO: add check if player is on an obstacle
-		return y >= parent.getGround() || isOnObstacle();
+		return y >= parent.getGround();
 	}
 	public boolean isOnObstacle(){
-		Actor left = new Actor(parent, x, y + h + force);
-		Actor right = new Actor(parent, x + w, y + h + force);
+		Actor left = new Actor(parent, x, y + force);
+		Actor right = new Actor(parent, x + w, y + force);
 		for (Actor child:parent.getActors()){
-			if(left.intersects(child)||right.intersects(child))
+			if(left.intersects(child) || right.intersects(child))
 				return true;
 		}
 		return false;
@@ -36,11 +36,14 @@ public class Player extends Actor {
 	
 	@Override
 	public void update() {
+
+		if(isOnObstacle()) force = 0;
+		
 		x += parent.getScrollSpeed();
 		y += force;
 		force += weight;
 		
-		if(isGrounded()) y = parent.getGround(); 
+		if(isGrounded()) y = parent.getGround();
 	}
 	
 	@Override

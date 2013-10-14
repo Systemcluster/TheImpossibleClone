@@ -24,8 +24,8 @@ public class Scene extends JPanel {
 	// current scroll position
 	private double xposition = 0;
 	
-	// initial scroll speed
-	private double xscrollspeed = 0.012;
+	// initial scroll speed 0.012
+	private double xscrollspeed = 0.002;
 	// scroll increment each round
 	private double xscrollinc = 0.0025;
 	// steps to perform scrolling in (for collision)
