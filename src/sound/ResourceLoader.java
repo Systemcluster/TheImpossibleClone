@@ -56,4 +56,22 @@ public class ResourceLoader {
 			}
 		}
 	}
+	public Object altLoad(String path) throws IOException{
+		if(loaded.containsKey(path)){
+			return loaded.get(path);
+		}
+		else{
+			InputStream is = cl.getResourceAsStream(path);
+			Object obj;
+			try {
+				obj = new AudioSource(is);
+			} catch (UnsupportedAudioFileException e) {
+				obj = ImageIO.read(is);
+			} catch (Exception e) {
+				return null;
+			}
+			loaded.put(path, obj);
+			return obj;
+		}
+	}	
 }

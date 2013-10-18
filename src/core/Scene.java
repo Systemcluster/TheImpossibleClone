@@ -156,6 +156,10 @@ public class Scene extends JPanel {
 		//add(a);
 		childs.add(a);
 	}
+	
+	public HashSet<Actor> getActors(){
+		return childs;
+	}
 
 	@Override
 	public void paintComponent(Graphics g) {

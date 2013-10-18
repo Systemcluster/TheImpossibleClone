@@ -22,8 +22,22 @@ public class Player extends Actor {
 		// TODO: add check if player is on an obstacle
 	}
 	
+	/**
+	 * Checks if player is beneath or over an obstacle
+	 * @return
+	 */
+	public boolean touchObstacle(){
+		Actor left = new Actor(parent, x, y + force);
+		Actor right = new Actor(parent, x + w, y + force);
+		for (Actor child:parent.getActors()){
+			if(left.intersects(child) || right.intersects(child))
+				return true;
+		}
+		return false;
+	}
+
 	public void addForce(double force) {
-		if(isGrounded()) this.force = force;
+		if(isGrounded() || touchObstacle()) this.force = force;
 	}
 	
 	@Override
@@ -32,6 +46,7 @@ public class Player extends Actor {
 		y += force;
 		force += weight;
 		
+		if(touchObstacle()) force = 0;
 		if(isGrounded()) y = parent.getGround(); 
 	}
 	
