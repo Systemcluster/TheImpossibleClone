@@ -3,7 +3,13 @@ package actors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+import sound.AudioSource;
+import sound.ResourceLoader;
 import core.Actor;
 import core.Scene;
 
@@ -22,9 +28,24 @@ public class Player extends Actor {
 	private double weight = 0.0022;
 	private double force = 0;
 	
+	private String pathJumpSound = "res/Jump.wav";
+	private AudioSource asJump;
+	
 	public Player(Scene parent) {
 		super(parent);
-		x = 0.1;
+		try {
+			asJump = (AudioSource) ResourceLoader.load(pathJumpSound);
+			if(!asJump.isOpen())
+				asJump.open();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		x = 0.1;	
 	}
 	
 	public boolean isGrounded() {
@@ -48,6 +69,7 @@ public class Player extends Actor {
 
 	public void addForce(double force, double maxHeight) {
 		if(isGrounded() || touchObstacle()){
+			asJump.start();
 			this.force = force;
 			this.maxHeight = y - maxHeight;
 			this.msAirStart = System.currentTimeMillis();

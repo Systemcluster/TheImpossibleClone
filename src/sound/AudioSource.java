@@ -9,6 +9,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -25,6 +27,22 @@ public class AudioSource {
 	public AudioSource(InputStream is) throws LineUnavailableException, UnsupportedAudioFileException, IOException{
 		ais = AudioSystem.getAudioInputStream(is);
 		clip = createClip(ais);
+		clip.addLineListener(new LineListener(){
+
+			@Override
+			public void update(LineEvent event) {
+				System.out.println(event.getType());
+				if(event.getType() == LineEvent.Type.STOP){
+					try {
+						clip.setFramePosition(0);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+        	
+        });
 	}
 	private Clip createClip (AudioInputStream ais) throws LineUnavailableException{
 		clip = AudioSystem.getClip();
@@ -45,12 +63,24 @@ public class AudioSource {
 		clip.loop(count);
 	}
 	public void start(){
-		clip.start();
+		Thread t = new Thread(new Runnable(){
+			public void run(){
+				clip.start();	
+				stop();
+			}
+		});
+		t.start();
 	}
 	public void stop(){
 		clip.stop();
 	}
 	public boolean isRunning(){
 		return clip.isRunning();
+	}
+	public void close(){
+		clip.close();
+	}
+	public boolean isOpen(){
+		return clip.isOpen();
 	}
 }
