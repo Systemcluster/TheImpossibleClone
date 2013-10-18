@@ -27,7 +27,7 @@ public class Scene extends JPanel {
 	// initial scroll speed
 	private double xscrollspeed = 0.012;
 	// scroll increment each round
-	private double xscrollinc = 0.0025;
+	private double xscrollinc = 0.0000;
 	// steps to perform scrolling in (for collision)
 	private double xscrollsteps = 0.01;
 	// value that holds current scroll speed (for stepwise movement)
@@ -39,11 +39,13 @@ public class Scene extends JPanel {
 	private double ground = 0.8;
 	
 	// force to add to the player on button press (jump)
-	private double jumpforce = -0.026;
+	private double jumpforce = -0.017;
 	
 	private int round = 1;
 	private boolean paused = false;
 
+	private boolean isSpacePressed = false;
+	
 	public Scene() {
 		super();
 		
@@ -56,14 +58,23 @@ public class Scene extends JPanel {
 			}
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(paused) paused = false;
-				else {
-					((Player)player).addForce(jumpforce);
-					// TODO: change jump mechanic (long press = higher jump)
+				//TODO: DELETE DEBUG KEY
+				if(e.getKeyCode() == KeyEvent.VK_P){
+					paused = true;
+					System.out.println(((Player)player).touchObstacle());
+				}
+				else{
+					isSpacePressed = true;
+					if(paused) paused = false;
+					else {
+						((Player)player).addForce(jumpforce, 0.21);
+						// TODO: change jump mechanic (long press = higher jump)
+					}
 				}
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
+				isSpacePressed = false;
 			}
 		});
 		
@@ -161,6 +172,10 @@ public class Scene extends JPanel {
 		return childs;
 	}
 
+	public boolean getSpaceState(){
+		return isSpacePressed;
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
