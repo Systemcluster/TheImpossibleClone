@@ -28,17 +28,15 @@ public class AudioSource {
 		ais = AudioSystem.getAudioInputStream(is);
 		clip = createClip(ais);
 		clip.addLineListener(new LineListener(){
-
-			@Override
 			public void update(LineEvent event) {
-				System.out.println(event.getType());
+				if(event.getType() == LineEvent.Type.START){
+					clip.setFramePosition(0);
+				}
 				if(event.getType() == LineEvent.Type.STOP){
-					try {
-						clip.setFramePosition(0);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				}
+				if(event.getType() == LineEvent.Type.CLOSE){
+				}
+				if(event.getType() == LineEvent.Type.OPEN){
 				}
 			}
         	
@@ -65,8 +63,9 @@ public class AudioSource {
 	public void start(){
 		Thread t = new Thread(new Runnable(){
 			public void run(){
+				clip.stop();
 				clip.start();	
-				stop();
+				clip.stop();
 			}
 		});
 		t.start();
