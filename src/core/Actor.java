@@ -11,7 +11,7 @@ import javax.swing.JComponent;
  */
 public class Actor extends JComponent {
 	protected double x = 1;
-	protected double y = 0.8;
+	public double y = 0.8;
 	protected double w = 0.04;
 	protected double h = 0.04;
 	

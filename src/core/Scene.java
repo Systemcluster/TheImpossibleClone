@@ -25,8 +25,10 @@ public class Scene extends JPanel {
 	private double xposition = 0;
 	
 	// initial scroll speed
+	//0.012
 	private double xscrollspeed = 0.012;
 	// scroll increment each round
+	// 0.0025
 	private double xscrollinc = 0.0000;
 	// steps to perform scrolling in (for collision)
 	private double xscrollsteps = 0.01;
@@ -34,7 +36,7 @@ public class Scene extends JPanel {
 	private double xscrolltmp = 0;
 	
 	// with of the scene
-	private double xsize = 2.3;
+	public double xsize = 2.3;
 	// position of the ground (0 to 1)
 	private double ground = 0.8;
 	
@@ -80,11 +82,18 @@ public class Scene extends JPanel {
 		
 		player = new Player(this);
 		
+		//###################################
+		//Hier wird das Level aus der Datei geladen oder generiert
+		//##################################
+		Level one = new Level(this,"res/level01.dat");
+		//What NEXT: Sollte hier ein Levelloader implementiert werden der das nächste Level einleitet ?
+		
+		
 		// -- test --
-		addActor(new Actor(this, 1.0, 0.8));
+		/*addActor(new Actor(this, 1.0, 0.8));
 		addActor(new Actor(this, 2.0, 0.8));
 		addActor(new Actor(this, 1.24, 0.7));
-		addActor(new Actor(this, 1.9, 0.8));
+		addActor(new Actor(this, 1.9, 0.8));*/
 		// -- /test --
 	}
 	

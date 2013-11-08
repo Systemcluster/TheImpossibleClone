@@ -14,23 +14,23 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class ResourceLoader {
-	ClassLoader cl;
+	//ClassLoader cl;
 	
-	private Map<String,Object> loaded;
+	private static Map<String,Object> loaded = new HashMap<String,Object>();
 	
-	private List<String> supportedImageTypes;
-	private List<String> supportedAudioTypes;
+	//private static List<String> supportedImageTypes;
+	//private static List<String> supportedAudioTypes;
 	
-	public ResourceLoader(){
-		cl = this.getClass().getClassLoader();
+	/*public ResourceLoader(){
+		//cl = this.getClass().getClassLoader();
 		
-		loaded = new HashMap<String,Object>();
+		//loaded = new HashMap<String,Object>();
 		
-		supportedImageTypes = new Vector<String>();
-		supportedAudioTypes = new Vector<String>();
+		//supportedImageTypes = new Vector<String>();
+		//supportedAudioTypes = new Vector<String>();
 	
-		Collections.addAll(supportedImageTypes, "png", "jpg", "gif", "bmp");
-		Collections.addAll(supportedAudioTypes, "wav", "au", "snd", "aiff", "aif", "aifc");
+		//Collections.addAll(supportedImageTypes, "png", "jpg", "gif", "bmp");
+		//Collections.addAll(supportedAudioTypes, "wav", "au", "snd", "aiff", "aif", "aifc");
 	}
 	public Object load(String path) throws IOException, LineUnavailableException, UnsupportedAudioFileException{
 		if(loaded.containsKey(path)){
@@ -56,12 +56,13 @@ public class ResourceLoader {
 			}
 		}
 	}
-	public Object altLoad(String path) throws IOException{
+	*/
+	public static Object load(String path) throws IOException{
 		if(loaded.containsKey(path)){
 			return loaded.get(path);
 		}
 		else{
-			InputStream is = cl.getResourceAsStream(path);
+			InputStream is = ResourceLoader.class.getClassLoader().getResourceAsStream(path);
 			Object obj;
 			try {
 				obj = new AudioSource(is);
