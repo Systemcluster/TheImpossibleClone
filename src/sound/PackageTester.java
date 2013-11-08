@@ -10,9 +10,8 @@ import javax.swing.SwingUtilities;
 
 public class PackageTester {
 	public static void main(String args[]){
-		ResourceLoader rl = new ResourceLoader();
 		try {
-			AudioSource clip = (AudioSource) rl.load("res/sound.wav");
+			AudioSource clip = (AudioSource) ResourceLoader.load("res/Jump.wav");
 			clip.open();
 			clip.start();
 			SwingUtilities.invokeLater(new Runnable() {
@@ -23,8 +22,7 @@ public class PackageTester {
 	                JOptionPane.showMessageDialog(null, "Yep");
 	            }
 	        });
-		} catch (IOException | LineUnavailableException
-				| UnsupportedAudioFileException e) {
+		} catch (IOException | LineUnavailableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
