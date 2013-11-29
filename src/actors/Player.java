@@ -6,9 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import javax.sound.sampled.LineUnavailableException;
-
+import sound.AudioClip;
 import sound.AudioSource;
 import sound.ResourceLoader;
 import core.Actor;
@@ -31,10 +29,13 @@ public class Player extends Actor {
 	
 	private String pathDieSound = "res/sound.wav";
 	private String pathJumpSound = "res/Jump.wav";
-	private AudioSource asJump;
+	private AudioClip asJump;
 	private AudioSource asDie;
 	
 	private BufferedImage bimage;
+	
+	// force to add to the player on button press (jump)
+	private double jumpforce = -0.017;
 	
 	public Player(Scene parent) {
 		super(parent);
@@ -47,15 +48,17 @@ public class Player extends Actor {
 		}
 		
 		try {
-			asJump = (AudioSource) ResourceLoader.load(pathJumpSound);
-			if(!asJump.isOpen()) {
+			asJump = (AudioClip) ResourceLoader.load(pathJumpSound);
+			//if(!asJump.isOpen()) {
 				asJump.open();
-			}
+			//}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
 		}
+	}
+	
+	public boolean jump() {
+		return addForce(jumpforce, 0.21);
 	}
 	
 	public boolean isGrounded() {
@@ -68,7 +71,7 @@ public class Player extends Actor {
 	 * @return
 	 */
 	public boolean touchObstacle(){
-		Actor left = new Actor(parent, x, y + force + 0.00012);
+		Actor left = new Actor(parent, x, y + force + 0.00025);
 		for (Actor child:parent.getActors()){
 			if(left.intersects(child))
 				return true;
@@ -76,7 +79,7 @@ public class Player extends Actor {
 		return false;
 	}
 	public Actor getTouchedObstacle() {
-		Actor left = new Actor(parent, x, y + force + 0.00012);
+		Actor left = new Actor(parent, x, y + force + 0.00025);
 		for (Actor child:parent.getActors()){
 			if(left.intersects(child))
 				return child;
@@ -86,7 +89,7 @@ public class Player extends Actor {
 
 	public boolean addForce(double force, double maxHeight) {
 		if(isGrounded() || touchObstacle()){
-			asJump.start();
+			asJump.play();
 			
 			this.force = force;
 			this.maxHeight = y - maxHeight;
@@ -122,13 +125,21 @@ public class Player extends Actor {
 			force += weight;
 		}
 		if(touchObstacle() && force > 0){
-			if(getTouchedObstacle()!=null)
-				y = getTouchedObstacle().y-h-0.0001;
+			if(getTouchedObstacle()!=null) {
+				if(!this.intersects(getTouchedObstacle()))
+					y = getTouchedObstacle().y-h-0.0002;
+				else {
+					//force = -1;
+				}
+			}
 			force = 0;
 		}
 		y+=force;
 		
-		if(isGrounded()) y = parent.getGround(); 
+		if(isGrounded()) {
+			y = parent.getGround();
+			force = 0;
+		}
 		//--/JUMP--
 		
 		//RENDER
@@ -136,7 +147,7 @@ public class Player extends Actor {
 		
 		g2D.setColor(Color.black);
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		g2D.drawRect(parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h));
+		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
 		
 		g2D.drawImage(bimage, parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
 

@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Scanner;
+
 import javax.swing.JFrame;
 
 import core.Scene;

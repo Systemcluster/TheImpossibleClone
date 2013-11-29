@@ -26,7 +26,7 @@ public class Scene extends JPanel {
 	
 	// initial scroll speed
 	//0.012
-	private double xscrollspeed = 0.012;
+	private double xscrollspeed = 0.010;
 	// scroll increment each round
 	// 0.0025
 	private double xscrollinc = 0.0000;
@@ -40,8 +40,7 @@ public class Scene extends JPanel {
 	// position of the ground (0 to 1)
 	private double ground = 0.8;
 	
-	// force to add to the player on button press (jump)
-	private double jumpforce = -0.017;
+
 	
 	private int round = 1;
 	private boolean paused = false;
@@ -67,10 +66,11 @@ public class Scene extends JPanel {
 				}
 				else{
 					isSpacePressed = true;
-					if(paused) paused = false;
+					if(paused) {
+						//paused = false;
+					}
 					else {
-						((Player)player).addForce(jumpforce, 0.21);
-						// TODO: change jump mechanic (long press = higher jump)
+						((Player)player).jump();
 					}
 				}
 			}
@@ -119,6 +119,11 @@ public class Scene extends JPanel {
 		double scroll = getWidth() * (xposition / ytiles);
 		return (int)(coord - scroll);
 	}
+	public int getCoordXFixed(double x) {
+		double coord = getWidth() * (x / ytiles);
+		return (int)(coord);
+	}
+	
 	/**
 	 * Returns the real position from grid position y.
 	 * @param y
@@ -185,32 +190,25 @@ public class Scene extends JPanel {
 		return isSpacePressed;
 	}
 	
+	public void resetPlayer() {
+		xposition = 0.0;
+		xscrollspeed += xscrollinc;
+		player.x = 0.1;
+		round += 1;
+		// TODO: fix player position reset bug
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		//--paint--
-		g.setColor(Color.white);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.red);
-		((Graphics2D)g).drawString("Round: "+round, 10, 20);
-		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
-		
-		player.paintComponent(g);
-		for(Actor c: childs) {
-			c.paintComponent(g);
-		}
-		//--/paint--
+		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
 		
 		//--update--
 		
 		if(!paused) {
 			if(xposition >= xsize) {
-				xposition = 0.0;
-				xscrollspeed += xscrollinc;
-				player.x = 0.1;
-				round += 1;
-				// TODO: fix player position reset bug
+				resetPlayer();
 			}
 		
 			// smooth fast movement so intersections aren't skipped
@@ -227,6 +225,8 @@ public class Scene extends JPanel {
 					if(player.intersects(c)) {
 						//System.out.println(player+" intersects with "+c);
 						paused = true;
+						//player.
+						
 					}
 				}
 				
@@ -235,5 +235,26 @@ public class Scene extends JPanel {
 			
 		}
 		//--/update--
+		
+		//--paint--
+		g.setColor(Color.white);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		g.setColor(Color.red);
+		((Graphics2D)g).drawString("Round: "+round, 10, 20);
+		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
+		
+		player.paintComponent(g);
+		for(Actor c: childs) {
+			c.paintComponent(g);
+		}
+		
+		((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85), getCoordY(0.9));
+		
+		if(paused) {
+			g.setColor(Color.red);
+			((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.45), getCoordY(0.48));
+		}
+		
+		//--/paint--
 	}
 }
