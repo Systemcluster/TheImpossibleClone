@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.HashSet;
 
 import javax.swing.JPanel;
@@ -18,11 +19,13 @@ import actors.Player;
 public class Scene extends JPanel {
 
 	private double ytiles = 1;
-	private HashSet<Actor> childs;
+	public HashSet<Actor> childs;
 	private Actor player;
 	
 	// current scroll position
 	private double xposition = 0;
+	
+	private LevelLoader lloader = null;
 	
 	// initial scroll speed
 	//0.012
@@ -85,8 +88,11 @@ public class Scene extends JPanel {
 		//###################################
 		//Hier wird das Level aus der Datei geladen oder generiert
 		//##################################
-		Level one = new Level(this,"res/level01.dat");
+		//Level one = new Level(this,"res/level01.dat");
 		//What NEXT: Sollte hier ein Levelloader implementiert werden der das nächste Level einleitet ?
+		
+		lloader = new LevelLoader(this, new File("res/levels/"));
+		lloader.start();
 		
 		
 		// -- test --
@@ -198,6 +204,10 @@ public class Scene extends JPanel {
 		// TODO: fix player position reset bug
 	}
 	
+	public boolean getPaused() {
+		return paused;
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -208,6 +218,7 @@ public class Scene extends JPanel {
 		
 		if(!paused) {
 			if(xposition >= xsize) {
+				lloader.start();
 				resetPlayer();
 			}
 		

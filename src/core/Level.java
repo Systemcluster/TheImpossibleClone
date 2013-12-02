@@ -10,15 +10,17 @@ import actors.Block;
 public class Level {
 	private double xsize;
 	private Scene scene;
-	public Level(Scene s,String pathToLevelFile) {
+	private File path;
+	public final int nr;
+	public Level(Scene s,File pathToLevelFile, int nr) {
+		this.nr=nr;
 		scene=s;
-		add(s,new File(pathToLevelFile));
-		
+		path=pathToLevelFile;
 	}
 	
-	private void add(Scene s,File f) {
+	public void add(Scene s) {
 		try{
-			Scanner in = new Scanner(f);
+			Scanner in = new Scanner(path);
 			in.useDelimiter(";");
 			String tokens,tmp[];
 			
@@ -55,4 +57,6 @@ public class Level {
 		
 		
 	}
+	
+	public String getPath(){ return path.getAbsolutePath(); }
 }
