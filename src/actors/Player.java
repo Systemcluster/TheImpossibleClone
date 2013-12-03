@@ -15,12 +15,10 @@ import core.Scene;
 public class Player extends Actor {
 	
 	//TODO : CHANGE VALUES
-	private double msAirMax = 0;
 	private double maxHeight = 0;
 	//-- TODO
 	
 	private double msAirStart = 0;
-	private double msAir = 0;
 	private double initY = 0;
 	
 	//w = 0.0018
@@ -89,7 +87,7 @@ public class Player extends Actor {
 
 	public boolean addForce(double force, double maxHeight) {
 		if(isGrounded() || touchObstacle()){
-			asJump.play();
+			//asJump.play();
 			
 			this.force = force;
 			this.maxHeight = y - maxHeight;
@@ -111,13 +109,7 @@ public class Player extends Actor {
 	public void paintComponent(Graphics g ) {
 
 		//--JUMP--
-		if(isGrounded() || touchObstacle()){
-			msAir = 0;
-		}
-		else{
-			msAir = System.currentTimeMillis() - msAirStart;
-		}
-		
+	
 		if(parent.getSpaceState() && y > maxHeight ){
 			force += weight * ((y - initY)/(maxHeight - initY));
 		}

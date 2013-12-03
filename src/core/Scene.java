@@ -7,7 +7,11 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -207,6 +211,59 @@ public class Scene extends JPanel {
 	public boolean getPaused() {
 		return paused;
 	}
+	
+	public void generateObstacles(){
+		int obstacleCount =  (int) ((int) Math.random() * ((xsize*5.0) - (xsize*4.0)) + (xsize*4.0));
+		boolean genFlag = false;	// check if a x-value has already been created
+		double preX = 0.0;	
+		String obstacleName = "";
+		Random r = new Random();
+		PrintStream levelGen = null;
+		/*try {
+			levelGen = new PrintStream(new File("res/randLevel.dat"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error while generating level");
+		}*/
+		double xValArr[] = new double[obstacleCount];
+		double yValArr[] = new double[obstacleCount];
+		//System.out.println("Length of x = "+xValArr.length+" "+"obstaclecount = "+obstacleCount);
+		
+		for(int i = 0;i<obstacleCount;i++){
+			double randomX = 0.5 + ((xsize-2.0) - 0.5) * r.nextDouble();
+			double randomY = 0.7 + (0.8 - 0.7) * r.nextDouble();
+			
+			randomX = (double)Math.round(randomX * 100) / 100;
+			randomY = (double)Math.round(randomY*10)/10;
+			
+			xValArr[i] = randomX;
+			yValArr[i] = randomY;		
+		}
+		Arrays.sort(xValArr);
+		//System.out.println(Arrays.toString(xValArr));
+		for(int j=0;j<obstacleCount;j++){
+			if(j>0){ // value of j has to be bigger than 0 bc. of the comparison	
+					if((xValArr[j]-xValArr[j-1])<0.8){
+						if((xValArr[j]+2.5)>xsize){/* do nothing*/}
+						else{
+							if(j<xValArr.length/2)
+								xValArr[j]=+1.5;
+							else
+								xValArr[j]=+0.8;
+						}
+					}	
+			}
+			double temp = Math.random()*2;
+			int randObstacle = (int) temp;
+			switch(randObstacle){
+				case 0 : obstacleName = "block"; break;
+				case 1 : obstacleName = "triangle"; break;
+			}
+			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
+			addActor(new Actor(this, xValArr[j],yValArr[j]));
+		}
+	}
+
 	
 	@Override
 	public void paintComponent(Graphics g) {

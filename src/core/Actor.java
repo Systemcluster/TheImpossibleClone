@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
+import actors.Player;
+
 /**
  * Actor class.
  */
@@ -51,6 +53,10 @@ public class Actor extends JComponent {
 	}
 	
 	public void update() {
+		
+	}
+	
+	public void collide(Player p) {
 		
 	}
 	

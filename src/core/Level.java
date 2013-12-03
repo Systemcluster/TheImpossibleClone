@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import actors.Block;
+import actors.Triangle;
+import actors.Hole;
 
 public class Level {
 	private double xsize;
@@ -50,7 +52,11 @@ public class Level {
 		
 		case "block"	:	scene.addActor(new Block(scene, x, y));
 							break;
-		default		:		System.out.println("Error: Not defined type of Obstacle");
+		case "triangle"	:	scene.addActor(new Triangle(scene, x, y));
+							break;
+		case "hole"		:	scene.addActor(new Hole(scene, x, y));
+							break;
+		default			:	System.out.println("Error: Not defined type of Obstacle");
 							break;
 		}
 		
