@@ -7,14 +7,15 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
+import actors.BackgroundActor;
 import actors.Player;
 
 /**
@@ -24,6 +25,7 @@ public class Scene extends JPanel {
 
 	private double ytiles = 1;
 	public HashSet<Actor> childs;
+	private ArrayList<HashSet<BackgroundActor>> bg;
 	private Actor player;
 	
 	// current scroll position
@@ -33,12 +35,12 @@ public class Scene extends JPanel {
 	
 	// initial scroll speed
 	//0.012
-	private double xscrollspeed = 0.010;
+	public double xscrollspeed = 0.010;
 	// scroll increment each round
 	// 0.0025
 	private double xscrollinc = 0.0000;
 	// steps to perform scrolling in (for collision)
-	private double xscrollsteps = 0.01;
+	private double xscrollsteps = 0.005;
 	// value that holds current scroll speed (for stepwise movement)
 	private double xscrolltmp = 0;
 	
@@ -69,7 +71,7 @@ public class Scene extends JPanel {
 				//TODO: DELETE DEBUG KEY
 				if(e.getKeyCode() == KeyEvent.VK_P){
 					paused = true;
-					System.out.println(((Player)player).touchObstacle());
+					System.out.println(((Player)player).getTouchedObstacle()!=null);
 				}
 				else{
 					isSpacePressed = true;
@@ -98,6 +100,19 @@ public class Scene extends JPanel {
 		lloader = new LevelLoader(this, new File("res/levels/"));
 		lloader.start();
 		
+		bg = new ArrayList<>();
+		HashSet<BackgroundActor> layer1 = new HashSet<>(),
+									layer2 = new HashSet<>(),
+									layer3 = new HashSet<>();
+		layer1.add(new BackgroundActor(this,1,1.0));
+		layer1.add(new BackgroundActor(this,1,1.7));
+		layer2.add(new BackgroundActor(this,2,1.1));
+		layer2.add(new BackgroundActor(this,2,1.8));
+		layer3.add(new BackgroundActor(this,3,1.2));
+		layer3.add(new BackgroundActor(this,3,1.9));
+		bg.add(layer1);
+		bg.add(layer2);
+		bg.add(layer3);
 		
 		// -- test --
 		/*addActor(new Actor(this, 1.0, 0.8));
@@ -205,6 +220,12 @@ public class Scene extends JPanel {
 		xscrollspeed += xscrollinc;
 		player.x = 0.1;
 		round += 1;
+		for(int i = bg.size()-1; i >= 0; i--){
+			for(BackgroundActor c : bg.get(i)){
+				c.x = c.getResetX();
+			}
+		} 
+		
 		// TODO: fix player position reset bug
 	}
 	
@@ -284,6 +305,12 @@ public class Scene extends JPanel {
 				xposition += getScrollSpeed();
 			
 				// update the actors (movement)
+				for(int i = bg.size()-1; i >= 0; i--){
+					for(BackgroundActor c : bg.get(i)){
+						System.out.println("i" + i + "bg.get()");
+						c.update();
+					}
+				} 
 				player.update();
 				for(Actor c: childs) {
 					c.update();
@@ -292,7 +319,7 @@ public class Scene extends JPanel {
 				for(Actor c: childs) {
 					if(player.intersects(c)) {
 						//System.out.println(player+" intersects with "+c);
-						paused = true;
+						c.collide((Player) player);
 						//player.
 						
 					}
@@ -302,8 +329,10 @@ public class Scene extends JPanel {
 			xscrolltmp = 0;
 			
 		}
-		//--/update--
-		
+		//--/update--å
+		if(((Player)player).dead == true) {
+			paused = true;
+		}
 		//--paint--
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -311,6 +340,13 @@ public class Scene extends JPanel {
 		((Graphics2D)g).drawString("Round: "+round, 10, 20);
 		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
 		
+		
+		for(int i = bg.size()-1; i >= 0; i--){
+			for(BackgroundActor c : bg.get(i)){
+				System.out.println("i" + i + "bg.get()");
+				c.paintComponent(g);
+			}
+		} 
 		player.paintComponent(g);
 		for(Actor c: childs) {
 			c.paintComponent(g);

@@ -17,6 +17,8 @@ public class Actor extends JComponent {
 	protected double w = 0.04;
 	protected double h = 0.04;
 	
+	public boolean isGround = false;
+	
 	protected Scene parent;
 	
 	public Actor(Scene parent) {
@@ -58,6 +60,9 @@ public class Actor extends JComponent {
 	
 	public void collide(Player p) {
 		
+	}
+	public void surf(Player p) {
+		 
 	}
 	
 	@Override

@@ -28,6 +28,13 @@ public class Level {
 			
 			double maxwidth = 1;
 			
+			// read level speed
+			{
+				String a = in.nextLine();
+				double x = Double.parseDouble(a);
+				s.xscrollspeed = x;
+			}
+			
 			while(in.hasNextLine()){
 				tokens= in.nextLine();
 				tmp = tokens.split(";");

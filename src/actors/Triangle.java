@@ -2,12 +2,19 @@ package actors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import core.Actor;
 import core.Scene;
 public class Triangle extends Actor{
 	public Triangle(Scene parent, double x, double y) {
 		super(parent,x,y);
 	}
+	
+	@Override
+	public void collide(Player p) {
+		p.kill();
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;

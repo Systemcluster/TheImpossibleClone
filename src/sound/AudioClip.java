@@ -42,4 +42,7 @@ public class AudioClip {
 	public void loop(int count){
 		clip.loop(count);
 	}
+	public void close(){
+		clip.close();
+	}
 }
