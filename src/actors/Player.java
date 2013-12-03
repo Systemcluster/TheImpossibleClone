@@ -43,20 +43,12 @@ public class Player extends Actor {
 		super(parent);
 		x = 0.1;
 		
-		try {
-			bimage = (BufferedImage) ResourceLoader.load("res/player.png");//ImageIO.read(ResourceLoader.class.getClassLoader().getResource("res/player.png"));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		bimage = (BufferedImage) ResourceLoader.load("res/player.png");//ImageIO.read(ResourceLoader.class.getClassLoader().getResource("res/player.png"));
 		
-		try {
-			asJump = (AudioClip) ResourceLoader.load(pathJumpSound);
-			asJump.open();
-			asDie = (AudioClip) ResourceLoader.load(pathDieSound);
-			asDie.open();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		asJump = (AudioClip) ResourceLoader.load(pathJumpSound);
+		asJump.open();
+		asDie = (AudioClip) ResourceLoader.load(pathDieSound);
+		asDie.open();
 		//x = 0.035;
 		y = 0.035;
 		w = 0.035;
@@ -85,7 +77,7 @@ public class Player extends Actor {
 	 */
 	public Actor getTouchedObstacle() {
 		//0.00025
-		Actor left = new Actor(parent, x, y + force + 0.00020);
+		Actor left = new Actor(parent, x, y + force + 0.00025);
 		for (Actor child:parent.getActors()){
 			if(left.intersects(child)){
 				child.surf(this);
@@ -142,15 +134,16 @@ public class Player extends Actor {
 		else{
 			force += weight;
 		}
+		System.out.println(force);
 		try {
 			if(getTouchedObstacle()!=null && force > 0 &&getTouchedObstacle().isGround){
-					if(!this.intersects(getTouchedObstacle()))
-						//0.0002
-						y = getTouchedObstacle().y-h-0.0001;
-					else {
-						// auskommentieren?
-						//force = -1;
-					}
+				if(!this.intersects(getTouchedObstacle()))
+					//0.0002
+					y = getTouchedObstacle().y-h-0.0001;
+				else {
+					// auskommentieren?
+					//force = -1;
+				}
 				force = 0;
 			}
 		} catch (NullPointerException e) {

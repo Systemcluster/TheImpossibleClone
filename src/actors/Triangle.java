@@ -39,11 +39,7 @@ public class Triangle extends Actor{
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
 		//g2D.drawPolygon(a,b,4);
 		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-		try {
-			g2D.drawImage((BufferedImage) ResourceLoader.load("res/bush.png"),parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		g2D.drawImage((BufferedImage) ResourceLoader.load("res/bush.png"),parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
 	}
 	
 	//TODO: collision

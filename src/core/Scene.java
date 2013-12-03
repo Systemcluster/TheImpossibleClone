@@ -1,5 +1,7 @@
 package core;
 
+import global.GlobalSettings;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,6 +17,7 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
+import sound.ResourceLoader;
 import actors.BackgroundActor;
 import actors.Player;
 
@@ -23,6 +26,8 @@ import actors.Player;
  */
 public class Scene extends JPanel {
 
+	public GlobalSettings gs;
+	
 	private double ytiles = 1;
 	public HashSet<Actor> childs;
 	private ArrayList<HashSet<BackgroundActor>> bg;
@@ -56,8 +61,9 @@ public class Scene extends JPanel {
 
 	private boolean isSpacePressed = false;
 	
-	public Scene() {
+	public Scene(GlobalSettings gs) {
 		super();
+		this.gs = gs;
 		
 		childs = new HashSet<Actor>();
 		
@@ -97,7 +103,7 @@ public class Scene extends JPanel {
 		//Level one = new Level(this,"res/level01.dat");
 		//What NEXT: Sollte hier ein Levelloader implementiert werden der das nächste Level einleitet ?
 		
-		lloader = new LevelLoader(this, new File("res/levels/"));
+		lloader = new LevelLoader(this, (File) ResourceLoader.load("res/levels/"));
 		lloader.start();
 		
 		bg = new ArrayList<>();
@@ -142,11 +148,11 @@ public class Scene extends JPanel {
 		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
 		double coord = getWidth() * (x / ytiles);
 		double scroll = getWidth() * (xposition / ytiles);
-		return (int)(coord - scroll + 0.5);
+		return (int)(coord - scroll);
 	}
 	public int getCoordXFixed(double x) {
 		double coord = getWidth() * (x / ytiles);
-		return (int)(coord+0.5);
+		return (int)(coord);
 	}
 	
 	/**
@@ -157,7 +163,7 @@ public class Scene extends JPanel {
 	 * The real position calculated from grid position y.
 	 */
 	public int getCoordY(double y) {
-		return (int) (((this.getHeight() / ytiles) * y)+0.5);
+		return (int) ((this.getHeight() / ytiles) * y);
 	}
 	
 	/**
@@ -170,7 +176,7 @@ public class Scene extends JPanel {
 	public int getWidth(double w) {
 		//return (int) ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * w);
 		double coord = (double) getWidth() * (w / ytiles);
-		return (int) (coord+0.5);
+		return (int) coord;
 	}
 	/**
 	 * Returns the real height from grid height h.
@@ -180,7 +186,7 @@ public class Scene extends JPanel {
 	 * The real height calculated from grid width w.
 	 */
 	public int getHeight(double h) {
-		return (int) (((this.getHeight() / ytiles) * h)+0.5);
+		return (int) ((this.getHeight() / ytiles) * h);
 	}
 	
 	/**
@@ -307,7 +313,6 @@ public class Scene extends JPanel {
 				// update the actors (movement)
 				for(int i = bg.size()-1; i >= 0; i--){
 					for(BackgroundActor c : bg.get(i)){
-						System.out.println("i" + i + "bg.get()");
 						c.update();
 					}
 				} 
@@ -329,7 +334,7 @@ public class Scene extends JPanel {
 			xscrolltmp = 0;
 			
 		}
-		//--/update--
+		//--/update--å
 		if(((Player)player).dead == true) {
 			paused = true;
 		}
@@ -343,15 +348,13 @@ public class Scene extends JPanel {
 		
 		for(int i = bg.size()-1; i >= 0; i--){
 			for(BackgroundActor c : bg.get(i)){
-				System.out.println("i" + i + "bg.get()");
 				c.paintComponent(g);
 			}
 		} 
-		
+		player.paintComponent(g);
 		for(Actor c: childs) {
 			c.paintComponent(g);
 		}
-		player.paintComponent(g);
 		
 		((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85), getCoordY(0.9));
 		
