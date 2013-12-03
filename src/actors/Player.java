@@ -57,6 +57,11 @@ public class Player extends Actor {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		//x = 0.035;
+		y = 0.035;
+		w = 0.035;
+		h = 0.035;
+		
 	}
 	
 	public void kill() {
@@ -79,19 +84,27 @@ public class Player extends Actor {
 	 * the touched obstacle
 	 */
 	public Actor getTouchedObstacle() {
-		Actor left = new Actor(parent, x, y + force + 0.00025);
+		//0.00025
+		Actor left = new Actor(parent, x, y + force + 0.00020);
 		for (Actor child:parent.getActors()){
 			if(left.intersects(child)){
 				child.surf(this);
 				return child;
+			}
+			else {
 			}
 		}
 		return null;
 	}
 
 	public boolean addForce(double force, double maxHeight) {
+		this.w += 0.05;
+		this.x -= 0.01;
 		if(isGrounded() || (getTouchedObstacle()!=null && getTouchedObstacle().isGround)) {
 			asJump.play();
+			
+			this.w -= 0.05;
+			this.x += 0.01;
 			
 			this.force = force;
 			this.maxHeight = y - maxHeight;
@@ -99,6 +112,10 @@ public class Player extends Actor {
 			this.initY = y;
 			return true;
 		}
+		
+		this.w -= 0.05;
+		this.x += 0.01;
+		
 		return false;
 	}
 	
@@ -128,7 +145,8 @@ public class Player extends Actor {
 		try {
 			if(getTouchedObstacle()!=null && force > 0 &&getTouchedObstacle().isGround){
 					if(!this.intersects(getTouchedObstacle()))
-						y = getTouchedObstacle().y-h-0.0002;
+						//0.0002
+						y = getTouchedObstacle().y-h-0.0001;
 					else {
 						// auskommentieren?
 						//force = -1;
@@ -149,20 +167,20 @@ public class Player extends Actor {
 		//RENDER
 		Graphics2D g2D = (Graphics2D) g;
 		
-		g2D.setColor(Color.black);
+		g2D.setColor(Color.LIGHT_GRAY);
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		//g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
 		
-		AffineTransform trans = new AffineTransform();
-		trans.setTransform(new AffineTransform());
+		//AffineTransform trans = new AffineTransform();
+		//trans.setTransform(new AffineTransform());
 		
-		trans.translate(parent.getCoordX(x)+parent.getWidth(w/2), parent.getCoordY(y)+parent.getHeight(h/2));
-		trans.rotate(Math.toRadians(rotate));
+		//trans.translate(parent.getCoordX(x)+parent.getWidth(w/2), parent.getCoordY(y)+parent.getHeight(h/2));
+		//trans.rotate(Math.toRadians(rotate));
 		//trans.setToScale(2,2);
 		//trans.scale(3, 3);
 		
-		g2D.drawImage(bimage, trans, null);
-		//g2D.drawImage(bimage, parent.getCoordX(x-0.01), parent.getCoordY(y-0.01), parent.getWidth(w+0.02), parent.getHeight(h+0.02), null);
+		//g2D.drawImage(bimage, trans, null);
+		g2D.drawImage(bimage, parent.getCoordX(x-0.005), parent.getCoordY(y-0.005), parent.getWidth(w+0.01), parent.getHeight(h+0.01), null);
 
 	}
 	

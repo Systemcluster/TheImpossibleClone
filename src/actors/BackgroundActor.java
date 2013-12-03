@@ -10,7 +10,7 @@ import core.Scene;
 
 public class BackgroundActor extends Actor{
 	private double resetX, resetY;
-	private double speed = 0.005;
+	private double speed = 0.0012;
 	private int layer;
 	private BufferedImage bimage;
 	
@@ -20,18 +20,18 @@ public class BackgroundActor extends Actor{
 		this.layer = layer;
 		this.x = x;
 		try{
-			bimage = (BufferedImage) ResourceLoader.load("res/treehuge.png");
+			bimage = (BufferedImage) ResourceLoader.load("res/bg/treehuge.png");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
 		//The higher the layer, the smaller the model and the slower the speed
 		w = 0.1 * (4 - layer);
-		h = 0.15 * (4 - layer);
+		h = 0.12 * (4 - layer);
 		this.y = 0.9 - h - (0.08 * layer);
 		//this.x = x;
 		
-		speed = 0.002 * (layer);
+		speed += 0.0005 * (layer);
 		
 		resetX = this.x;
 		resetY = this.y;

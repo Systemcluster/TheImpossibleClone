@@ -142,11 +142,11 @@ public class Scene extends JPanel {
 		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
 		double coord = getWidth() * (x / ytiles);
 		double scroll = getWidth() * (xposition / ytiles);
-		return (int)(coord - scroll);
+		return (int)(coord - scroll + 0.5);
 	}
 	public int getCoordXFixed(double x) {
 		double coord = getWidth() * (x / ytiles);
-		return (int)(coord);
+		return (int)(coord+0.5);
 	}
 	
 	/**
@@ -157,7 +157,7 @@ public class Scene extends JPanel {
 	 * The real position calculated from grid position y.
 	 */
 	public int getCoordY(double y) {
-		return (int) ((this.getHeight() / ytiles) * y);
+		return (int) (((this.getHeight() / ytiles) * y)+0.5);
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public class Scene extends JPanel {
 	public int getWidth(double w) {
 		//return (int) ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * w);
 		double coord = (double) getWidth() * (w / ytiles);
-		return (int) coord;
+		return (int) (coord+0.5);
 	}
 	/**
 	 * Returns the real height from grid height h.
@@ -180,7 +180,7 @@ public class Scene extends JPanel {
 	 * The real height calculated from grid width w.
 	 */
 	public int getHeight(double h) {
-		return (int) ((this.getHeight() / ytiles) * h);
+		return (int) (((this.getHeight() / ytiles) * h)+0.5);
 	}
 	
 	/**
@@ -329,7 +329,7 @@ public class Scene extends JPanel {
 			xscrolltmp = 0;
 			
 		}
-		//--/update--å
+		//--/update--
 		if(((Player)player).dead == true) {
 			paused = true;
 		}
@@ -347,10 +347,11 @@ public class Scene extends JPanel {
 				c.paintComponent(g);
 			}
 		} 
-		player.paintComponent(g);
+		
 		for(Actor c: childs) {
 			c.paintComponent(g);
 		}
+		player.paintComponent(g);
 		
 		((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85), getCoordY(0.9));
 		

@@ -12,10 +12,10 @@ import actors.Player;
  * Actor class.
  */
 public class Actor extends JComponent {
-	protected double x = 1;
-	public double y = 0.8;
-	protected double w = 0.04;
-	protected double h = 0.04;
+	public double x = 1;
+	public double y = 1;
+	public double w = 0.04;
+	public double h = 0.04;
 	
 	public boolean isGround = false;
 	
