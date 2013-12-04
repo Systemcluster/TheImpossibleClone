@@ -1,20 +1,20 @@
 package core;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import actors.Block;
-import actors.Triangle;
 import actors.Hole;
+import actors.Triangle;
 
 public class Level {
 	private double xsize;
 	private Scene scene;
-	private File path;
+	private InputStream path;
 	public final int nr;
-	public Level(Scene s,File pathToLevelFile, int nr) {
+	public Level(Scene s,InputStream pathToLevelFile, int nr) {
 		this.nr=nr;
 		scene=s;
 		path=pathToLevelFile;
@@ -44,12 +44,11 @@ public class Level {
 				}
 				scene.xsize = maxwidth;
 			}
-		}catch(FileNotFoundException e) {
-			System.err.println("Error Loading Rescource File!");
-			
 		}catch(InputMismatchException e) {
 			System.err.println("Error with Rescource File!");
-			
+		}
+		catch(NoSuchElementException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -71,5 +70,7 @@ public class Level {
 		
 	}
 	
-	public String getPath(){ return path.getAbsolutePath(); }
+	public String getPath(){ //WHATEVER
+		System.out.println("DOES NOT WORK");
+		return "IS: NOT A PATH" + path.toString();  }
 }

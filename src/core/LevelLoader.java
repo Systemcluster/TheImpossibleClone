@@ -1,27 +1,25 @@
 package core;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
+
+import sound.ResourceLoader;
 
 public class LevelLoader {
 	private Scene scene;
 	private ArrayList<Level> levels;
 	private int maxLevel=0;
 	private int current=0;
-	public LevelLoader(Scene scene, File pathToLevelFolder){
+	public LevelLoader(Scene scene, String pathToLevelFolder){
 		this.scene=scene;
 		this.levels = new ArrayList<Level>();
-		if(pathToLevelFolder.isDirectory())
-		{
-			for(File f : pathToLevelFolder.listFiles()){
-				System.out.println(scene + "#" + f.getAbsolutePath());
-				levels.add(new Level(scene, f,maxLevel));
-				maxLevel++;
-			}
-		}else {
-			System.err.println("Error Loading Levels from Level-Folder!");
+		InputStream t;
+		int i = 1;
+		for(i = 1;(t = (InputStream) ResourceLoader.load(pathToLevelFolder + "level0" + i + ".dat")) != null;i++){
+			System.out.println(t);
+			levels.add(new Level(scene, t,maxLevel));
 		}
+		maxLevel = i;
 	}
 	
 	public void start(){
@@ -42,6 +40,7 @@ public class LevelLoader {
 			else {
 				System.out.println("KEINE LEVEL MEHR DA!!!");
 				//scene.paused=true;
+				scene.xsize = 10000;
 			}
 		}
 		

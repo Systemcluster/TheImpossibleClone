@@ -2,7 +2,8 @@ package sound;
 
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.io.BufferedInputStream;
+import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -13,12 +14,12 @@ public class AudioClip {
 	private Clip clip;
 	private AudioInputStream ais;
 	
-	public AudioClip(InputStream is) throws UnsupportedAudioFileException{
+	public AudioClip(BufferedInputStream is) throws UnsupportedAudioFileException, IOException{
 		try{
 			clip = AudioSystem.getClip();
 			ais = AudioSystem.getAudioInputStream(is); 
-		}catch(IOException | LineUnavailableException e){
-			System.err.println("AudioClip: Init failed");
+		}catch(LineUnavailableException le){
+			System.err.println("AudioClip: Init : LUE -- " + le.getMessage());
 		}
 	}
 	

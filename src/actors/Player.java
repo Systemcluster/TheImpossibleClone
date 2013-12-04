@@ -89,6 +89,7 @@ public class Player extends Actor {
 		return null;
 	}
 
+	// TODO: fix flying bug
 	public boolean addForce(double force, double maxHeight) {
 		this.w += 0.05;
 		this.x -= 0.01;

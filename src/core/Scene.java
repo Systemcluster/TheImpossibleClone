@@ -103,7 +103,7 @@ public class Scene extends JPanel {
 		//Level one = new Level(this,"res/level01.dat");
 		//What NEXT: Sollte hier ein Levelloader implementiert werden der das nächste Level einleitet ?
 		
-		lloader = new LevelLoader(this, (File) ResourceLoader.load("res/levels/"));
+		lloader = new LevelLoader(this, "res/levels/");
 		lloader.start();
 		
 		bg = new ArrayList<>();

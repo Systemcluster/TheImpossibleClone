@@ -3,9 +3,11 @@ package sound;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -20,20 +22,22 @@ public class ResourceLoader {
 		else{
 			ClassLoader cl = ResourceLoader.class.getClassLoader();
 			InputStream is = cl.getResourceAsStream(path);
-			//is.mark(0);
+			BufferedInputStream bis = new BufferedInputStream(cl.getResourceAsStream(path));
 			Object obj;
 			try {
-				obj = new AudioClip(is);
-			} catch (UnsupportedAudioFileException e) {
+				obj = new AudioClip(bis);
+			} catch (UnsupportedAudioFileException | IOException e) {
+				System.out.println(e.getMessage());
 				try{
-					if((obj = ImageIO.read(is)) == null){
-						is.reset();
-						obj = new File(cl.getSystemResource(path).toURI());
-					}
-				}catch(URISyntaxException use){
-					System.err.println(use.getMessage());
-					obj = null;
-				}catch(IOException ie){
+					/*if((obj = ImageIO.read(is)) == null){
+						obj = cl.getResourceAsStream(path);
+					}*/
+					if(path.endsWith(".dat"))
+						obj = cl.getResourceAsStream(path);
+					else
+						obj = ImageIO.read(is);
+				}
+				catch(IOException ie){
 					obj = null;
 				}
 			} catch (Exception e) {	
