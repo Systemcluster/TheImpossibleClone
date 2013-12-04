@@ -25,11 +25,12 @@ public class Main extends JFrame {
 
 			@Override
 			public void windowClosed(WindowEvent arg0) {
-				mmi.returnToMainMenu();
 			}
 
 			@Override
 			public void windowClosing(WindowEvent arg0) {
+				mmi.returnToMainMenu();
+			    dispose();
 			}
 
 			@Override
@@ -61,7 +62,7 @@ public class Main extends JFrame {
 			@Override 
 			public void run() {
 
-				while(true) {
+				while(obj.isDisplayable()) {
 					try {
 						obj.run();
 						this.sleep(16);

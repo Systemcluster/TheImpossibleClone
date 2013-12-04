@@ -50,7 +50,7 @@ public class Player extends Actor {
 		asDie = (AudioClip) ResourceLoader.load(pathDieSound);
 		asDie.open();
 		//x = 0.035;
-		y = 0.035;
+		//y = 0.035;
 		w = 0.035;
 		h = 0.035;
 		
