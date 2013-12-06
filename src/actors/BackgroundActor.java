@@ -40,8 +40,8 @@ public class BackgroundActor extends Actor{
 	
 	public void update() {
 		x+=speed;
-		System.out.println("BI - Actor x :" + x + "; Scene x" + parent.getPosition());
-		System.out.println(parent.getCoordX(x));
+		//System.out.println("BI - Actor x :" + x + "; Scene x" + parent.getPosition());
+		//System.out.println(parent.getCoordX(x));
 		if(x+h < parent.getPosition()){
 			x = parent.getPosition() + 1;
 		}

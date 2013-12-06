@@ -135,7 +135,7 @@ public class Player extends Actor {
 		else{
 			force += weight;
 		}
-		System.out.println(force);
+		//System.out.println(force);
 		try {
 			if(getTouchedObstacle()!=null && force > 0 &&getTouchedObstacle().isGround){
 				if(!this.intersects(getTouchedObstacle()))
