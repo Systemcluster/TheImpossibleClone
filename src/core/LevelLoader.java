@@ -40,7 +40,8 @@ public class LevelLoader {
 			else {
 				System.out.println("KEINE LEVEL MEHR DA!!!");
 				//scene.paused=true;
-				scene.xsize = 10000;
+				scene.xsize = 200;
+				scene.generateObstacles();
 			}
 		}
 		

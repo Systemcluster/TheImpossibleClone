@@ -91,11 +91,13 @@ public class Player extends Actor {
 
 	// TODO: fix flying bug
 	public boolean addForce(double force, double maxHeight) {
+		//SURFJUMPFIX
 		this.w += 0.05;
 		this.x -= 0.01;
 		if(isGrounded() || (getTouchedObstacle()!=null && getTouchedObstacle().isGround)) {
 			asJump.play();
 			
+			//SURFJUMPFIX
 			this.w -= 0.05;
 			this.x += 0.01;
 			
@@ -106,6 +108,7 @@ public class Player extends Actor {
 			return true;
 		}
 		
+		//SURFJUMPFIX
 		this.w -= 0.05;
 		this.x += 0.01;
 		
@@ -130,12 +133,15 @@ public class Player extends Actor {
 		//--JUMP--
 	
 		if(parent.getSpaceState() && y > maxHeight ){
-			force += weight * ((y - initY)/(maxHeight - initY));
+			double meh = (y - initY) <= 0 ? (y - initY) : -0.5; // surfjump fix
+			force += weight * (meh/(maxHeight - initY));
+			System.out.println(weight * ((y - initY)/(maxHeight - initY)));
 		}
 		else{
 			force += weight;
 		}
-		//System.out.println(force);
+		
+		//-- SURF --
 		try {
 			if(getTouchedObstacle()!=null && force > 0 &&getTouchedObstacle().isGround){
 				if(!this.intersects(getTouchedObstacle()))
@@ -150,12 +156,15 @@ public class Player extends Actor {
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
+		//-- /SURF --
 		if(!dead)y+=force;
 		
+		//-- GROUND
 		if(isGrounded()) {
 			y = parent.getGround();
 			force = 0;
 		}
+		//-- /GROUND --
 		//--/JUMP--
 		
 		//RENDER

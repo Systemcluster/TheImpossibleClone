@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,8 +16,8 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import sound.ResourceLoader;
 import actors.BackgroundActor;
+import actors.Block;
 import actors.Player;
 
 /**
@@ -28,7 +27,7 @@ public class Scene extends JPanel {
 
 	public GlobalSettings gs;
 	
-	private double ytiles = 1;
+	private double ytiles = 1.1;
 	public HashSet<Actor> childs;
 	private ArrayList<HashSet<BackgroundActor>> bg;
 	private Actor player;
@@ -287,7 +286,7 @@ public class Scene extends JPanel {
 				case 1 : obstacleName = "triangle"; break;
 			}
 			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
-			addActor(new Actor(this, xValArr[j],yValArr[j]));
+			addActor(new Block(this, xValArr[j],yValArr[j]));
 		}
 	}
 
@@ -318,16 +317,18 @@ public class Scene extends JPanel {
 				} 
 				player.update();
 				for(Actor c: childs) {
-					c.update();
+					if(c.x > xposition - 1 && c.x < xposition + 2)
+						c.update();
 				}
 				// check if the player intersects with an obstacle
 				for(Actor c: childs) {
-					if(player.intersects(c)) {
-						//System.out.println(player+" intersects with "+c);
-						c.collide((Player) player);
-						//player.
-						
-					}
+					if(c.x > xposition - 1 && c.x < xposition + 2)
+						if(player.intersects(c)) {
+							//System.out.println(player+" intersects with "+c);
+							c.collide((Player) player);
+							//player.
+							
+						}
 				}
 				
 			}
@@ -353,7 +354,8 @@ public class Scene extends JPanel {
 		} 
 		player.paintComponent(g);
 		for(Actor c: childs) {
-			c.paintComponent(g);
+			if(c.x > xposition - 1 && c.x < xposition + 2)
+				c.paintComponent(g);
 		}
 		
 		((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85), getCoordY(0.9));
