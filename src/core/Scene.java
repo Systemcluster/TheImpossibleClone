@@ -1,37 +1,51 @@
 package core;
 
+import global.GlobalSettings;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
+import actors.Block;
 import actors.Player;
+import background.Background;
+import background.BackgroundActor;
 
 /**
  * Scene class. Base class for Scenes to hold and display actors.
  */
 public class Scene extends JPanel {
 
-	private double ytiles = 1;
-	private HashSet<Actor> childs;
+	public GlobalSettings gs;
+	
+	private double ytiles = 1.1;
+	public HashSet<Actor> childs;
+	private Background bg;
 	private Actor player;
 	
 	// current scroll position
 	private double xposition = 0;
 	
+	private LevelLoader lloader = null;
+	
 	// initial scroll speed
 	//0.012
-	private double xscrollspeed = 0.010;
+	public double xscrollspeed = 0.010;
 	// scroll increment each round
 	// 0.0025
 	private double xscrollinc = 0.0000;
 	// steps to perform scrolling in (for collision)
-	private double xscrollsteps = 0.01;
+	private double xscrollsteps = 0.005;
 	// value that holds current scroll speed (for stepwise movement)
 	private double xscrolltmp = 0;
 	
@@ -47,8 +61,9 @@ public class Scene extends JPanel {
 
 	private boolean isSpacePressed = false;
 	
-	public Scene() {
-		super();
+	public Scene(GlobalSettings gs) {
+		System.err.println("DEBUG : SCENE ");
+		this.gs = gs;
 		
 		childs = new HashSet<Actor>();
 		
@@ -62,7 +77,7 @@ public class Scene extends JPanel {
 				//TODO: DELETE DEBUG KEY
 				if(e.getKeyCode() == KeyEvent.VK_P){
 					paused = true;
-					System.out.println(((Player)player).touchObstacle());
+					System.out.println(((Player)player).getTouchedObstacle()!=null);
 				}
 				else{
 					isSpacePressed = true;
@@ -85,9 +100,21 @@ public class Scene extends JPanel {
 		//###################################
 		//Hier wird das Level aus der Datei geladen oder generiert
 		//##################################
-		Level one = new Level(this,"res/level01.dat");
+		//Level one = new Level(this,"res/level01.dat");
 		//What NEXT: Sollte hier ein Levelloader implementiert werden der das nächste Level einleitet ?
 		
+		lloader = new LevelLoader(this, "res/levels/");
+		lloader.start();
+		
+		bg = new Background(this);
+		bg.addBackgroundActor(new BackgroundActor(this,1.0,1), 1);
+		bg.addBackgroundActor(new BackgroundActor(this,1.7,1), 1);
+		bg.addBackgroundActor(new BackgroundActor(this,1.1,1), 2);
+		bg.addBackgroundActor(new BackgroundActor(this,1.8,1), 2);
+		bg.addBackgroundActor(new BackgroundActor(this,1.2,1), 3);
+		bg.addBackgroundActor(new BackgroundActor(this,1.9,1), 3);
+		bg.addBackgroundActor(new BackgroundActor(this,1.3,1), 4);
+		bg.addBackgroundActor(new BackgroundActor(this,2.0,1), 4);
 		
 		// -- test --
 		/*addActor(new Actor(this, 1.0, 0.8));
@@ -195,8 +222,67 @@ public class Scene extends JPanel {
 		xscrollspeed += xscrollinc;
 		player.x = 0.1;
 		round += 1;
+		bg.reset();
+		
 		// TODO: fix player position reset bug
 	}
+	
+	public boolean getPaused() {
+		return paused;
+	}
+	
+	public void generateObstacles(){
+		int obstacleCount =  (int) ((int) Math.random() * ((xsize*5.0) - (xsize*4.0)) + (xsize*4.0));
+		boolean genFlag = false;	// check if a x-value has already been created
+		double preX = 0.0;	
+		String obstacleName = "";
+		Random r = new Random();
+		PrintStream levelGen = null;
+		/*try {
+			levelGen = new PrintStream(new File("res/randLevel.dat"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error while generating level");
+		}*/
+		double xValArr[] = new double[obstacleCount];
+		double yValArr[] = new double[obstacleCount];
+		//System.out.println("Length of x = "+xValArr.length+" "+"obstaclecount = "+obstacleCount);
+		
+		for(int i = 0;i<obstacleCount;i++){
+			double randomX = 0.5 + ((xsize-2.0) - 0.5) * r.nextDouble();
+			double randomY = 0.7 + (0.8 - 0.7) * r.nextDouble();
+			
+			randomX = (double)Math.round(randomX * 100) / 100;
+			randomY = (double)Math.round(randomY*10)/10;
+			
+			xValArr[i] = randomX;
+			yValArr[i] = randomY;		
+		}
+		Arrays.sort(xValArr);
+		//System.out.println(Arrays.toString(xValArr));
+		for(int j=0;j<obstacleCount;j++){
+			if(j>0){ // value of j has to be bigger than 0 bc. of the comparison	
+					if((xValArr[j]-xValArr[j-1])<0.8){
+						if((xValArr[j]+2.5)>xsize){/* do nothing*/}
+						else{
+							if(j<xValArr.length/2)
+								xValArr[j]=+1.5;
+							else
+								xValArr[j]=+0.8;
+						}
+					}	
+			}
+			double temp = Math.random()*2;
+			int randObstacle = (int) temp;
+			switch(randObstacle){
+				case 0 : obstacleName = "block"; break;
+				case 1 : obstacleName = "triangle"; break;
+			}
+			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
+			addActor(new Block(this, xValArr[j],yValArr[j]));
+		}
+	}
+
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -208,6 +294,7 @@ public class Scene extends JPanel {
 		
 		if(!paused) {
 			if(xposition >= xsize) {
+				lloader.start();
 				resetPlayer();
 			}
 		
@@ -216,26 +303,31 @@ public class Scene extends JPanel {
 				xposition += getScrollSpeed();
 			
 				// update the actors (movement)
+				bg.update();
 				player.update();
 				for(Actor c: childs) {
-					c.update();
+					if(c.x > xposition - 1 && c.x < xposition + 2)
+						c.update();
 				}
 				// check if the player intersects with an obstacle
 				for(Actor c: childs) {
-					if(player.intersects(c)) {
-						//System.out.println(player+" intersects with "+c);
-						paused = true;
-						//player.
-						
-					}
+					if(c.x > xposition - 1 && c.x < xposition + 2)
+						if(player.intersects(c)) {
+							//System.out.println(player+" intersects with "+c);
+							c.collide((Player) player);
+							//player.
+							
+						}
 				}
 				
 			}
 			xscrolltmp = 0;
 			
 		}
-		//--/update--
-		
+		//--/update--å
+		if(((Player)player).dead == true) {
+			paused = true;
+		}
 		//--paint--
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -243,9 +335,12 @@ public class Scene extends JPanel {
 		((Graphics2D)g).drawString("Round: "+round, 10, 20);
 		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
 		
+		
+		bg.paintComponent(g);
 		player.paintComponent(g);
 		for(Actor c: childs) {
-			c.paintComponent(g);
+			if(c.x > xposition - 1 && c.x < xposition + 2)
+				c.paintComponent(g);
 		}
 		
 		((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85), getCoordY(0.9));
