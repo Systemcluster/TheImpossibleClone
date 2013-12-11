@@ -12,6 +12,9 @@ import actors.Player;
  * Actor class.
  */
 public class Actor extends JComponent {
+	
+	private static final long serialVersionUID = -8778184236273407234L;
+	
 	public double x = 1;
 	public double y = 1;
 	public double w = 0.04;
@@ -80,5 +83,33 @@ public class Actor extends JComponent {
 		g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h));
 		
 		
+	}
+	
+	public void setRelWidth(double w){
+		this.w = w;
+	}
+	public double getRelWidth(){
+		return w;
+	}
+	
+	public void setRelHeight(double h){
+		this.h = h;
+	}
+	public double getRelHeight(){
+		return h;
+	}
+	
+	public double getRelX() {
+		return x;
+	}
+	public void setRelX(double x) {
+		this.x = x;
+	}
+	
+	public double getRelY() {
+		return y;
+	}
+	public void setRelY(double y) {
+		this.y = y;
 	}
 }

@@ -58,7 +58,7 @@ public class Player extends Actor {
 	
 	public void kill() {
 		dead = true;
-		asDie.play();
+		asDie.start();
 	}
 	
 	public boolean jump() {
@@ -95,7 +95,7 @@ public class Player extends Actor {
 		this.w += 0.05;
 		this.x -= 0.01;
 		if(isGrounded() || (getTouchedObstacle()!=null && getTouchedObstacle().isGround)) {
-			asJump.play();
+			asJump.start();
 			
 			//SURFJUMPFIX
 			this.w -= 0.05;

@@ -16,9 +16,10 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import actors.BackgroundActor;
 import actors.Block;
 import actors.Player;
+import background.Background;
+import background.BackgroundActor;
 
 /**
  * Scene class. Base class for Scenes to hold and display actors.
@@ -29,7 +30,7 @@ public class Scene extends JPanel {
 	
 	private double ytiles = 1.1;
 	public HashSet<Actor> childs;
-	private ArrayList<HashSet<BackgroundActor>> bg;
+	private Background bg;
 	private Actor player;
 	
 	// current scroll position
@@ -53,7 +54,7 @@ public class Scene extends JPanel {
 	// position of the ground (0 to 1)
 	private double ground = 0.8;
 	
-
+	private long score = 0;
 	
 	private int round = 1;
 	private boolean paused = false;
@@ -61,7 +62,7 @@ public class Scene extends JPanel {
 	private boolean isSpacePressed = false;
 	
 	public Scene(GlobalSettings gs) {
-		super();
+		System.err.println("DEBUG : SCENE ");
 		this.gs = gs;
 		
 		childs = new HashSet<Actor>();
@@ -105,19 +106,15 @@ public class Scene extends JPanel {
 		lloader = new LevelLoader(this, "res/levels/");
 		lloader.start();
 		
-		bg = new ArrayList<>();
-		HashSet<BackgroundActor> layer1 = new HashSet<>(),
-									layer2 = new HashSet<>(),
-									layer3 = new HashSet<>();
-		layer1.add(new BackgroundActor(this,1,1.0));
-		layer1.add(new BackgroundActor(this,1,1.7));
-		layer2.add(new BackgroundActor(this,2,1.1));
-		layer2.add(new BackgroundActor(this,2,1.8));
-		layer3.add(new BackgroundActor(this,3,1.2));
-		layer3.add(new BackgroundActor(this,3,1.9));
-		bg.add(layer1);
-		bg.add(layer2);
-		bg.add(layer3);
+		bg = new Background(this);
+		bg.addBackgroundActor(new BackgroundActor(this,1.0,1), 1);
+		bg.addBackgroundActor(new BackgroundActor(this,1.7,1), 1);
+		bg.addBackgroundActor(new BackgroundActor(this,1.1,1), 2);
+		bg.addBackgroundActor(new BackgroundActor(this,1.8,1), 2);
+		bg.addBackgroundActor(new BackgroundActor(this,1.2,1), 3);
+		bg.addBackgroundActor(new BackgroundActor(this,1.9,1), 3);
+		bg.addBackgroundActor(new BackgroundActor(this,1.3,1), 4);
+		bg.addBackgroundActor(new BackgroundActor(this,2.0,1), 4);
 		
 		// -- test --
 		/*addActor(new Actor(this, 1.0, 0.8));
@@ -147,10 +144,10 @@ public class Scene extends JPanel {
 		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
 		double coord = getWidth() * (x / ytiles);
 		double scroll = getWidth() * (xposition / ytiles);
-		return (int)(coord - scroll);
+		return (int)(coord - scroll + 0.5);
 	}
 	public int getCoordXFixed(double x) {
-		double coord = getWidth() * (x / ytiles);
+		double coord = getWidth() * (x / ytiles) + 0.5;
 		return (int)(coord);
 	}
 	
@@ -162,7 +159,7 @@ public class Scene extends JPanel {
 	 * The real position calculated from grid position y.
 	 */
 	public int getCoordY(double y) {
-		return (int) ((this.getHeight() / ytiles) * y);
+		return (int) ((this.getHeight() / ytiles) * y + 0.5);
 	}
 	
 	/**
@@ -174,7 +171,7 @@ public class Scene extends JPanel {
 	 */
 	public int getWidth(double w) {
 		//return (int) ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * w);
-		double coord = (double) getWidth() * (w / ytiles);
+		double coord = (double) getWidth() * (w / ytiles) + 0.5;
 		return (int) coord;
 	}
 	/**
@@ -185,7 +182,7 @@ public class Scene extends JPanel {
 	 * The real height calculated from grid width w.
 	 */
 	public int getHeight(double h) {
-		return (int) ((this.getHeight() / ytiles) * h);
+		return (int) ((this.getHeight() / ytiles) * h + 0.5);
 	}
 	
 	/**
@@ -221,15 +218,11 @@ public class Scene extends JPanel {
 	}
 	
 	public void resetPlayer() {
-		xposition = 0.0;
+		//xposition = 0.0;
 		xscrollspeed += xscrollinc;
-		player.x = 0.1;
+		//player.x = 0.1;
 		round += 1;
-		for(int i = bg.size()-1; i >= 0; i--){
-			for(BackgroundActor c : bg.get(i)){
-				c.x = c.getResetX();
-			}
-		} 
+		bg.reset();
 		
 		// TODO: fix player position reset bug
 	}
@@ -286,7 +279,7 @@ public class Scene extends JPanel {
 				case 1 : obstacleName = "triangle"; break;
 			}
 			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
-			addActor(new Block(this, xValArr[j],yValArr[j]));
+			addActor(new Block(this, xValArr[j] + getPosition(),yValArr[j]));
 		}
 	}
 
@@ -300,6 +293,9 @@ public class Scene extends JPanel {
 		//--update--
 		
 		if(!paused) {
+			
+			score += 1;
+			
 			if(xposition >= xsize) {
 				lloader.start();
 				resetPlayer();
@@ -310,19 +306,15 @@ public class Scene extends JPanel {
 				xposition += getScrollSpeed();
 			
 				// update the actors (movement)
-				for(int i = bg.size()-1; i >= 0; i--){
-					for(BackgroundActor c : bg.get(i)){
-						c.update();
-					}
-				} 
+				bg.update();
 				player.update();
 				for(Actor c: childs) {
-					if(c.x > xposition - 1 && c.x < xposition + 2)
+					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 						c.update();
 				}
 				// check if the player intersects with an obstacle
 				for(Actor c: childs) {
-					if(c.x > xposition - 1 && c.x < xposition + 2)
+					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 						if(player.intersects(c)) {
 							//System.out.println(player+" intersects with "+c);
 							c.collide((Player) player);
@@ -335,7 +327,7 @@ public class Scene extends JPanel {
 			xscrolltmp = 0;
 			
 		}
-		//--/update--å
+		//--/update--
 		if(((Player)player).dead == true) {
 			paused = true;
 		}
@@ -345,16 +337,13 @@ public class Scene extends JPanel {
 		g.setColor(Color.red);
 		((Graphics2D)g).drawString("Round: "+round, 10, 20);
 		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
+		((Graphics2D)g).drawString("Score: "+new Double(score) / 10, 10, 40);
 		
 		
-		for(int i = bg.size()-1; i >= 0; i--){
-			for(BackgroundActor c : bg.get(i)){
-				c.paintComponent(g);
-			}
-		} 
+		bg.paintComponent(g);
 		player.paintComponent(g);
 		for(Actor c: childs) {
-			if(c.x > xposition - 1 && c.x < xposition + 2)
+			if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 				c.paintComponent(g);
 		}
 		
