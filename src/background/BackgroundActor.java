@@ -22,8 +22,6 @@ public class BackgroundActor extends Actor{
 	
 	public BackgroundActor(Scene parent, double x, double y) {
 		super(parent, x, y);
-		resetX = this.x;
-		resetY = this.y;
 		try{
 			bimage = (BufferedImage) ResourceLoader.load("res/bg/treehuge.png");
 		}catch(Exception e){
@@ -34,13 +32,6 @@ public class BackgroundActor extends Actor{
 		x+=speed;
 	}
 	
-	public double getResetX(){
-		return resetX;
-	}
-	public double getResetY(){
-		return resetY;
-	}
-
 	public void setSpeed(double speed){
 		this.speed = speed;
 	}
