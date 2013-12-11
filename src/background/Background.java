@@ -86,7 +86,8 @@ public class Background extends JComponent{
 	public void reset(){
 		iterate(new Callable(){
 			public void call(BackgroundActor b){
-				b.setRelX(b.getRelX() % 1);
+				//Do someting when next level is loaded
+				System.out.print("");
 			}
 		});
 	}
