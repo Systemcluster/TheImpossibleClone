@@ -20,10 +20,6 @@ public class Main extends JFrame {
 		this.addWindowListener(new WindowListener(){
 
 			@Override
-			public void windowActivated(WindowEvent arg0) {
-			}
-
-			@Override
 			public void windowClosed(WindowEvent arg0) {
 			}
 
@@ -47,6 +43,12 @@ public class Main extends JFrame {
 
 			@Override
 			public void windowOpened(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		setSize(gs.getResolution()[0], gs.getResolution()[1]);

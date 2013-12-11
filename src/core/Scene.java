@@ -218,9 +218,9 @@ public class Scene extends JPanel {
 	}
 	
 	public void resetPlayer() {
-		xposition = 0.0;
+		//xposition = 0.0;
 		xscrollspeed += xscrollinc;
-		player.x = 0.1;
+		//player.x = 0.1;
 		round += 1;
 		bg.reset();
 		
@@ -279,7 +279,7 @@ public class Scene extends JPanel {
 				case 1 : obstacleName = "triangle"; break;
 			}
 			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
-			addActor(new Block(this, xValArr[j],yValArr[j]));
+			addActor(new Block(this, xValArr[j] + getPosition(),yValArr[j]));
 		}
 	}
 
@@ -306,12 +306,12 @@ public class Scene extends JPanel {
 				bg.update();
 				player.update();
 				for(Actor c: childs) {
-					if(c.x > xposition - 1 && c.x < xposition + 2)
+					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 						c.update();
 				}
 				// check if the player intersects with an obstacle
 				for(Actor c: childs) {
-					if(c.x > xposition - 1 && c.x < xposition + 2)
+					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 						if(player.intersects(c)) {
 							//System.out.println(player+" intersects with "+c);
 							c.collide((Player) player);
@@ -339,7 +339,7 @@ public class Scene extends JPanel {
 		bg.paintComponent(g);
 		player.paintComponent(g);
 		for(Actor c: childs) {
-			if(c.x > xposition - 1 && c.x < xposition + 2)
+			if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 				c.paintComponent(g);
 		}
 		

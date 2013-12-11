@@ -10,10 +10,10 @@ import actors.Hole;
 import actors.Triangle;
 
 public class Level {
-	private double xsize;
 	private Scene scene;
 	private InputStream path;
 	public final int nr;
+	
 	public Level(Scene s,InputStream pathToLevelFile, int nr) {
 		this.nr=nr;
 		scene=s;
@@ -21,34 +21,34 @@ public class Level {
 	}
 	
 	public void add(Scene s) {
+		
+		double maxwidth = 1;
+		Scanner in = null;
+		String tmp[];
+		 
 		try{
-			Scanner in = new Scanner(path);
+			in = new Scanner(path);
 			in.useDelimiter(";");
-			String tokens,tmp[];
-			
-			double maxwidth = 1;
 			
 			// read level speed
-			{
-				String a = in.nextLine();
-				double x = Double.parseDouble(a);
-				s.xscrollspeed = x;
-			}
+			s.xscrollspeed = Double.parseDouble(in.nextLine());
 			
 			while(in.hasNextLine()){
-				tokens= in.nextLine();
-				tmp = tokens.split(";");
-				addObstacles(tmp[0],Double.parseDouble(tmp[1]),Double.parseDouble(tmp[2]));
-				if(Double.parseDouble(tmp[1]) + 0.3 > maxwidth) {
-					maxwidth = Double.parseDouble(tmp[1]) + 0.3;
+				tmp = in.nextLine().split(";");
+				addObstacles(tmp[0],Double.parseDouble(tmp[1]) + s.getPosition() ,Double.parseDouble(tmp[2]));
+				if(Double.parseDouble(tmp[1]) + s.getPosition() + 0.3 > maxwidth) {
+					maxwidth += Double.parseDouble(tmp[1]) + 0.3;
 				}
 				scene.xsize = maxwidth;
 			}
+			
 		}catch(InputMismatchException e) {
 			System.err.println("Error with Rescource File!");
-		}
-		catch(NoSuchElementException e) {
+		}catch(NoSuchElementException e) {
 			e.printStackTrace();
+		}finally{
+			if(in != null)
+				in.close();
 		}
 	}
 	
