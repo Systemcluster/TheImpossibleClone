@@ -86,14 +86,14 @@ public class Background extends JComponent{
 	public void reset(){
 		iterate(new Callable(){
 			public void call(BackgroundActor b){
-				b.setRelX(b.getRelX() % 1);
+				System.out.println("");
 			}
 		});
 	}
 	
 	/**
 	 * Provides a method to call a function for every BackgroundActor on this Background
-	 * @param c A function wrapped in the Callableinterface
+	 * @param c A function wrapped in the Callable interface
 	 */
 	private void iterate(Callable c){
 		for(int i = mLayers.size(); i >= 0; i--){

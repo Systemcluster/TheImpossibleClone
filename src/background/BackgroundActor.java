@@ -16,14 +16,11 @@ public class BackgroundActor extends Actor{
 
 	private static final long serialVersionUID = -7327728536198764908L;
 	
-	private double resetX, resetY;
 	private double speed = 0.0012;
 	private BufferedImage bimage;
 	
 	public BackgroundActor(Scene parent, double x, double y) {
 		super(parent, x, y);
-		resetX = this.x;
-		resetY = this.y;
 		try{
 			bimage = (BufferedImage) ResourceLoader.load("res/bg/treehuge.png");
 		}catch(Exception e){
@@ -31,14 +28,8 @@ public class BackgroundActor extends Actor{
 		}
 	}
 	public void update() {
-		x+=speed;
-	}
-	
-	public double getResetX(){
-		return resetX;
-	}
-	public double getResetY(){
-		return resetY;
+		setRelX(getRelX()+speed);
+		//System.out.println("BA : X - " + getRelX() + ":: Scene.getPos() - " + parent.getPosition());
 	}
 
 	public void setSpeed(double speed){
@@ -48,37 +39,9 @@ public class BackgroundActor extends Actor{
 		return speed;
 	}
 
-	public void setRelWidth(double w){
-		this.w = w;
-	}
-	public double getRelWidth(){
-		return w;
-	}
-	
-	public void setRelHeight(double h){
-		this.h = h;
-	}
-	public double getRelHeight(){
-		return h;
-	}
-	
-	public double getRelX() {
-		return x;
-	}
-	public void setRelX(double x) {
-		this.x = x;
-	}
-	
-	public double getRelY() {
-		return y;
-	}
-	public void setRelY(double y) {
-		this.y = y;
-	}
-	
 	public void paintComponent(Graphics g){
 		Graphics2D g2D = (Graphics2D) g;		
-		g2D.drawImage(bimage, parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
+		g2D.drawImage(bimage, parent.getCoordX(getRelX()), parent.getCoordY(getRelY()), parent.getWidth(getRelWidth()), parent.getHeight(getRelHeight()), null);
 	}
 	
 }
