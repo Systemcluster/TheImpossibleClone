@@ -337,7 +337,7 @@ public class Scene extends JPanel {
 		g.setColor(Color.red);
 		((Graphics2D)g).drawString("Round: "+round, 10, 20);
 		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
-		((Graphics2D)g).drawString("Score: "+new Double(score) / 10, 10, 40);
+		((Graphics2D)g).drawString("Score: "+new Double(score) / 10, 10, 60);
 		
 		
 		bg.paintComponent(g);
