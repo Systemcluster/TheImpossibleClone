@@ -16,7 +16,6 @@ public class BackgroundActor extends Actor{
 
 	private static final long serialVersionUID = -7327728536198764908L;
 	
-	private double resetX, resetY;
 	private double speed = 0.0012;
 	private BufferedImage bimage;
 	
@@ -37,34 +36,6 @@ public class BackgroundActor extends Actor{
 	}
 	public double getSpeed(){
 		return speed;
-	}
-
-	public void setRelWidth(double w){
-		this.w = w;
-	}
-	public double getRelWidth(){
-		return w;
-	}
-	
-	public void setRelHeight(double h){
-		this.h = h;
-	}
-	public double getRelHeight(){
-		return h;
-	}
-	
-	public double getRelX() {
-		return x;
-	}
-	public void setRelX(double x) {
-		this.x = x;
-	}
-	
-	public double getRelY() {
-		return y;
-	}
-	public void setRelY(double y) {
-		this.y = y;
 	}
 	
 	public void paintComponent(Graphics g){

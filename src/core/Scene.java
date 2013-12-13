@@ -279,7 +279,7 @@ public class Scene extends JPanel {
 				case 1 : obstacleName = "triangle"; break;
 			}
 			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
-			addActor(new Block(this, xValArr[j] + getPosition(),yValArr[j]));
+			addActor(new Block(this, xValArr[j] + getPosition() +1,yValArr[j]));
 		}
 	}
 
