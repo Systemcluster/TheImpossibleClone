@@ -14,16 +14,27 @@ import core.Scene;
  */
 public class BackgroundActor extends Actor{
 
+	public static enum Type{
+		TREE ("res/bg/treehuge.png");
+		
+		private final String path;
+		Type(String path){
+			this.path = path;
+		}
+		public String getPath(){
+			return path;
+		}
+	}
+	  
 	private static final long serialVersionUID = -7327728536198764908L;
 	
-	private double resetX, resetY;
 	private double speed = 0.0012;
 	private BufferedImage bimage;
 	
-	public BackgroundActor(Scene parent, double x, double y) {
+	public BackgroundActor(Scene parent, double x, double y, Type type) {
 		super(parent, x, y);
 		try{
-			bimage = (BufferedImage) ResourceLoader.load("res/bg/treehuge.png");
+			bimage = (BufferedImage) ResourceLoader.load(type.getPath());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -39,34 +50,6 @@ public class BackgroundActor extends Actor{
 		return speed;
 	}
 
-	public void setRelWidth(double w){
-		this.w = w;
-	}
-	public double getRelWidth(){
-		return w;
-	}
-	
-	public void setRelHeight(double h){
-		this.h = h;
-	}
-	public double getRelHeight(){
-		return h;
-	}
-	
-	public double getRelX() {
-		return x;
-	}
-	public void setRelX(double x) {
-		this.x = x;
-	}
-	
-	public double getRelY() {
-		return y;
-	}
-	public void setRelY(double y) {
-		this.y = y;
-	}
-	
 	public void paintComponent(Graphics g){
 		Graphics2D g2D = (Graphics2D) g;		
 		g2D.drawImage(bimage, parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
