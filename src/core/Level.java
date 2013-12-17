@@ -45,7 +45,7 @@ public class Level {
 		}catch(InputMismatchException e) {
 			System.err.println("Error with Rescource File!");
 		}catch(NoSuchElementException e) {
-			e.printStackTrace();
+			System.err.println("NoSuchElementException as expected in Scene:add, ignoring...");
 		}finally{
 			if(in != null)
 				in.close();
@@ -62,7 +62,7 @@ public class Level {
 							break;
 		case "hole"		:	scene.addActor(new Hole(scene, x, y));
 							break;
-		default			:	System.out.println("Error: Not defined type of Obstacle");
+		default			:	System.out.println("Error: Not defined type of Obstacle: "+type);
 							break;
 		}
 		

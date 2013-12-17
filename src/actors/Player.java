@@ -135,7 +135,7 @@ public class Player extends Actor {
 		if(parent.getSpaceState() && y > maxHeight ){
 			double meh = (y - initY) <= 0 ? (y - initY) : -0.5; // surfjump fix
 			force += weight * (meh/(maxHeight - initY));
-			System.out.println(weight * ((y - initY)/(maxHeight - initY)));
+			//System.out.println(weight * ((y - initY)/(maxHeight - initY)));
 		}
 		else{
 			force += weight;

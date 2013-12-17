@@ -1,5 +1,6 @@
 package core;
 
+import foreground.Foreground;
 import global.GlobalSettings;
 
 import java.awt.Color;
@@ -9,7 +10,6 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -28,9 +28,10 @@ public class Scene extends JPanel {
 
 	public GlobalSettings gs;
 	
-	private double ytiles = 1.1;
+	private double ytiles = 1.3;
 	public HashSet<Actor> childs;
 	private Background bg;
+	private Foreground fg;
 	private Actor player;
 	
 	// current scroll position
@@ -62,10 +63,15 @@ public class Scene extends JPanel {
 	private boolean isSpacePressed = false;
 	
 	public Scene(GlobalSettings gs) {
-		System.err.println("DEBUG : SCENE ");
+		//System.err.println("DEBUG : SCENE ");
 		this.gs = gs;
 		
 		childs = new HashSet<Actor>();
+		
+		//fix aspect ratio
+		ytiles = new Double(gs.getResolution()[0]) / new Double(gs.getResolution()[1]);
+		System.out.println("Using resolution "+gs.getResolution()[0] +"x"+ gs.getResolution()[1]);
+		System.out.println("Set aspect ratio to "+ytiles);
 		
 		this.setFocusable(true);
 		this.addKeyListener(new KeyListener() {
@@ -77,7 +83,7 @@ public class Scene extends JPanel {
 				//TODO: DELETE DEBUG KEY
 				if(e.getKeyCode() == KeyEvent.VK_P){
 					paused = true;
-					System.out.println(((Player)player).getTouchedObstacle()!=null);
+					//System.out.println(((Player)player).getTouchedObstacle()!=null);
 				}
 				else{
 					isSpacePressed = true;
@@ -115,6 +121,8 @@ public class Scene extends JPanel {
 		bg.addBackgroundActor(new BackgroundActor(this,1.9,1, BackgroundActor.Type.TREE), 3);
 		bg.addBackgroundActor(new BackgroundActor(this,1.3,1, BackgroundActor.Type.TREE), 4);
 		bg.addBackgroundActor(new BackgroundActor(this,2.0,1, BackgroundActor.Type.TREE), 4);
+		
+		fg = new Foreground(this);
 		
 		// -- test --
 		/*addActor(new Actor(this, 1.0, 0.8));
@@ -159,7 +167,7 @@ public class Scene extends JPanel {
 	 * The real position calculated from grid position y.
 	 */
 	public int getCoordY(double y) {
-		return (int) ((this.getHeight() / ytiles) * y + 0.5);
+		return (int) ((this.getHeight() / 1) * y + 0.5);
 	}
 	
 	/**
@@ -182,7 +190,7 @@ public class Scene extends JPanel {
 	 * The real height calculated from grid width w.
 	 */
 	public int getHeight(double h) {
-		return (int) ((this.getHeight() / ytiles) * h + 0.5);
+		return (int) ((this.getHeight() / 1) * h + 0.5);
 	}
 	
 	/**
@@ -307,7 +315,10 @@ public class Scene extends JPanel {
 			
 				// update the actors (movement)
 				bg.update();
+				fg.update();
 				player.update();
+				
+				
 				for(Actor c: childs) {
 					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 						c.update();
@@ -341,6 +352,7 @@ public class Scene extends JPanel {
 		
 		
 		bg.paintComponent(g);
+		fg.paintComponent(g);
 		player.paintComponent(g);
 		for(Actor c: childs) {
 			if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
