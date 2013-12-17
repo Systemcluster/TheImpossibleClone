@@ -3,9 +3,8 @@ package actors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.util.ArrayList;
 
 import sound.AudioClip;
 import sound.ResourceLoader;
@@ -31,6 +30,7 @@ public class Player extends Actor {
 	private String pathJumpSound = "res/Jump.wav";
 	private AudioClip asJump;
 	private AudioClip asDie;
+	private ArrayList<BufferedImage> runnimation = new ArrayList<>();
 	
 	public boolean dead = false;
 	
@@ -49,10 +49,13 @@ public class Player extends Actor {
 		asJump.open();
 		asDie = (AudioClip) ResourceLoader.load(pathDieSound);
 		asDie.open();
-		//x = 0.035;
-		//y = 0.035;
 		w = 0.035;
 		h = 0.035;
+		
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_01.png"));
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_02.png"));
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_03.png"));
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_04.png"));
 		
 	}
 	
@@ -123,7 +126,7 @@ public class Player extends Actor {
 		trans.translate(x, y);
 		trans.rotate(0.02, x, y);
 		trans.translate(ax, ay);*/
-		rotate += 2;
+		rotate += 0.2;
 	}
 
 	@Override
@@ -183,7 +186,7 @@ public class Player extends Actor {
 		//trans.scale(3, 3);
 		
 		//g2D.drawImage(bimage, trans, null);
-		g2D.drawImage(bimage, parent.getCoordX(x-0.005), parent.getCoordY(y-0.005), parent.getWidth(w+0.01), parent.getHeight(h+0.01), null);
+		g2D.drawImage(runnimation.get((int) (rotate%4)), parent.getCoordX(x-0.009), parent.getCoordY(y-0.005), parent.getWidth(w+0.02), parent.getHeight(h+0.01), null);
 
 	}
 	
