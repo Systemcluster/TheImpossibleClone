@@ -107,14 +107,14 @@ public class Scene extends JPanel {
 		lloader.start();
 		
 		bg = new Background(this);
-		bg.addBackgroundActor(new BackgroundActor(this,1.0,1), 1);
-		bg.addBackgroundActor(new BackgroundActor(this,1.7,1), 1);
-		bg.addBackgroundActor(new BackgroundActor(this,1.1,1), 2);
-		bg.addBackgroundActor(new BackgroundActor(this,1.8,1), 2);
-		bg.addBackgroundActor(new BackgroundActor(this,1.2,1), 3);
-		bg.addBackgroundActor(new BackgroundActor(this,1.9,1), 3);
-		bg.addBackgroundActor(new BackgroundActor(this,1.3,1), 4);
-		bg.addBackgroundActor(new BackgroundActor(this,2.0,1), 4);
+		bg.addBackgroundActor(new BackgroundActor(this,1.0,1, BackgroundActor.Type.TREE), 1);
+		bg.addBackgroundActor(new BackgroundActor(this,1.7,1, BackgroundActor.Type.TREE), 1);
+		bg.addBackgroundActor(new BackgroundActor(this,1.1,1, BackgroundActor.Type.TREE), 2);
+		bg.addBackgroundActor(new BackgroundActor(this,1.8,1, BackgroundActor.Type.TREE), 2);
+		bg.addBackgroundActor(new BackgroundActor(this,1.2,1, BackgroundActor.Type.TREE), 3);
+		bg.addBackgroundActor(new BackgroundActor(this,1.9,1, BackgroundActor.Type.TREE), 3);
+		bg.addBackgroundActor(new BackgroundActor(this,1.3,1, BackgroundActor.Type.TREE), 4);
+		bg.addBackgroundActor(new BackgroundActor(this,2.0,1, BackgroundActor.Type.TREE), 4);
 		
 		// -- test --
 		/*addActor(new Actor(this, 1.0, 0.8));
