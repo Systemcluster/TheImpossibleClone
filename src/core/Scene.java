@@ -26,7 +26,7 @@ import background.BackgroundActor;
  */
 public class Scene extends JPanel {
 
-	public GlobalSettings gs;
+	public GlobalSettings globalSettings;
 	
 	private double ytiles = 1.3;
 	public HashSet<Actor> childs;
@@ -62,15 +62,15 @@ public class Scene extends JPanel {
 
 	private boolean isSpacePressed = false;
 	
-	public Scene(GlobalSettings gs) {
+	public Scene(GlobalSettings globalSettings) {
 		//System.err.println("DEBUG : SCENE ");
-		this.gs = gs;
+		this.globalSettings = globalSettings;
 		
 		childs = new HashSet<Actor>();
 		
 		//fix aspect ratio
-		ytiles = new Double(gs.getResolution()[0]) / new Double(gs.getResolution()[1]);
-		System.out.println("Using resolution "+gs.getResolution()[0] +"x"+ gs.getResolution()[1]);
+		ytiles = new Double(globalSettings.getResolution()[0]) / new Double(globalSettings.getResolution()[1]);
+		System.out.println("Using resolution "+globalSettings.getResolution()[0] +"x"+ globalSettings.getResolution()[1]);
 		System.out.println("Set aspect ratio to "+ytiles);
 		
 		this.setFocusable(true);
@@ -191,6 +191,15 @@ public class Scene extends JPanel {
 	 */
 	public int getHeight(double h) {
 		return (int) ((this.getHeight() / 1) * h + 0.5);
+	}
+	
+	/**
+	 * Returns the width of one screen.
+	 * @return
+	 * The width of one screen.
+	 */
+	public double getXWidth() {
+		return ytiles;
 	}
 	
 	/**
@@ -315,8 +324,8 @@ public class Scene extends JPanel {
 			
 				// update the actors (movement)
 				bg.update();
-				fg.update();
 				player.update();
+				fg.update();
 				
 				
 				for(Actor c: childs) {
@@ -352,12 +361,12 @@ public class Scene extends JPanel {
 		
 		
 		bg.paintComponent(g);
-		fg.paintComponent(g);
 		player.paintComponent(g);
 		for(Actor c: childs) {
 			if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
 				c.paintComponent(g);
 		}
+		fg.paintComponent(g);
 		
 		((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85), getCoordY(0.9));
 		

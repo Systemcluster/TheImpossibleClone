@@ -89,7 +89,6 @@ public class Player extends Actor {
 		return null;
 	}
 
-	// TODO: fix flying bug
 	public boolean addForce(double force, double maxHeight) {
 		//SURFJUMPFIX
 		this.w += 0.05;
@@ -143,7 +142,8 @@ public class Player extends Actor {
 		
 		//-- SURF --
 		try {
-			if(getTouchedObstacle()!=null && force > 0 &&getTouchedObstacle().isGround){
+			if(getTouchedObstacle()!=null && force > 0 && getTouchedObstacle().isGround){
+				System.out.println(force);
 				if(!this.intersects(getTouchedObstacle()))
 					//0.0002
 					y = getTouchedObstacle().y-h-0.0001;
