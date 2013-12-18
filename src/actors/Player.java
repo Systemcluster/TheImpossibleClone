@@ -14,9 +14,7 @@ import core.Scene;
 @SuppressWarnings("serial")
 public class Player extends Actor {
 	
-	//TODO : CHANGE VALUES
 	private double maxHeight = 0;
-	//-- TODO
 	
 	private double initY = 0;
 	
@@ -68,7 +66,7 @@ public class Player extends Actor {
 	
 	public boolean isGrounded() {
 		return y >= parent.getGround();
-		// TODO: add check if player is on an obstacle
+		// TODO: add check if player is on an obstacle? (may be redundant)
 	}
 	
 	/**
@@ -124,7 +122,6 @@ public class Player extends Actor {
 		trans.translate(x, y);
 		trans.rotate(0.02, x, y);
 		trans.translate(ax, ay);*/
-		rotate += rotationspeed;
 		
 	}
 	
@@ -169,6 +166,7 @@ public class Player extends Actor {
 		}
 		//-- /GROUND --
 		//--/JUMP--
+		rotate += rotationspeed;
 	}
 
 	@Override

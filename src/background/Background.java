@@ -41,9 +41,9 @@ public class Background extends JComponent{
 	public void addBackgroundActor(BackgroundActor ba, int layer){
 		
 		//Resize and move the BackgroundActor according to its layer
-		ba.setRelWidth(0.1 * (lSize - (layer)));
-		ba.setRelHeight(0.12 * (lSize - (layer)));
-		ba.setRelY(p.getGround() + 0.1 - ba.getRelHeight() - (lYOffset * layer));
+		ba.w = (0.1 * (lSize - (layer)));
+		ba.h = (0.12 * (lSize - (layer)));
+		ba.y = (p.getGround() + 0.1 - ba.h - (lYOffset * layer));
 		ba.setSpeed(ba.getSpeed() + (lSpeedOffset * (layer)));
 		//--
 		
@@ -60,8 +60,8 @@ public class Background extends JComponent{
 		iterate(new Callable(){
 			public void call(BackgroundActor b){
 				b.update();
-				if(b.getRelX() + b.getRelWidth() < p.getPosition()){
-					b.setRelX(p.getPosition() + p.getXWidth());
+				if(b.x + b.w < p.getPosition()){
+					b.x = (p.getPosition() + p.getXWidth());
 				}
 			}
 		});

@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import core.StateManager;
 
+@SuppressWarnings("serial")
 public class Main extends JFrame {
 	
 	public Main(GlobalSettings gs, final MainMenuInterface mmi) {
@@ -48,7 +49,6 @@ public class Main extends JFrame {
 
 			@Override
 			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});

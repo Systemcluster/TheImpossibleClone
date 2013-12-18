@@ -2,8 +2,11 @@ package actors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import core.Actor;
 import core.Scene;
+
+@SuppressWarnings("serial")
 public class Hole extends Actor{
 	public Hole(Scene parent, double x, double y) {
 		super(parent,x,y);

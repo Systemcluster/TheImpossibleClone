@@ -29,7 +29,6 @@ public class ImpossibleGame implements CollectionGame{
 
 	@Override
 	public BufferedImage[] getGamePics() {
-		// TODO Auto-generated method stub
 		try{
 			return new BufferedImage[]{
 					(BufferedImage)ResourceLoader.load("res/screenshot.jpg")

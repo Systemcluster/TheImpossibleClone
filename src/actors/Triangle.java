@@ -3,12 +3,16 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import sound.ResourceLoader;
 import core.Actor;
 import core.Scene;
+
+@SuppressWarnings("serial")
 public class Triangle extends Actor{
+	
+	static BufferedImage bimage = (BufferedImage) ResourceLoader.load("res/bush.png");
+	
 	public Triangle(Scene parent, double x, double y) {
 		super(parent,x,y-0.015);
 		w = 0.06;
@@ -45,10 +49,8 @@ public class Triangle extends Actor{
 		else {
 			g2D.setColor(Color.green);
 			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-			g2D.drawImage((BufferedImage) ResourceLoader.load("res/bush.png"),parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
+			g2D.drawImage(bimage, parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
 		}
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
 	}
-	
-	//TODO: collision
 }

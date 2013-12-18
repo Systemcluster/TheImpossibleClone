@@ -32,7 +32,9 @@ public class StateManager extends JPanel {
 	 * The state to be active.
 	 */
 	public void pushState(State state) {
-		
+		parent.remove(states.get(0));
+		states.add(0, state);
+		parent.add(state);
 	}
 	/**
 	 * Replace the current state.
@@ -40,7 +42,10 @@ public class StateManager extends JPanel {
 	 * The state to be active.
 	 */
 	public void replaceState(State state) {
-		
+		parent.remove(states.get(0));
+		states.remove(0);
+		states.add(0, state);
+		parent.add(state);
 	}
 	/**
 	 * Replace all states.
@@ -48,7 +53,11 @@ public class StateManager extends JPanel {
 	 * The state to be active.
 	 */
 	public void setState(State state) {
-		
+		for(State s: states) {
+			parent.remove(s);
+		}
+		parent.add(state);
+		states.add(state);
 	}
 	
 	@Override

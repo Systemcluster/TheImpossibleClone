@@ -48,7 +48,7 @@ public class Scene extends State {
 	// 0.0025
 	private double xscrollinc = 0.0000;
 	// steps to perform scrolling in (for collision)
-	private double xscrollsteps = 0.005;
+	private double xscrollsteps = 0.002;
 	// value that holds current scroll speed (for stepwise movement)
 	private double xscrolltmp = 0;
 	
@@ -69,6 +69,11 @@ public class Scene extends State {
 
 	private boolean isSpacePressed = false;
 	
+	
+	private double update_sec = 0;
+	private int frames = 0;
+	private double five_sec = 0;
+	private double diff = 0;
 
 	
 	public HashSet<Actor> childs;
@@ -98,7 +103,6 @@ public class Scene extends State {
 			}
 			@Override
 			public void keyPressed(KeyEvent e) {
-				//TODO: DELETE DEBUG KEY
 				if(e.getKeyCode() == KeyEvent.VK_P) {
 					if(!stopped)
 						stopped = true;
@@ -112,8 +116,7 @@ public class Scene extends State {
 				}
 				else{
 					isSpacePressed = true;
-					if(paused) {
-						//paused = false;
+					if(paused||stopped) {
 					}
 					else {
 						((Player)player).jump();
@@ -250,20 +253,16 @@ public class Scene extends State {
 	 * Does not reset the player.
 	 */
 	public void resetPlayer() {
-		//xposition = 0.0;
 		xscrollspeed += xscrollinc;
-		//player.x = 0.1;
 		round += 1;
 		bg.reset();
-		
-		// TODO: fix player position reset bug
 	}
 	
 	public boolean getPaused() {
 		return paused;
 	}
 	
-	//TODO: explanation?
+	//TODO: add explanation?
 	public void generateObstacles(){
 		boolean level_gen = false;
 		
@@ -335,6 +334,12 @@ public class Scene extends State {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
 		
+		
+		//--clear bg--
+		g.setColor(Color.white);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		//--/clear bg--
+		
 		//--update--
 		if(!paused && !stopped) {
 			
@@ -347,31 +352,31 @@ public class Scene extends State {
 		
 			// smooth fast movement so intersections aren't skipped
 			// (notice this might cause lag at high movement speed)
+			if(!classic_mode) bg.update();
 			for(xscrolltmp = xscrollspeed; xscrolltmp > 0.000001 && !paused; xscrolltmp -= xscrollsteps) {
 				xposition += getScrollSpeed();
 			
 				// update the actors (movement)
-				if(!classic_mode) bg.update();
-				player.update();
-				if(!classic_mode) fg.update();
-				
+				player.update();			
 				
 				for(Actor c: childs) {
-					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + getXWidth()) // only update near actors
+					if(c.x > xposition - 1 && c.x < xposition + getXWidth()) { // only update near actors
 						c.update();
-					
-						
+					}
 				}
 			}
 			xscrolltmp = 0;
+			if(!classic_mode) fg.update();
 			
 			// fixed update
 			{
 				// update the actors (movement)
 				player.fixedUpdate();
 				for(Actor c: childs) {
-					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + getXWidth()) // only update near actors
+					if(c.x > xposition - 1 && c.x < xposition + getXWidth()) { // only update near actors
 						c.fixedUpdate();
+					}
+					
 				}
 			}
 		}
@@ -384,12 +389,11 @@ public class Scene extends State {
 		//--paint--
 		{
 			{
-				g.setColor(Color.white);
-				g.fillRect(0, 0, getWidth(), getHeight());
+				
 				g.setColor(Color.red);
 				((Graphics2D)g).drawString("Round: "+round, 10, 20);
-				((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
-				((Graphics2D)g).drawString("Score: "+new Double(score) / scoredivisor, 10, 60);
+				((Graphics2D)g).drawString("Speed:  "+xscrollspeed, 10, 40);
+				((Graphics2D)g).drawString("Score:   "+new Double(score) / scoredivisor, 10, 60);
 			}
 			
 			if(!classic_mode) bg.paintComponent(g); // paint background
@@ -401,8 +405,10 @@ public class Scene extends State {
 					if(c.x + c.w < xposition) {
 						removees.add(c);
 					}
-					else if(c.getRelX() > xposition - getXWidth() && c.getRelX() < xposition + getXWidth() + c.w) // only paint near actors
+					else if(c.x > xposition - getXWidth() && c.x < xposition + getXWidth() + c.w) // only paint near actors
 						c.paintComponent(g); // paint level
+					
+					//TODO: FIX JITTER!!!
 				}
 				for(Actor rem: removees) {
 					childs.remove(rem); // remove actors that are out of view (<|)
@@ -418,6 +424,18 @@ public class Scene extends State {
 				((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.45*getXWidth()), getCoordY(0.48));
 			}
 			
+			
+			double ct = System.currentTimeMillis();
+			diff += (ct - update_sec);
+			update_sec = ct;
+			++frames;
+			if(frames == 5) {
+				five_sec = diff / 5;
+				diff = 0;
+				frames = 0;
+			}
+			g.setColor(Color.red);
+			((Graphics2D)g).drawString("FPS:      "+(double)((int)((1000/five_sec)*100))/100, 10, 80);
 			
 		}
 		

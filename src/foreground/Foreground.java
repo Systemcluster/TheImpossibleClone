@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 
 import core.Scene;
 
+@SuppressWarnings("serial")
 public class Foreground extends JComponent {
 	
 	private double anti_frequency = 0.5;

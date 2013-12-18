@@ -94,32 +94,4 @@ public class Actor extends JComponent {
 		
 		
 	}
-	
-	public void setRelWidth(double w){
-		this.w = w;
-	}
-	public double getRelWidth(){
-		return w;
-	}
-	
-	public void setRelHeight(double h){
-		this.h = h;
-	}
-	public double getRelHeight(){
-		return h;
-	}
-	
-	public double getRelX() {
-		return x;
-	}
-	public void setRelX(double x) {
-		this.x = x;
-	}
-	
-	public double getRelY() {
-		return y;
-	}
-	public void setRelY(double y) {
-		this.y = y;
-	}
 }
