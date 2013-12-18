@@ -30,7 +30,7 @@ public class AudioClip{
 			if(!clip.isOpen())
 				clip.open(ais);
 		}catch(Exception e){
-			System.err.println("AudioClip: Sound couldnt be opened");
+			System.err.println("AudioClip: Sound couldn't be opened");
 		}
 	}
 	public void start(){

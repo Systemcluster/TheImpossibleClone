@@ -24,28 +24,30 @@ public class Level {
 		
 		double maxwidth = 1;
 		Scanner in = null;
-		String tmp[];
+		String tmp[] = {};
 		 
 		try{
 			in = new Scanner(path);
 			in.useDelimiter(";");
-			
+			String iss = in.nextLine();
 			// read level speed
-			s.xscrollspeed = Double.parseDouble(in.nextLine());
+			s.xscrollspeed = Double.parseDouble(iss);
 			
 			while(in.hasNextLine()){
 				tmp = in.nextLine().split(";");
-				addObstacles(tmp[0],Double.parseDouble(tmp[1]) + s.getPosition() ,Double.parseDouble(tmp[2]));
-				if(Double.parseDouble(tmp[1]) + s.getPosition() + 0.3 > maxwidth) {
-					maxwidth += Double.parseDouble(tmp[1]) + 0.3;
+				addObstacles(tmp[0],Double.parseDouble(tmp[1]) + s.getPosition() + s.getXWidth() ,Double.parseDouble(tmp[2]));
+				if(Double.parseDouble(tmp[1]) + s.getPosition() > maxwidth) {
+					maxwidth = Double.parseDouble(tmp[1]);
 				}
 				scene.xsize = maxwidth;
+				System.out.println("obstcl at "+ Double.parseDouble(tmp[1]) +" "+ s.getPosition() +" "+ s.getXWidth()); 
 			}
+			scene.xsize += scene.getXWidth() + scene.getPosition();
 			
 		}catch(InputMismatchException e) {
 			System.err.println("Error with Rescource File!");
 		}catch(NoSuchElementException e) {
-			System.err.println("NoSuchElementException as expected in Scene:add, ignoring...");
+			e.printStackTrace();
 		}finally{
 			if(in != null)
 				in.close();

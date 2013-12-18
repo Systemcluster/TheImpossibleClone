@@ -61,7 +61,7 @@ public class Background extends JComponent{
 			public void call(BackgroundActor b){
 				b.update();
 				if(b.getRelX() + b.getRelWidth() < p.getPosition()){
-					b.setRelX(p.getPosition() + 1);
+					b.setRelX(p.getPosition() + p.getXWidth());
 				}
 			}
 		});

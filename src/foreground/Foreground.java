@@ -29,7 +29,7 @@ public class Foreground extends JComponent {
 				removees.add(child);
 			else child.update();
 		}
-		for(ForegroundActor rem: removees) {
+		if(removees.size() > 20) for(ForegroundActor rem: removees) {
 			childs.remove(rem);
 		}
 		removees.clear();

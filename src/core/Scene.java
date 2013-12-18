@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.PrintStream;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -18,26 +19,21 @@ import javax.swing.JPanel;
 
 import actors.Block;
 import actors.Player;
+import actors.Triangle;
 import background.Background;
 import background.BackgroundActor;
 
 /**
- * Scene class. Base class for Scenes to hold and display actors.
+ * Scene class. -/-Base class for Scenes to hold and display actors.-/-
+ * update 1: Class to represent the main panel.
  */
 public class Scene extends JPanel {
 
-	public GlobalSettings globalSettings;
-	
+	// screen aspect ratio (calculated by screen w/h) 
 	private double ytiles = 1.3;
-	public HashSet<Actor> childs;
-	private Background bg;
-	private Foreground fg;
-	private Actor player;
 	
 	// current scroll position
 	private double xposition = 0;
-	
-	private LevelLoader lloader = null;
 	
 	// initial scroll speed
 	//0.012
@@ -56,22 +52,38 @@ public class Scene extends JPanel {
 	private double ground = 0.8;
 	
 	private long score = 0;
+	private int scoredivisor = 10;
 	
+	// level nr.
 	private int round = 1;
+	// if game is paused (actually if player is dead)
 	private boolean paused = false;
+	// if the game is actually paused
+	private boolean stopped = false;
 
 	private boolean isSpacePressed = false;
 	
+
+	public GlobalSettings globalSettings;
+	public HashSet<Actor> childs;
+	private Background bg;
+	private Foreground fg;
+	private Actor player;
+	private LevelLoader lloader = null;
+	
+	
 	public Scene(GlobalSettings globalSettings) {
-		//System.err.println("DEBUG : SCENE ");
 		this.globalSettings = globalSettings;
 		
 		childs = new HashSet<Actor>();
 		
 		//fix aspect ratio
-		ytiles = new Double(globalSettings.getResolution()[0]) / new Double(globalSettings.getResolution()[1]);
+		ytiles = Math.round(
+				new Double(globalSettings.getResolution()[0]) / new Double(globalSettings.getResolution()[1]) * 100
+				) / 100.0;
 		System.out.println("Using resolution "+globalSettings.getResolution()[0] +"x"+ globalSettings.getResolution()[1]);
 		System.out.println("Set aspect ratio to "+ytiles);
+		
 		
 		this.setFocusable(true);
 		this.addKeyListener(new KeyListener() {
@@ -82,7 +94,9 @@ public class Scene extends JPanel {
 			public void keyPressed(KeyEvent e) {
 				//TODO: DELETE DEBUG KEY
 				if(e.getKeyCode() == KeyEvent.VK_P){
-					paused = true;
+					if(!stopped)
+					stopped = true;
+					else stopped = false;
 					//System.out.println(((Player)player).getTouchedObstacle()!=null);
 				}
 				else{
@@ -123,13 +137,6 @@ public class Scene extends JPanel {
 		bg.addBackgroundActor(new BackgroundActor(this,2.0,1, BackgroundActor.Type.TREE), 4);
 		
 		fg = new Foreground(this);
-		
-		// -- test --
-		/*addActor(new Actor(this, 1.0, 0.8));
-		addActor(new Actor(this, 2.0, 0.8));
-		addActor(new Actor(this, 1.24, 0.7));
-		addActor(new Actor(this, 1.9, 0.8));*/
-		// -- /test --
 	}
 	
 	/**
@@ -222,7 +229,6 @@ public class Scene extends JPanel {
 	 * The actor to be added to the scene.
 	 */
 	public void addActor(Actor a) {
-		//add(a);
 		childs.add(a);
 	}
 	
@@ -234,6 +240,10 @@ public class Scene extends JPanel {
 		return isSpacePressed;
 	}
 	
+	/**
+	 * Resets the background, changes xscrollspeed and increments round.
+	 * Does not reset the player.
+	 */
 	public void resetPlayer() {
 		//xposition = 0.0;
 		xscrollspeed += xscrollinc;
@@ -248,13 +258,14 @@ public class Scene extends JPanel {
 		return paused;
 	}
 	
+	// was tut dies
 	public void generateObstacles(){
 		int obstacleCount =  (int) ((int) Math.random() * ((xsize*5.0) - (xsize*4.0)) + (xsize*4.0));
-		boolean genFlag = false;	// check if a x-value has already been created
+/*		boolean genFlag = false;	// check if a x-value has already been created
 		double preX = 0.0;	
-		String obstacleName = "";
+		PrintStream levelGen = null;*/
 		Random r = new Random();
-		PrintStream levelGen = null;
+		String obstacleName;
 		/*try {
 			levelGen = new PrintStream(new File("res/randLevel.dat"));
 		} catch (FileNotFoundException e) {
@@ -289,14 +300,24 @@ public class Scene extends JPanel {
 						}
 					}	
 			}
-			double temp = Math.random()*2;
+			xValArr[j]+=getXWidth();
+			double temp = Math.random()*2+0.5;
 			int randObstacle = (int) temp;
 			switch(randObstacle){
-				case 0 : obstacleName = "block"; break;
-				case 1 : obstacleName = "triangle"; break;
+				case 0 : {
+					obstacleName = "block";
+					addActor(new Block(this, xValArr[j] + getPosition(),yValArr[j]));
+					
+				}
+				break;
+				case 1 : {
+					obstacleName = "triangle"; 
+					addActor(new Triangle(this, xValArr[j] + getPosition(),yValArr[j]));
+				}
+				break;
 			}
 			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
-			addActor(new Block(this, xValArr[j] + getPosition(),yValArr[j]));
+			
 		}
 	}
 
@@ -308,12 +329,11 @@ public class Scene extends JPanel {
 
 		
 		//--update--
-		
-		if(!paused) {
+		if(!paused && !stopped) {
 			
 			score += 1;
 			
-			if(xposition >= xsize) {
+			if(xposition + getXWidth() >= xsize) {
 				lloader.start();
 				resetPlayer();
 			}
@@ -345,34 +365,43 @@ public class Scene extends JPanel {
 				
 			}
 			xscrolltmp = 0;
-			
 		}
 		//--/update--
 		if(((Player)player).dead == true) {
 			paused = true;
 		}
 		//--paint--
-		g.setColor(Color.white);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.red);
-		((Graphics2D)g).drawString("Round: "+round, 10, 20);
-		((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
-		((Graphics2D)g).drawString("Score: "+new Double(score) / 10, 10, 60);
-		
-		
-		bg.paintComponent(g);
-		player.paintComponent(g);
-		for(Actor c: childs) {
-			if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
-				c.paintComponent(g);
-		}
-		fg.paintComponent(g);
-		
-		((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85), getCoordY(0.9));
-		
-		if(paused) {
-			g.setColor(Color.red);
-			((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.45), getCoordY(0.48));
+		{
+			{
+				g.setColor(Color.white);
+				g.fillRect(0, 0, getWidth(), getHeight());
+				g.setColor(Color.red);
+				((Graphics2D)g).drawString("Round: "+round, 10, 20);
+				((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
+				((Graphics2D)g).drawString("Score: "+new Double(score) / scoredivisor, 10, 60);
+			}
+			bg.paintComponent(g); // paint background
+			player.paintComponent(g); // paint player
+			{
+				HashSet<Actor> removees = new HashSet<>();
+				for(Actor c: childs) {
+					if(c.x + c.w < xposition)
+						removees.add(c);
+					else if(c.getRelX() > xposition - getXWidth() && c.getRelX() < xposition + getXWidth() + c.w)
+						c.paintComponent(g); // paint level
+				}
+				if(removees.size() > 20) for(Actor rem: removees) {
+					childs.remove(rem); // remove actors that are out of view (<|)
+				}
+				removees.clear();
+				
+				fg.paintComponent(g); // paint foreground
+			}
+			((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85*getXWidth()), getCoordY(0.9));
+			if(paused) {
+				g.setColor(Color.red);
+				((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.45*getXWidth()), getCoordY(0.48));
+			}
 		}
 		
 		//--/paint--

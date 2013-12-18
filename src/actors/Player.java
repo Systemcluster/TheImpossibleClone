@@ -25,6 +25,7 @@ public class Player extends Actor {
 	private double force = 0;
 	
 	private double rotate = 0;
+	private double rotationspeed = 0.18;
 	
 	private String pathDieSound = "res/sound.wav";
 	private String pathJumpSound = "res/Jump.wav";
@@ -126,7 +127,7 @@ public class Player extends Actor {
 		trans.translate(x, y);
 		trans.rotate(0.02, x, y);
 		trans.translate(ax, ay);*/
-		rotate += 0.2;
+		rotate += rotationspeed;
 	}
 
 	@Override
@@ -146,7 +147,7 @@ public class Player extends Actor {
 		//-- SURF --
 		try {
 			if(getTouchedObstacle()!=null && force > 0 && getTouchedObstacle().isGround){
-				System.out.println(force);
+				//System.out.println(force);
 				if(!this.intersects(getTouchedObstacle()))
 					//0.0002
 					y = getTouchedObstacle().y-h-0.0001;
@@ -177,15 +178,6 @@ public class Player extends Actor {
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
 		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
 		
-		//AffineTransform trans = new AffineTransform();
-		//trans.setTransform(new AffineTransform());
-		
-		//trans.translate(parent.getCoordX(x)+parent.getWidth(w/2), parent.getCoordY(y)+parent.getHeight(h/2));
-		//trans.rotate(Math.toRadians(rotate));
-		//trans.setToScale(2,2);
-		//trans.scale(3, 3);
-		
-		//g2D.drawImage(bimage, trans, null);
 		g2D.drawImage(runnimation.get((int) (rotate%4)), parent.getCoordX(x-0.009), parent.getCoordY(y-0.005), parent.getWidth(w+0.02), parent.getHeight(h+0.01), null);
 
 	}
