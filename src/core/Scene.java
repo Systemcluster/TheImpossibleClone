@@ -9,8 +9,10 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -27,6 +29,7 @@ import background.BackgroundActor;
  * Scene class. -/-Base class for Scenes to hold and display actors.-/-
  * update 1: Class to represent the main panel.
  */
+@SuppressWarnings("serial")
 public class Scene extends JPanel {
 
 	// screen aspect ratio (calculated by screen w/h) 
@@ -116,12 +119,6 @@ public class Scene extends JPanel {
 		});
 		
 		player = new Player(this);
-		
-		//###################################
-		//Hier wird das Level aus der Datei geladen oder generiert
-		//##################################
-		//Level one = new Level(this,"res/level01.dat");
-		//What NEXT: Sollte hier ein Levelloader implementiert werden der das nächste Level einleitet ?
 		
 		lloader = new LevelLoader(this, "res/levels/");
 		lloader.start();
@@ -258,20 +255,21 @@ public class Scene extends JPanel {
 		return paused;
 	}
 	
-	// was tut dies
+	//TODO: explanation?
 	public void generateObstacles(){
+		boolean level_gen = false;
+		
 		int obstacleCount =  (int) ((int) Math.random() * ((xsize*5.0) - (xsize*4.0)) + (xsize*4.0));
-/*		boolean genFlag = false;	// check if a x-value has already been created
-		double preX = 0.0;	
-		PrintStream levelGen = null;*/
 		Random r = new Random();
-		String obstacleName;
-		/*try {
-			levelGen = new PrintStream(new File("res/randLevel.dat"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Error while generating level");
-		}*/
+		String obstacleName = new String();
+		PrintStream levelGen = null;
+		if(level_gen) {
+			try {
+				levelGen = new PrintStream(new File("res/randLevel.dat"));
+			} catch (FileNotFoundException e) {
+				System.out.println("Error generating level");
+			}
+		}
 		double xValArr[] = new double[obstacleCount];
 		double yValArr[] = new double[obstacleCount];
 		//System.out.println("Length of x = "+xValArr.length+" "+"obstaclecount = "+obstacleCount);
@@ -316,7 +314,9 @@ public class Scene extends JPanel {
 				}
 				break;
 			}
-			//levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
+			if(level_gen) {
+				levelGen.println(obstacleName+";"+xValArr[j]+";"+yValArr[j]);
+			}
 			
 		}
 	}
@@ -339,6 +339,7 @@ public class Scene extends JPanel {
 			}
 		
 			// smooth fast movement so intersections aren't skipped
+			// (notice this might cause lag at high movement speed)
 			for(xscrolltmp = xscrollspeed; xscrolltmp > 0.000001 && !paused; xscrolltmp -= xscrollsteps) {
 				xposition += getScrollSpeed();
 			
@@ -349,27 +350,37 @@ public class Scene extends JPanel {
 				
 				
 				for(Actor c: childs) {
-					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
+					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + getXWidth()) // only update near actors
 						c.update();
 				}
 				// check if the player intersects with an obstacle
-				for(Actor c: childs) {
-					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + 2)
+				/*for(Actor c: childs) {
+					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + getXWidth()) // only check near actors
 						if(player.intersects(c)) {
-							//System.out.println(player+" intersects with "+c);
+							// collision
 							c.collide((Player) player);
-							//player.
-							
 						}
-				}
+				}*/
 				
 			}
 			xscrolltmp = 0;
+			
+			// fixed update
+			{
+				// update the actors (movement)
+				player.fixedUpdate();
+				for(Actor c: childs) {
+					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + getXWidth()) // only update near actors
+						c.fixedUpdate();
+				}
+			}
 		}
 		//--/update--
+		
 		if(((Player)player).dead == true) {
 			paused = true;
 		}
+		
 		//--paint--
 		{
 			{
@@ -383,14 +394,14 @@ public class Scene extends JPanel {
 			bg.paintComponent(g); // paint background
 			player.paintComponent(g); // paint player
 			{
-				HashSet<Actor> removees = new HashSet<>();
+				ArrayList<Actor> removees = new ArrayList<>();
 				for(Actor c: childs) {
 					if(c.x + c.w < xposition)
 						removees.add(c);
-					else if(c.getRelX() > xposition - getXWidth() && c.getRelX() < xposition + getXWidth() + c.w)
+					else if(c.getRelX() > xposition - getXWidth() && c.getRelX() < xposition + getXWidth() + c.w) // only paint near actors
 						c.paintComponent(g); // paint level
 				}
-				if(removees.size() > 20) for(Actor rem: removees) {
+				for(Actor rem: removees) {
 					childs.remove(rem); // remove actors that are out of view (<|)
 				}
 				removees.clear();

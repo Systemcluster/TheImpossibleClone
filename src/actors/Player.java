@@ -11,13 +11,13 @@ import sound.ResourceLoader;
 import core.Actor;
 import core.Scene;
 
+@SuppressWarnings("serial")
 public class Player extends Actor {
 	
 	//TODO : CHANGE VALUES
 	private double maxHeight = 0;
 	//-- TODO
 	
-	private double msAirStart = 0;
 	private double initY = 0;
 	
 	//w = 0.0018
@@ -35,16 +35,12 @@ public class Player extends Actor {
 	
 	public boolean dead = false;
 	
-	private BufferedImage bimage;
-	
 	// force to add to the player on button press (jump)
 	private double jumpforce = -0.017;
 	
 	public Player(Scene parent) {
 		super(parent);
 		x = 0.1;
-		
-		bimage = (BufferedImage) ResourceLoader.load("res/player.png");//ImageIO.read(ResourceLoader.class.getClassLoader().getResource("res/player.png"));
 		
 		asJump = (AudioClip) ResourceLoader.load(pathJumpSound);
 		asJump.open();
@@ -62,6 +58,7 @@ public class Player extends Actor {
 	
 	public void kill() {
 		dead = true;
+		System.out.println("Player died");
 		asDie.start();
 	}
 	
@@ -81,7 +78,7 @@ public class Player extends Actor {
 	 */
 	public Actor getTouchedObstacle() {
 		//0.00025
-		Actor left = new Actor(parent, x, y + force + 0.00025);
+		Actor left = new Actor(parent, x, y + force);// + 0.00025);
 		for (Actor child:parent.getActors()){
 			if(left.intersects(child)){
 				child.surf(this);
@@ -106,7 +103,7 @@ public class Player extends Actor {
 			
 			this.force = force;
 			this.maxHeight = y - maxHeight;
-			this.msAirStart = System.currentTimeMillis();
+			System.currentTimeMillis();
 			this.initY = y;
 			return true;
 		}
@@ -128,13 +125,13 @@ public class Player extends Actor {
 		trans.rotate(0.02, x, y);
 		trans.translate(ax, ay);*/
 		rotate += rotationspeed;
+		
 	}
-
-	@Override
-	public void paintComponent(Graphics g ) {
-
-		//--JUMP--
 	
+	@Override
+	public void fixedUpdate() {
+		//--JUMP--
+		
 		if(parent.getSpaceState() && y > maxHeight ){
 			double meh = (y - initY) <= 0 ? (y - initY) : -0.5; // surfjump fix
 			force += weight * (meh/(maxHeight - initY));
@@ -146,16 +143,18 @@ public class Player extends Actor {
 		
 		//-- SURF --
 		try {
-			if(getTouchedObstacle()!=null && force > 0 && getTouchedObstacle().isGround){
-				//System.out.println(force);
-				if(!this.intersects(getTouchedObstacle()))
-					//0.0002
-					y = getTouchedObstacle().y-h-0.0001;
+			Actor touch = getTouchedObstacle();
+			if(touch!=null && force > 0 && touch.isGround
+					){
+				if(!this.intersects(touch))
+					y = getTouchedObstacle().y-h-0.0001; //0.0002
 				else {
-					// auskommentieren?
-					//force = -1;
+					touch.collide(this);
 				}
 				force = 0;
+			}
+			else if(touch!=null&&touch.intersects(this)) {
+				touch.collide(this);
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -170,6 +169,11 @@ public class Player extends Actor {
 		}
 		//-- /GROUND --
 		//--/JUMP--
+	}
+
+	@Override
+	public void paintComponent(Graphics g ) {
+
 		
 		//RENDER
 		Graphics2D g2D = (Graphics2D) g;

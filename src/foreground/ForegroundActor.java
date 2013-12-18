@@ -8,17 +8,29 @@ import sound.ResourceLoader;
 import core.Actor;
 import core.Scene;
 
+
+@SuppressWarnings("serial")
 public class ForegroundActor extends Actor {
 	
 	private BufferedImage bimage;
 
-	private double speed = -0.0024;
+	private double speed;
 	
 	public ForegroundActor(Scene parent, double x, double y) {
+		this(parent, x, y, 0.30, 0.30, -0.0024, 0);
+	}
+	
+	public ForegroundActor(Scene parent, double x, double y, double w, double h, double speed, double magicNumber) {
 		super(parent, x, y);
-		w = 0.30;
-		h = 0.30;
-		bimage = (BufferedImage) ResourceLoader.load("res/fg/busch.png");
+		this.w = w;
+		this.h = h;
+		this.speed = speed;
+		if(magicNumber > 0.5) {
+			bimage = (BufferedImage) ResourceLoader.load("res/fg/busch.png");
+		}
+		else {
+			bimage = (BufferedImage) ResourceLoader.load("res/fg/treehugetrans.png");
+		}
 	}
 	
 	public void update(){

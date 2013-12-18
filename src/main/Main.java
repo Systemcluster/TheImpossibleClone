@@ -17,6 +17,7 @@ public class Main extends JFrame {
 		
 		setTitle("The Impossible Test");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
 		this.addWindowListener(new WindowListener(){
 
 			@Override
@@ -51,12 +52,11 @@ public class Main extends JFrame {
 				
 			}
 		});
+		this.pack();
 		setSize(gs.getResolution()[0], gs.getResolution()[1]);
-		
-		//add(new TestParent());
 		add(new Scene(gs));
-
-
+		
+		this.setLocationRelativeTo(null);
 		setVisible(true);
 		
 		final Main obj = this;
@@ -81,7 +81,4 @@ public class Main extends JFrame {
 	private void run() {
 		repaint();
 	}
-
-	
-
 }

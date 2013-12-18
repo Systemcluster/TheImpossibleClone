@@ -30,17 +30,25 @@ public class Level {
 			in = new Scanner(path);
 			in.useDelimiter(";");
 			String iss = in.nextLine();
-			// read level speed
+			/**
+			 * read level speed
+			 * (first line, double)
+			 */
 			s.xscrollspeed = Double.parseDouble(iss);
 			
 			while(in.hasNextLine()){
+				/**
+				 * Level format (after first line):
+				 * string    ;double    ;double
+				 * block_type;x_position;y_position
+				 */
 				tmp = in.nextLine().split(";");
 				addObstacles(tmp[0],Double.parseDouble(tmp[1]) + s.getPosition() + s.getXWidth() ,Double.parseDouble(tmp[2]));
 				if(Double.parseDouble(tmp[1]) + s.getPosition() > maxwidth) {
 					maxwidth = Double.parseDouble(tmp[1]);
 				}
 				scene.xsize = maxwidth;
-				System.out.println("obstcl at "+ Double.parseDouble(tmp[1]) +" "+ s.getPosition() +" "+ s.getXWidth()); 
+				//System.out.println("obstcl at "+ Double.parseDouble(tmp[1]) +" "+ s.getPosition() +" "+ s.getXWidth()); 
 			}
 			scene.xsize += scene.getXWidth() + scene.getPosition();
 			
@@ -72,7 +80,4 @@ public class Level {
 		
 	}
 	
-	public String getPath(){ //WHATEVER
-		System.out.println("DOES NOT WORK");
-		return "IS: NOT A PATH" + path.toString();  }
 }

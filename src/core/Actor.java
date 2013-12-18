@@ -57,6 +57,16 @@ public class Actor extends JComponent {
 	            (th < ty || th > ry));
 	}
 	
+	/**
+	 * Fixed update once per frame.
+	 */
+	public void fixedUpdate() {
+		
+	}
+	
+	/**
+	 * Multiple updates per frame dependent on speed.
+	 */
 	public void update() {
 		
 	}
