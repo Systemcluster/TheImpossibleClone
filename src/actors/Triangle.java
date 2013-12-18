@@ -15,6 +15,8 @@ public class Triangle extends Actor{
 		h = 0.06;
 	}
 	
+	// TODO: add triangular collision calculation
+	
 	@Override
 	public void collide(Player p) {
 		p.kill();
@@ -23,23 +25,29 @@ public class Triangle extends Actor{
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
-		int[] a = {
-				parent.getCoordX(x),
-				parent.getCoordX(x)+parent.getWidth(w),
-				parent.getCoordX(x)+parent.getWidth(w/2),
-				parent.getCoordX(x)
-				};
-		int[] b = {
-				parent.getCoordY(y)+parent.getHeight(h),
-				parent.getCoordY(y)+parent.getHeight(h),
-				parent.getCoordY(y),
-				parent.getCoordY(y)+parent.getHeight(h)
-				};
-		g2D.setColor(Color.green);
+		
+		if(parent.classic_mode) {
+			g2D.setColor(Color.green);
+			int[] a = {
+					parent.getCoordX(x),
+					parent.getCoordX(x)+parent.getWidth(w),
+					parent.getCoordX(x)+parent.getWidth(w/2),
+					parent.getCoordX(x)
+					};
+			int[] b = {
+					parent.getCoordY(y)+parent.getHeight(h),
+					parent.getCoordY(y)+parent.getHeight(h),
+					parent.getCoordY(y),
+					parent.getCoordY(y)+parent.getHeight(h)
+					};
+			g2D.drawPolygon(a,b,4);
+		}
+		else {
+			g2D.setColor(Color.green);
+			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+			g2D.drawImage((BufferedImage) ResourceLoader.load("res/bush.png"),parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
+		}
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		//g2D.drawPolygon(a,b,4);
-		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-		g2D.drawImage((BufferedImage) ResourceLoader.load("res/bush.png"),parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
 	}
 	
 	//TODO: collision

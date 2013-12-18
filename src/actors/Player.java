@@ -173,16 +173,20 @@ public class Player extends Actor {
 
 	@Override
 	public void paintComponent(Graphics g ) {
-
-		
-		//RENDER
 		Graphics2D g2D = (Graphics2D) g;
 		
-		g2D.setColor(Color.LIGHT_GRAY);
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-		
-		g2D.drawImage(runnimation.get((int) (rotate%4)), parent.getCoordX(x-0.009), parent.getCoordY(y-0.005), parent.getWidth(w+0.02), parent.getHeight(h+0.01), null);
+		if(parent.classic_mode) {
+			g2D.setColor(Color.WHITE);
+			g2D.fillRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+			g2D.setColor(Color.black);
+			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+		}
+		else {
+			g2D.setColor(Color.LIGHT_GRAY);
+			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+			g2D.drawImage(runnimation.get((int) (rotate%4)), parent.getCoordX(x-0.009), parent.getCoordY(y-0.005), parent.getWidth(w+0.02), parent.getHeight(h+0.01), null);
+		}
 
 	}
 	

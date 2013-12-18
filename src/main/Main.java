@@ -1,14 +1,14 @@
 package main;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
 import global.GlobalSettings;
 import global.MainMenuInterface;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import javax.swing.JFrame;
 
-import core.Scene;
+import core.StateManager;
 
 public class Main extends JFrame {
 	
@@ -54,7 +54,8 @@ public class Main extends JFrame {
 		});
 		this.pack();
 		setSize(gs.getResolution()[0], gs.getResolution()[1]);
-		add(new Scene(gs));
+		//add(new Scene(gs));
+		add(new StateManager(this, gs));
 		
 		this.setLocationRelativeTo(null);
 		setVisible(true);

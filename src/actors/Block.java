@@ -40,12 +40,17 @@ public class Block extends Actor{
 
 		Graphics2D g2D = (Graphics2D) g;
 		
-		g2D.setColor(Color.red);
-		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		//g2D.fillRect(parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y)+draw_offset_y, parent.getWidth(w), parent.getHeight(h));
-		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-		g2D.drawImage((BufferedImage) ResourceLoader.load("res/log.png"),parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y-overlap_height)+draw_offset_y, parent.getWidth(w), parent.getHeight(h+overlap_height), null);
+		if(parent.classic_mode) {
+			g2D.setColor(Color.red);
+			g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h));
+		}
+		else {
+			g2D.setColor(Color.red);
+			//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
+			//g2D.fillRect(parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y)+draw_offset_y, parent.getWidth(w), parent.getHeight(h));
+			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+			g2D.drawImage((BufferedImage) ResourceLoader.load("res/log.png"),parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y-overlap_height)+draw_offset_y, parent.getWidth(w), parent.getHeight(h+overlap_height), null);
+		}
 		
 		
 		draw_offset_x = 0;

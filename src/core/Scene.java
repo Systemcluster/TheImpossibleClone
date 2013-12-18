@@ -30,10 +30,13 @@ import background.BackgroundActor;
  * update 1: Class to represent the main panel.
  */
 @SuppressWarnings("serial")
-public class Scene extends JPanel {
+public class Scene extends State {
 
 	// screen aspect ratio (calculated by screen w/h) 
 	private double ytiles = 1.3;
+	
+	// classic mode
+	public boolean classic_mode = false;
 	
 	// current scroll position
 	private double xposition = 0;
@@ -67,7 +70,7 @@ public class Scene extends JPanel {
 	private boolean isSpacePressed = false;
 	
 
-	public GlobalSettings globalSettings;
+	
 	public HashSet<Actor> childs;
 	private Background bg;
 	private Foreground fg;
@@ -75,8 +78,8 @@ public class Scene extends JPanel {
 	private LevelLoader lloader = null;
 	
 	
-	public Scene(GlobalSettings globalSettings) {
-		this.globalSettings = globalSettings;
+	public Scene(JPanel parent, GlobalSettings settings) {
+		super(parent, settings);
 		
 		childs = new HashSet<Actor>();
 		
@@ -96,11 +99,16 @@ public class Scene extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				//TODO: DELETE DEBUG KEY
-				if(e.getKeyCode() == KeyEvent.VK_P){
+				if(e.getKeyCode() == KeyEvent.VK_P) {
 					if(!stopped)
-					stopped = true;
+						stopped = true;
 					else stopped = false;
 					//System.out.println(((Player)player).getTouchedObstacle()!=null);
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_C) {
+					if(!classic_mode)
+						classic_mode = true;
+					else classic_mode = false;
 				}
 				else{
 					isSpacePressed = true;
@@ -325,8 +333,7 @@ public class Scene extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
+		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
 		
 		//--update--
 		if(!paused && !stopped) {
@@ -344,24 +351,17 @@ public class Scene extends JPanel {
 				xposition += getScrollSpeed();
 			
 				// update the actors (movement)
-				bg.update();
+				if(!classic_mode) bg.update();
 				player.update();
-				fg.update();
+				if(!classic_mode) fg.update();
 				
 				
 				for(Actor c: childs) {
 					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + getXWidth()) // only update near actors
 						c.update();
+					
+						
 				}
-				// check if the player intersects with an obstacle
-				/*for(Actor c: childs) {
-					if(c.getRelX() > xposition - 1 && c.getRelX() < xposition + getXWidth()) // only check near actors
-						if(player.intersects(c)) {
-							// collision
-							c.collide((Player) player);
-						}
-				}*/
-				
 			}
 			xscrolltmp = 0;
 			
@@ -391,13 +391,16 @@ public class Scene extends JPanel {
 				((Graphics2D)g).drawString("Speed: "+xscrollspeed, 10, 40);
 				((Graphics2D)g).drawString("Score: "+new Double(score) / scoredivisor, 10, 60);
 			}
-			bg.paintComponent(g); // paint background
+			
+			if(!classic_mode) bg.paintComponent(g); // paint background
+			
 			player.paintComponent(g); // paint player
 			{
 				ArrayList<Actor> removees = new ArrayList<>();
 				for(Actor c: childs) {
-					if(c.x + c.w < xposition)
+					if(c.x + c.w < xposition) {
 						removees.add(c);
+					}
 					else if(c.getRelX() > xposition - getXWidth() && c.getRelX() < xposition + getXWidth() + c.w) // only paint near actors
 						c.paintComponent(g); // paint level
 				}
@@ -405,14 +408,17 @@ public class Scene extends JPanel {
 					childs.remove(rem); // remove actors that are out of view (<|)
 				}
 				removees.clear();
-				
-				fg.paintComponent(g); // paint foreground
 			}
+			
+			if(!classic_mode) fg.paintComponent(g); // paint foreground
+			
 			((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85*getXWidth()), getCoordY(0.9));
 			if(paused) {
 				g.setColor(Color.red);
 				((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.45*getXWidth()), getCoordY(0.48));
 			}
+			
+			
 		}
 		
 		//--/paint--
