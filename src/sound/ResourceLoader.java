@@ -1,6 +1,7 @@
 package sound;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,8 @@ public class ResourceLoader {
 			try{
 				if((obj = AudioIO.read(bis)) == null)
 					if((obj = ImageIO.read(bis)) == null)
-						obj = cl.getResourceAsStream(path);
+						if((obj = cl.getResourceAsStream(path)) == null)
+							throw new FileNotFoundException("Couldn't read file: "+path); // TODO: change if condition
 			}catch(IOException ioe){
 				obj = null;
 			}

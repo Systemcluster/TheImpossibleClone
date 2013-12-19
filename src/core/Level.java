@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import actors.Block;
 import actors.Hole;
+import actors.Star;
 import actors.Triangle;
 
 public class Level {
@@ -71,6 +72,8 @@ public class Level {
 		case "triangle"	:	scene.addActor(new Triangle(scene, x, y));
 							break;
 		case "hole"		:	scene.addActor(new Hole(scene, x, y));
+							break;
+		case "star"		:	scene.addActor(new Star(scene, x, y));
 							break;
 		default			:	System.out.println("Error: Not defined type of Obstacle: "+type);
 							break;

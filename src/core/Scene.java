@@ -147,6 +147,17 @@ public class Scene extends State {
 		fg = new Foreground(this);
 	}
 	
+	public void addScore(long add) {
+		score += add * scoredivisor;
+		//TODO: add sound effect
+	}
+	public double getScore() {
+		return new Double(score) / scoredivisor;
+	}
+	public void setScore(long score) {
+		score = score * scoredivisor;
+	}
+	
 	/**
 	 * Returns the grid position of the ground.
 	 * @return
@@ -262,7 +273,7 @@ public class Scene extends State {
 		return paused;
 	}
 	
-	//TODO: add explanation?
+	//TODO: fix (+ add explanation?)
 	public void generateObstacles(){
 		boolean level_gen = false;
 		
@@ -393,7 +404,7 @@ public class Scene extends State {
 				g.setColor(Color.red);
 				((Graphics2D)g).drawString("Round: "+round, 10, 20);
 				((Graphics2D)g).drawString("Speed:  "+xscrollspeed, 10, 40);
-				((Graphics2D)g).drawString("Score:   "+new Double(score) / scoredivisor, 10, 60);
+				((Graphics2D)g).drawString("Score:   "+getScore(), 10, 60);
 			}
 			
 			if(!classic_mode) bg.paintComponent(g); // paint background
@@ -407,7 +418,6 @@ public class Scene extends State {
 					}
 					else if(c.x > xposition - getXWidth() && c.x < xposition + getXWidth() + c.w) // only paint near actors
 						c.paintComponent(g); // paint level
-					
 					//TODO: FIX JITTER!!!
 				}
 				for(Actor rem: removees) {

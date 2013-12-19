@@ -9,33 +9,35 @@ public class LevelLoader {
 	private Scene scene;
 	private ArrayList<Level> levels;
 	private int maxLevel=0;
-	private int current=-1;
+	private int current=0;
 	public LevelLoader(Scene scene, String pathToLevelFolder){
 		this.scene=scene;
 		this.levels = new ArrayList<Level>();
 		InputStream t;
-		int i = 1;
-		for(i = 1;(t = (InputStream) ResourceLoader.load(pathToLevelFolder + "level0" + i + ".dat")) != null;i++){
-			System.out.println("level loaded: "+pathToLevelFolder + "level0" + i + ".dat");
+		while((t = (InputStream) ResourceLoader.load(pathToLevelFolder + "level0" + maxLevel + ".dat")) != null){
+			System.out.println("level loaded: "+pathToLevelFolder + "level0" + maxLevel + ".dat");
 			levels.add(new Level(scene, t,maxLevel));
+			++maxLevel;
 		}
-		maxLevel = i;
+		System.out.println("Level founud: "+maxLevel);
 	}
 	
 	public void start(){
-			System.out.println("Level "+current+" end");
 			//Load next Level
-			if(current<=maxLevel){
-				current++;
+			if(current<maxLevel){
+				System.out.println("Loading level "+current);
 				try {
 					load(levels.get(current));
 				} 
 				catch(IndexOutOfBoundsException e) {
-					System.err.println("IndexOutOfBoundsException as expected in LevelLoader:start, ignoring...");
+					System.err.println("Could not load level "+current+", error in LevelLoader:start");
+				}
+				finally {
+					current++;
 				}
 			}
 			else {
-				System.out.println("starting random generated level");
+				System.out.println("Starting random generated level");
 				scene.xsize = 200;
 				scene.generateObstacles();
 			}

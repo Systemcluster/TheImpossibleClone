@@ -1,11 +1,13 @@
 0.01
 block;1.0;0.8;
-block;2.0;0.8;
 block;1.24;0.7;
+star;1.24;0.64;
 triangle;1.9;0.8;
+block;2.0;0.8;
 block;2.2;0.7;
 hole;2.4;0.8;
 block;2.8;0.8;
+star;2.9;0.74;
 block;2.9;0.8;
 block;3.4;0.7;
 block;3.5;0.7;

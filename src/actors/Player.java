@@ -74,43 +74,48 @@ public class Player extends Actor {
 	 * @return
 	 * the touched obstacle
 	 */
-	public Actor getTouchedObstacle() {
+	public ArrayList<Actor> getTouchedObstacle() {
 		//0.00025
+		ArrayList<Actor> touched = new ArrayList<>();
 		Actor left = new Actor(parent, x, y + force);// + 0.00025);
 		for (Actor child:parent.getActors()){
-			if(left.intersects(child)){
-				child.surf(this);
-				return child;
-			}
-			else {
+			if(child.x > parent.getPosition() - 1 && child.x < parent.getPosition() + parent.getXWidth()) { //only test near actors
+				if(left.intersects(child)){
+					child.surf(this);
+					touched.add(child);
+				}
+				else {
+				}
 			}
 		}
-		return null;
+		return touched;
 	}
 
 	public boolean addForce(double force, double maxHeight) {
 		//SURFJUMPFIX
 		this.w += 0.05;
 		this.x -= 0.01;
-		if(isGrounded() || (getTouchedObstacle()!=null && getTouchedObstacle().isGround)) {
-			asJump.start();
-			
-			//SURFJUMPFIX
-			this.w -= 0.05;
-			this.x += 0.01;
-			
+		boolean dojump = false;
+		if(isGrounded()) dojump = true;
+		for(Actor a:getTouchedObstacle()) {
+			if((a.isGround && !a.intersects(this))) {
+				dojump = true;
+			}
+		}
+		
+		if(dojump) {
+			asJump.start();	
 			this.force = force;
 			this.maxHeight = y - maxHeight;
 			System.currentTimeMillis();
 			this.initY = y;
-			return true;
 		}
 		
 		//SURFJUMPFIX
 		this.w -= 0.05;
 		this.x += 0.01;
 		
-		return false;
+		return dojump;
 	}
 	
 	@Override
@@ -127,12 +132,15 @@ public class Player extends Actor {
 	
 	@Override
 	public void fixedUpdate() {
+		
+		//System.out.println(force);
 		//--JUMP--
 		
-		if(parent.getSpaceState() && y > maxHeight ){
+		if(parent.getSpaceState() && y > maxHeight && initY != 0 && maxHeight != 0){
 			double meh = (y - initY) <= 0 ? (y - initY) : -0.5; // surfjump fix
 			force += weight * (meh/(maxHeight - initY));
 			//System.out.println(weight * ((y - initY)/(maxHeight - initY)));
+			//System.out.println((maxHeight - initY));
 		}
 		else{
 			force += weight;
@@ -140,18 +148,16 @@ public class Player extends Actor {
 		
 		//-- SURF --
 		try {
-			Actor touch = getTouchedObstacle();
-			if(touch!=null && force > 0 && touch.isGround
-					){
-				if(!this.intersects(touch))
-					y = getTouchedObstacle().y-h-0.0001; //0.0002
-				else {
+			for(Actor touch:getTouchedObstacle()) {
+				if(touch!=null && force > 0 && touch.isGround){
+					if(!this.intersects(touch)) {
+						y = touch.y-h-0.0001; //0.0002
+						force = 0;
+					}
+				}
+				if(touch!=null&&touch.intersects(this)) {
 					touch.collide(this);
 				}
-				force = 0;
-			}
-			else if(touch!=null&&touch.intersects(this)) {
-				touch.collide(this);
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
