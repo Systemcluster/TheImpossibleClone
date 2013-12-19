@@ -25,7 +25,7 @@ public class ForegroundActor extends Actor {
 		this.w = w;
 		this.h = h;
 		this.speed = speed;
-		if(magicNumber > 0.8) {
+		if(magicNumber > 0.85) {
 			bimage = (BufferedImage) ResourceLoader.load("res/fg/busch.png");
 		}
 		else {

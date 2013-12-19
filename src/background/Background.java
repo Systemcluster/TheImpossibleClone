@@ -3,6 +3,7 @@ package background;
 import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
 import javax.swing.JComponent;
 
@@ -23,6 +24,8 @@ public class Background extends JComponent{
 	private double lSpeedOffset = 0.0005;
 	private double lSize = 6;
 	
+	Random rand = new Random();
+	
 	private interface Callable{
 		public void call(BackgroundActor b);
 	}
@@ -30,6 +33,18 @@ public class Background extends JComponent{
 	public Background(Scene p){
 		this.p = p;
 		mLayers = new HashMap<>();
+		
+		rand.setSeed(726341+System.currentTimeMillis()); // magic number
+		
+		Background bg = this;
+		bg.addBackgroundActor(new BackgroundActor(p,1.0+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 1);
+		bg.addBackgroundActor(new BackgroundActor(p,1.7+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 1);
+		bg.addBackgroundActor(new BackgroundActor(p,1.1+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 2);
+		bg.addBackgroundActor(new BackgroundActor(p,1.8+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 2);
+		bg.addBackgroundActor(new BackgroundActor(p,1.2+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 3);
+		bg.addBackgroundActor(new BackgroundActor(p,1.9+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 3);
+		bg.addBackgroundActor(new BackgroundActor(p,1.3+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 4);
+		bg.addBackgroundActor(new BackgroundActor(p,2.0+(rand.nextDouble()-0.5),1, BackgroundActor.Type.TREE), 4);
 	}
 	
 	/**
@@ -61,7 +76,7 @@ public class Background extends JComponent{
 			public void call(BackgroundActor b){
 				b.update();
 				if(b.x + b.w < p.getPosition()){
-					b.x = (p.getPosition() + p.getXWidth());
+					b.x = (p.getPosition() + p.getXWidth())+(rand.nextDouble()-0.5);
 				}
 			}
 		});
