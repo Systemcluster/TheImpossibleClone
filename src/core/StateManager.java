@@ -43,6 +43,7 @@ public class StateManager extends JPanel {
 	 */
 	public void replaceState(State state) {
 		parent.remove(states.get(0));
+		states.set(0, null);
 		states.remove(0);
 		states.add(0, state);
 		parent.add(state);

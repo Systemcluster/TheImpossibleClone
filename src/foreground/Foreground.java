@@ -54,7 +54,7 @@ public class Foreground extends JComponent {
 					0.65 + (double)key/10, 
 					0.40 * (1 + key /4),
 					0.40 * (1 + key /4),
-					- 0.0015 - (0.0009 * key),
+					- 0.0015 - (0.0010 * key),
 					rand.nextDouble()));
 				currpos.put(key, currpos.get(key) + anti_frequency + rand.nextDouble() / (key*2));
 			}

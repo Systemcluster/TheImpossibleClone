@@ -64,13 +64,22 @@ public class Main extends JFrame {
 		Thread t = new Thread() {
 			@Override 
 			public void run() {
-
+				double cur2, upd2 = System.currentTimeMillis()-16, dif2;
 				while(obj.isDisplayable()) {
 					try {
+						cur2 = System.currentTimeMillis();
+						dif2 = cur2 - upd2;
+						upd2 = cur2;
+						
 						obj.run();
-						Thread.sleep(16); // TODO: adaptive sleep time
+						
+						//System.out.println((long)(16-(diff)));
+						//long val = (long)dif2-16 > 0 ? (long)dif2-16 : 0;
+						//System.out.println(16-val);
+						//System.out.println(dif2);
+						
+						Thread.sleep((long)(16)); // 16 - val
 					} catch (InterruptedException e) {
-						//e.printStackTrace();
 						System.out.println("Hurr Durr MF");
 					}
 				}

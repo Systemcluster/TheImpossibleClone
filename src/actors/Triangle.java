@@ -26,6 +26,7 @@ public class Triangle extends Actor{
 		p.kill();
 	}
 	
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
@@ -44,7 +45,7 @@ public class Triangle extends Actor{
 					parent.getCoordY(y),
 					parent.getCoordY(y)+parent.getHeight(h)
 					};
-			g2D.drawPolygon(a,b,4);
+			g2D.fillPolygon(a,b,4);
 		}
 		else {
 			g2D.setColor(Color.green);

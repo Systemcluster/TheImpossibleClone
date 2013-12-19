@@ -44,7 +44,7 @@ public class Block extends Actor{
 		
 		if(parent.classic_mode) {
 			g2D.setColor(Color.red);
-			g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h));
+			g2D.fillRect(parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y)+draw_offset_y, parent.getWidth(w), parent.getHeight(h));
 		}
 		else {
 			g2D.setColor(Color.red);

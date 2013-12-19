@@ -134,7 +134,7 @@ public class Scene extends State {
 			}
 		});
 		
-		resetGame();
+		initGame();
 		
 		bg = new Background(this);
 		fg = new Foreground(this);
@@ -142,19 +142,26 @@ public class Scene extends State {
 		backgroundmusic.loop();
 	}
 	
-	
 	/**
-	 * Resets the game.
+	 * Initialize the game.
 	 */
-	public void resetGame() {
+	public void initGame() {
 		childs = new HashSet<Actor>();
 		setScore(0);
-		// TODO: Fix LevelLoader reset
 		lloader = new LevelLoader(this, "res/levels/");
 		lloader.start();
 		player = new Player(this);
 		xposition = 0;
 		paused = false;
+	}
+	/**
+	 * Reset the game.
+	 */
+	public void resetGame() {
+		// method 1?
+		//((StateManager)parent).replaceState(new Scene(parent, settings));
+		// method 2
+		initGame(); // TODO: Fix LevelLoader reset
 	}
 	
 	/**
@@ -340,7 +347,7 @@ public class Scene extends State {
 		
 		
 		//--clear bg--
-		g.setColor(Color.white);
+		g.setColor(new Color(180, 220, 250));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		//--/clear bg--
 		
@@ -412,7 +419,6 @@ public class Scene extends State {
 					}
 					else if(c.x > xposition - getXWidth() && c.x < xposition + getXWidth() + c.w) // only paint near actors
 						c.paintComponent(g); // paint level
-					//TODO: FIX JITTER!!!
 				}
 				for(Actor rem: removees) {
 					childs.remove(rem); // remove actors that are out of view (<|)

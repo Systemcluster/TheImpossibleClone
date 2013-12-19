@@ -15,7 +15,8 @@ import core.Scene;
 public class BackgroundActor extends Actor{
 
 	public static enum Type{
-		TREE ("res/bg/treehuge.png");
+		TREE ("res/bg/treehuge.png"),
+		DIRT ("res/bg/dirt.png");
 		
 		private final String path;
 		Type(String path){

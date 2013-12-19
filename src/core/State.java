@@ -10,18 +10,18 @@ public class State extends JPanel {
 	// screen aspect ratio (calculated by screen w/h) 
 	private double ytiles = 1.3;
 	
-	public GlobalSettings globalSettings;
+	public GlobalSettings settings;
 	public JPanel parent;
 	
-	public State(JPanel parent, GlobalSettings globalSettings) {
+	public State(JPanel parent, GlobalSettings settings) {
 		this.parent = parent;
-		this.globalSettings = globalSettings;
+		this.settings = settings;
 		
 		//fix aspect ratio
 		ytiles = Math.round(
-				new Double(globalSettings.getResolution()[0]) / new Double(globalSettings.getResolution()[1]) * 100
+				new Double(settings.getResolution()[0]) / new Double(settings.getResolution()[1]) * 100
 				) / 100.0;
-		System.out.println("Using resolution "+globalSettings.getResolution()[0] +"x"+ globalSettings.getResolution()[1]);
+		System.out.println("Using resolution "+settings.getResolution()[0] +"x"+ settings.getResolution()[1]);
 		System.out.println("Set aspect ratio to "+ytiles);
 		
 	}

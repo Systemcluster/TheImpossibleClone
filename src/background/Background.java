@@ -40,8 +40,25 @@ public class Background extends JComponent{
 		rand.setSeed(726341+System.currentTimeMillis()); // magic number
 		
 		for(int i = 0; i < layerUsed * objectsPerLayer; ++i) {
+			
+			
+			
+			BackgroundActor ba = new BackgroundActor(p, 0 + (int)(i % objectsPerLayer)*p.getXWidth(), 1, BackgroundActor.Type.DIRT);
+			ba.w = p.getXWidth();
+			ba.h = 1;
+			ba.y = (p.getGround() + - (lYOffset * (int)(i / objectsPerLayer)));
+			ba.setSpeed(ba.getSpeed() + (lSpeedOffset * ((int)(i / objectsPerLayer))));
+			if(!mLayers.containsKey(i))
+				mLayers.put(i,new HashSet<BackgroundActor>());
+			mLayers.get((int)(i / objectsPerLayer)).add(ba);
+			
+			
 			addBackgroundActor(new BackgroundActor(p, p.getXWidth() + (p.getXWidth() / objectsPerLayer) * (i % objectsPerLayer) + rand.nextDouble()/2,
 					1, BackgroundActor.Type.TREE), (int)(i / objectsPerLayer));
+			
+		}
+		for(int i = 0; i < layerUsed; ++i) {
+			
 		}
 	}
 	

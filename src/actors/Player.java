@@ -25,6 +25,8 @@ public class Player extends Actor {
 	private double rotate = 0;
 	private double rotationspeed = 0.18;
 	
+	private double defaultx = 0.1;
+	
 	private String pathDieSound = "res/sound.wav";
 	private String pathJumpSound = "res/Jump.wav";
 	private AudioClip asJump;
@@ -38,7 +40,7 @@ public class Player extends Actor {
 	
 	public Player(Scene parent) {
 		super(parent);
-		x = 0.1;
+		x = defaultx;
 		
 		asJump = (AudioClip) ResourceLoader.load(pathJumpSound);
 		asJump.open();
@@ -70,7 +72,7 @@ public class Player extends Actor {
 	}
 	
 	/**
-	 * Checks if player is beneath or over an obstacle
+	 * Checks if player is beneath or slightly over an obstacle.
 	 * @return
 	 * the touched obstacle
 	 */
@@ -81,7 +83,6 @@ public class Player extends Actor {
 		for (Actor child:parent.getActors()){
 			if(child.x > parent.getPosition() - 1 && child.x < parent.getPosition() + parent.getXWidth()) { //only test near actors
 				if(left.intersects(child)){
-					child.surf(this);
 					touched.add(child);
 				}
 				else {
@@ -121,7 +122,8 @@ public class Player extends Actor {
 	@Override
 	public void update() {
 	
-		x += parent.getScrollSpeed();
+		//x += parent.getScrollSpeed();
+		x = parent.getPosition() + defaultx;
 		/*double ax=trans.getTranslateX();
 		double ay=trans.getTranslateY();
 		trans.translate(x, y);
@@ -134,7 +136,6 @@ public class Player extends Actor {
 	public void fixedUpdate() {
 		
 		//System.out.println(force);
-		//--JUMP--
 		
 		if(parent.getSpaceState() && y > maxHeight && initY != 0 && maxHeight != 0){
 			double meh = (y - initY) <= 0 ? (y - initY) : -0.5; // surfjump fix
@@ -149,8 +150,9 @@ public class Player extends Actor {
 		//-- SURF --
 		try {
 			for(Actor touch:getTouchedObstacle()) {
-				if(touch!=null && force > 0 && touch.isGround){
-					if(!this.intersects(touch)) {
+				if(touch!=null && force > 0 && touch.isGround && !isGrounded()){
+					if(!touch.intersects(this)) {
+						touch.surf(this);
 						y = touch.y-h-0.0001; //0.0002
 						force = 0;
 					}
@@ -171,8 +173,9 @@ public class Player extends Actor {
 			force = 0;
 		}
 		//-- /GROUND --
-		//--/JUMP--
-		rotate += rotationspeed;
+		
+		if(isGrounded() || getTouchedObstacle().size() != 0)
+			rotate += rotationspeed;
 	}
 
 	@Override
