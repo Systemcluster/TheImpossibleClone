@@ -68,9 +68,9 @@ public class Main extends JFrame {
 				while(obj.isDisplayable()) {
 					try {
 						obj.run();
-						Thread.sleep(16);
+						Thread.sleep(16); // TODO: adaptive sleep time
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 						System.out.println("Hurr Durr MF");
 					}
 				}

@@ -50,4 +50,10 @@ public class AudioClip{
 	public void close(){
 		clip.close();
 	}
+	public boolean isRunning() {
+		return clip.isRunning();
+	}
+	public void stop() {
+		clip.stop();
+	}
 }
