@@ -84,11 +84,11 @@ public class Scene extends State {
 	private Actor player;
 	private LevelLoader lloader = null;
 	
+	private AudioClip backgroundmusic = (AudioClip) ResourceLoader.load("res/sound/background01.wav");
+	
 	
 	public Scene(JPanel parent, GlobalSettings settings) {
 		super(parent, settings);
-		
-		childs = new HashSet<Actor>();
 		
 		//fix aspect ratio
 		ytiles = Math.round(
@@ -105,17 +105,22 @@ public class Scene extends State {
 			}
 			@Override
 			public void keyPressed(KeyEvent e) {
+				// pause/unpause the game
 				if(e.getKeyCode() == KeyEvent.VK_P) {
 					if(!stopped)
 						stopped = true;
 					else stopped = false;
-					//System.out.println(((Player)player).getTouchedObstacle()!=null);
 				}
+				// toggle classic mode
 				else if(e.getKeyCode() == KeyEvent.VK_C) {
 					if(!classic_mode)
 						classic_mode = true;
 					else classic_mode = false;
 				}
+				else if(e.getKeyCode() == KeyEvent.VK_R) {
+					resetGame();
+				}
+				// jump
 				else{
 					isSpacePressed = true;
 					if(paused||stopped) {
@@ -131,10 +136,7 @@ public class Scene extends State {
 			}
 		});
 		
-		player = new Player(this);
-		
-		lloader = new LevelLoader(this, "res/levels/");
-		lloader.start();
+		resetGame();
 		
 		bg = new Background(this);
 		bg.addBackgroundActor(new BackgroundActor(this,1.0,1, BackgroundActor.Type.TREE), 1);
@@ -147,17 +149,49 @@ public class Scene extends State {
 		bg.addBackgroundActor(new BackgroundActor(this,2.0,1, BackgroundActor.Type.TREE), 4);
 		
 		fg = new Foreground(this);
+		
+		backgroundmusic.loop();
 	}
 	
+	
+	/**
+	 * Resets the game.
+	 */
+	public void resetGame() {
+		childs = new HashSet<Actor>();
+		setScore(0);
+		// TODO: Fix LevelLoader reset
+		lloader = new LevelLoader(this, "res/levels/");
+		lloader.start();
+		player = new Player(this);
+		xposition = 0;
+		paused = false;
+	}
+	
+	/**
+	 * Add to the score.
+	 * @param add
+	 * The value to be added to the score.
+	 */
 	public void addScore(long add) {
 		score += add * scoredivisor;
 		((AudioClip) ResourceLoader.load("res/coin.wav")).start();
 	}
+	/**
+	 * Returns the score.
+	 * @return
+	 * The current score.
+	 */
 	public double getScore() {
 		return new Double(score) / scoredivisor;
 	}
+	/**
+	 * Sets the score.
+	 * @param score
+	 * The current score.
+	 */
 	public void setScore(long score) {
-		score = score * scoredivisor;
+		this.score = score * scoredivisor;
 	}
 	
 	/**
@@ -253,10 +287,20 @@ public class Scene extends State {
 		childs.add(a);
 	}
 	
+	/**
+	 * Return all actors.
+	 * @return
+	 * All current actors.
+	 */
 	public HashSet<Actor> getActors(){
 		return childs;
 	}
 
+	/**
+	 * Returns if space (jump) is pressed.
+	 * @return
+	 * If space (jump) is pressed.
+	 */
 	public boolean getSpaceState(){
 		return isSpacePressed;
 	}
@@ -271,11 +315,16 @@ public class Scene extends State {
 		bg.reset();
 	}
 	
+	/**
+	 * Returns if game is paused/over.
+	 * @return
+	 * If game is paused/over.
+	 */
 	public boolean getPaused() {
 		return paused;
 	}
 	
-	//TODO: fix (+ add explanation?)
+	//TODO: Fix generator (+ add explanation?)
 	public void generateObstacles(){
 		boolean level_gen = false;
 		
@@ -358,6 +407,7 @@ public class Scene extends State {
 			
 			score += 1;
 			
+			// Load next level when scrolled past the current one.
 			if(xposition + getXWidth() >= xsize) {
 				lloader.start();
 				resetPlayer();

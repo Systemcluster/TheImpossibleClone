@@ -58,8 +58,9 @@ public class Level {
 		}catch(NoSuchElementException e) {
 			e.printStackTrace();
 		}finally{
-			if(in != null)
+			if(in != null) {
 				in.close();
+			}
 		}
 	}
 	

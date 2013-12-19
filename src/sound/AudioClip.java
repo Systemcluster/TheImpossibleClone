@@ -40,9 +40,11 @@ public class AudioClip{
 	}
 	
 	public void loop(){
+		open();
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 	public void loop(int count){
+		open();
 		clip.loop(count);
 	}
 	public void close(){
