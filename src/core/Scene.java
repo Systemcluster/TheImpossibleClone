@@ -19,6 +19,8 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
+import sound.AudioClip;
+import sound.ResourceLoader;
 import actors.Block;
 import actors.Player;
 import actors.Triangle;
@@ -149,7 +151,7 @@ public class Scene extends State {
 	
 	public void addScore(long add) {
 		score += add * scoredivisor;
-		//TODO: add sound effect
+		((AudioClip) ResourceLoader.load("res/coin.wav")).start();
 	}
 	public double getScore() {
 		return new Double(score) / scoredivisor;

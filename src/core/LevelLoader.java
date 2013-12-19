@@ -19,7 +19,7 @@ public class LevelLoader {
 			levels.add(new Level(scene, t,maxLevel));
 			++maxLevel;
 		}
-		System.out.println("Level founud: "+maxLevel);
+		System.out.println("Level found: "+maxLevel);
 	}
 	
 	public void start(){

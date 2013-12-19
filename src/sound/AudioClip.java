@@ -34,6 +34,7 @@ public class AudioClip{
 		}
 	}
 	public void start(){
+		open();
 		clip.setFramePosition(0);
 		clip.start();
 	}
