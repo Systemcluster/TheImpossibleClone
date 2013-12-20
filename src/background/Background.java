@@ -50,7 +50,7 @@ public class Background extends JComponent{
 			for(int j = 0; j <= floorscale; ++j ) {
 				BackgroundActor ba = new BackgroundActor(p, 
 						(p.getXWidth() / floorscale) * j, 
-						(p.getGround() - (lYOffset * (int)(i / objectsPerLayer)) +0.015), 
+						(p.getGround() - (lYOffset * (int)(i / objectsPerLayer)) +0.016), 
 						BackgroundActor.Type.DIRT);
 				ba.w = p.getXWidth() / floorscale + 0.01;
 				ba.h = 1.0/floorscale;
@@ -114,7 +114,7 @@ public class Background extends JComponent{
 	 * Calls paintComponent(Graphics g) on every BackgroundActor held by the Background 
 	 */
 	public void paintComponent(final Graphics g){
-		iterate2(new Callable(){
+		/*iterate2(new Callable(){
 			public void call(BackgroundActor b){
 				b.paintComponent(g);
 			}
@@ -123,7 +123,13 @@ public class Background extends JComponent{
 			public void call(BackgroundActor b){
 				b.paintComponent(g);
 			}
-		});
+		});*/
+		Callable cal = new Callable() {
+			public void call(BackgroundActor b) {
+				b.paintComponent(g);
+			}
+		};
+		iterateBoth(cal,cal);
 	}
 	
 	/**
@@ -159,5 +165,19 @@ public class Background extends JComponent{
 				}
 			}
 		} 
+	}
+	private void iterateBoth(Callable c1, Callable c2){
+		for(int i = mLayers.size() > mLayers2.size() ? mLayers.size() : mLayers2.size() ; i >= 0; i--){
+			if(mLayers2.containsKey(i)){
+				for(BackgroundActor b : mLayers2.get(i)){
+					c1.call(b);
+				}
+			}
+			if(mLayers.containsKey(i)){
+				for(BackgroundActor b : mLayers.get(i)){
+					c2.call(b);
+				}
+			}
+		}
 	}
 }

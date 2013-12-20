@@ -14,7 +14,6 @@ public class AlternateMain {
 			@Override
 			public void returnToMainMenu() {
 				// TODO Auto-generated method stub
-				
 			}
 		};
 		ImpossibleGame ig = new ImpossibleGame();
