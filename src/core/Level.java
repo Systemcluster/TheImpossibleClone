@@ -1,6 +1,7 @@
 package core;
 
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -17,25 +18,29 @@ public class Level {
 	
 	public Level(Scene s,InputStream pathToLevelFile, int nr) {
 		this.nr=nr;
-		scene=s;
+		this.scene=s;
 		path=pathToLevelFile;
+		
 	}
 	
-	public void add(Scene s) {
+	public String add() {
 		
 		double maxwidth = 1;
 		Scanner in = null;
+		String text = "";
 		String tmp[] = {};
 		 
 		try{
 			in = new Scanner(path);
+			in.reset();    
 			in.useDelimiter(";");
 			String iss = in.nextLine();
+			text += iss + "\n";
 			/**
 			 * read level speed
 			 * (first line, double)
 			 */
-			s.xscrollspeed = Double.parseDouble(iss);
+			scene.xscrollspeed = Double.parseDouble(iss);
 			
 			while(in.hasNextLine()){
 				/**
@@ -43,9 +48,11 @@ public class Level {
 				 * string    ;double    ;double
 				 * block_type;x_position;y_position
 				 */
-				tmp = in.nextLine().split(";");
-				addObstacles(tmp[0],Double.parseDouble(tmp[1]) + s.getPosition() + s.getXWidth() ,Double.parseDouble(tmp[2]));
-				if(Double.parseDouble(tmp[1]) + s.getPosition() > maxwidth) {
+				String nLine = in.nextLine();
+				text += nLine + "\n";    
+				tmp = nLine.split(";");
+				addObstacles(tmp[0],Double.parseDouble(tmp[1]) + scene.getPosition() + scene.getXWidth() ,Double.parseDouble(tmp[2]));
+				if(Double.parseDouble(tmp[1]) + scene.getPosition() > maxwidth) {
 					maxwidth = Double.parseDouble(tmp[1]);
 				}
 				scene.xsize = maxwidth;
@@ -56,16 +63,17 @@ public class Level {
 		}catch(InputMismatchException e) {
 			System.err.println("Error with Rescource File!");
 		}catch(NoSuchElementException e) {
-			e.printStackTrace();
+			System.err.println("LEVEL :" + nr + "-"+ e.getMessage());
 		}finally{
 			if(in != null) {
 				in.close();
 			}
 		}
+		return text;
 	}
 	
 	private void addObstacles(String type, double x, double y){
-		
+
 		switch(type){
 		
 		case "block"	:	scene.addActor(new Block(scene, x, y));

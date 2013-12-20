@@ -29,8 +29,9 @@ public class ResourceLoader {
 				if((obj = AudioIO.read(bis)) == null)
 					if((obj = ImageIO.read(bis)) == null)
 						if((obj = cl.getResourceAsStream(path)) == null)
-							throw new FileNotFoundException("Couldn't read file: "+path); // TODO: change if condition
+							throw new FileNotFoundException("Couldn't read file: "+path); 
 			}catch(IOException ioe){
+				System.err.println(ioe.getMessage());
 				obj = null;
 			}
 			loaded.put(path, obj);

@@ -2,6 +2,10 @@ package actors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import sound.ResourceLoader;
@@ -11,6 +15,8 @@ import core.Scene;
 @SuppressWarnings("serial")
 public class Triangle extends Actor{
 	
+	private Point pA,pB,pC;
+	private Polygon p;
 	static BufferedImage bimage = (BufferedImage) ResourceLoader.load("res/bush.png");
 	
 	public Triangle(Scene parent, double x, double y) {
@@ -18,8 +24,31 @@ public class Triangle extends Actor{
 		w = 0.06;
 		h = 0.06;
 	}
-	
-	// TODO: add triangular collision calculation
+		
+	@Override 
+	public boolean intersects(Actor r){
+		int[] a = {
+				parent.getCoordX(x),
+				parent.getCoordX(x)+parent.getWidth(w),
+				parent.getCoordX(x)+parent.getWidth(w/2),
+				parent.getCoordX(x)
+				};
+		int[] b = {
+				parent.getCoordY(y)+parent.getHeight(h),
+				parent.getCoordY(y)+parent.getHeight(h),
+				parent.getCoordY(y),
+				parent.getCoordY(y)+parent.getHeight(h)
+				};
+		Rectangle rec = new Rectangle(parent.getCoordX(r.x),parent.getCoordY(r.y),
+				parent.getWidth(r.w),parent.getHeight(r.h));
+		
+		return( 
+				new Polygon(a,b,4).intersects(rec)||
+				rec.contains(a[0], b[0])||
+				rec.contains(a[1], b[1])||
+				rec.contains(a[2], b[2])
+		);
+	}
 	
 	@Override
 	public void collide(Player p) {
@@ -48,8 +77,6 @@ public class Triangle extends Actor{
 			g2D.fillPolygon(a,b,4);
 		}
 		else {
-			g2D.setColor(Color.green);
-			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
 			g2D.drawImage(bimage, parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
 		}
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());

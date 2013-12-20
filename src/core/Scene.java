@@ -1,5 +1,8 @@
 package core;
 
+import foreground.Foreground;
+import global.GlobalSettings;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -22,8 +25,6 @@ import actors.Block;
 import actors.Player;
 import actors.Triangle;
 import background.Background;
-import foreground.Foreground;
-import global.GlobalSettings;
 
 /**
  * Scene class. -/-Base class for Scenes to hold and display actors.-/-
@@ -146,12 +147,14 @@ public class Scene extends State {
 	 * Initialize the game.
 	 */
 	public void initGame() {
-		childs = new HashSet<Actor>();
+		xposition = 0;
+		childs = new HashSet<>();
+		bg = new Background(this);
+		fg = new Foreground(this);
 		setScore(0);
 		lloader = new LevelLoader(this, "res/levels/");
 		lloader.start();
 		player = new Player(this);
-		xposition = 0;
 		paused = false;
 	}
 	/**
@@ -161,7 +164,7 @@ public class Scene extends State {
 		// method 1?
 		//((StateManager)parent).replaceState(new Scene(parent, settings));
 		// method 2
-		initGame(); // TODO: Fix LevelLoader reset
+		initGame(); 
 	}
 	
 	/**
