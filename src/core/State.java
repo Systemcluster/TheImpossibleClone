@@ -11,24 +11,28 @@ public class State extends JPanel {
 	private double ytiles = 1.3;
 	
 	public GlobalSettings settings;
-	public JPanel parent;
-	
-	public State(JPanel parent, GlobalSettings settings) {
+	public StateManager parent;
+		
+	public State(StateManager parent, GlobalSettings settings) {
 		this.parent = parent;
 		this.settings = settings;
 		
-		//fix aspect ratio
 		ytiles = Math.round(
 				new Double(settings.getResolution()[0]) / new Double(settings.getResolution()[1]) * 100
 				) / 100.0;
-		System.out.println("Using resolution "+settings.getResolution()[0] +"x"+ settings.getResolution()[1]);
-		System.out.println("Set aspect ratio to "+ytiles);
-		
 	}
 	
+	public void resize() {
+		//fix aspect ratio
+		ytiles = Math.round(
+				new Double(parent.parent.getWidth()) / new Double(parent.parent.getHeight()) * 100
+				) / 100.0;
+		System.out.println("Using resolution "+parent.parent.getWidth() +"x"+ parent.parent.getHeight());
+		System.out.println("Set aspect ratio to "+ytiles);
+	}
 	
 	public int getCoordXFixed(double x) {
-		double coord = getWidth() * (x / ytiles) + 0.5;
+		double coord = getWidth()  * x + 0.5;
 		return (int)(coord);
 	}
 	

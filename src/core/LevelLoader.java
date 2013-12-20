@@ -25,9 +25,9 @@ public class LevelLoader {
 	
 	public void start(){
 		InputStream t = null;
-		System.out.println("Loading level "+current);
 		try {
 			current++;
+			System.out.println("Loading level "+current);
 			if(!loadedLevels.containsKey(current)){
 				t =(InputStream) ResourceLoader.load(pathToLevel + "level0" + current + ".dat");
 				if(t != null){

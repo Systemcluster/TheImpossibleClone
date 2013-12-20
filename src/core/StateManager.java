@@ -3,6 +3,8 @@ package core;
 import global.GlobalSettings;
 
 import java.awt.Graphics;
+import java.awt.event.HierarchyBoundsListener;
+import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -19,11 +21,36 @@ public class StateManager extends JPanel {
 		this.parent = parent;
 		this.settings = settings;
 		
-		Scene scene = new Scene(this, settings);
+		Menu scene = new Menu(this, settings);
 		scene.setSize(settings.getResolution()[0], settings.getResolution()[1]);
 		this.setSize(settings.getResolution()[0], settings.getResolution()[1]);
 		parent.add(scene);
 		states.add(scene);
+		initState(scene);
+		
+		parent.getContentPane().addHierarchyBoundsListener(new HierarchyBoundsListener() {
+			@Override
+			public void ancestorMoved(HierarchyEvent e) {
+				
+			}
+			@Override
+			public void ancestorResized(HierarchyEvent e) {
+				onResize();
+			}
+		});
+	}
+	
+	public void onResize() {
+		setSize(parent.getWidth(), parent.getHeight());
+		states.get(0).setSize(parent.getWidth(), parent.getHeight());
+		states.get(0).resize();
+	}
+	
+	private void initState(State state) {
+		state.setSize(parent.getWidth(), parent.getHeight());
+		state.resize();
+		state.setFocusable(true);
+		state.requestFocus();
 	}
 	
 	/**
@@ -35,6 +62,7 @@ public class StateManager extends JPanel {
 		parent.remove(states.get(0));
 		states.add(0, state);
 		parent.add(state);
+		initState(state);
 	}
 	/**
 	 * Replace the current state.
@@ -47,6 +75,7 @@ public class StateManager extends JPanel {
 		states.remove(0);
 		states.add(0, state);
 		parent.add(state);
+		initState(state);
 	}
 	/**
 	 * Replace all states.
@@ -59,7 +88,20 @@ public class StateManager extends JPanel {
 		}
 		parent.add(state);
 		states.add(state);
+		initState(state);
 	}
+	
+	/**
+	 * Pop the state.
+	 */
+	public void popState() {
+		parent.remove(states.get(0));
+		states.set(0, null);
+		states.remove(0);
+		parent.add(states.get(0));
+		initState(states.get(0));
+	}
+	
 	
 	@Override
 	public void paintComponent(Graphics g) {

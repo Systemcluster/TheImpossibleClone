@@ -50,7 +50,7 @@ public class Block extends Actor{
 			g2D.setColor(Color.red);
 			//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
 			//g2D.fillRect(parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y)+draw_offset_y, parent.getWidth(w), parent.getHeight(h));
-			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y), parent.getWidth(w)-2, parent.getHeight(h)-2);
 			g2D.drawImage(bimage ,parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y-overlap_height)+draw_offset_y, parent.getWidth(w), parent.getHeight(h+overlap_height), null);
 		}
 		

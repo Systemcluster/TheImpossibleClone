@@ -1,7 +1,6 @@
 package core;
 
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;

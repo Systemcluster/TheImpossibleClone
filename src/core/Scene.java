@@ -1,14 +1,12 @@
 package core;
 
-import foreground.Foreground;
-import global.GlobalSettings;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -17,7 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 import sound.AudioClip;
 import sound.ResourceLoader;
@@ -25,6 +23,8 @@ import actors.Block;
 import actors.Player;
 import actors.Triangle;
 import background.Background;
+import foreground.Foreground;
+import global.GlobalSettings;
 
 /**
  * Scene class. -/-Base class for Scenes to hold and display actors.-/-
@@ -84,11 +84,13 @@ public class Scene extends State {
 	
 	private AudioClip backgroundmusic = (AudioClip) ResourceLoader.load("res/sound/background01.wav");
 	
+	private BufferedImage img_rse = (BufferedImage) ResourceLoader.load("res/menu/l_rse.png");
 	
-	public Scene(JPanel parent, GlobalSettings settings) {
+	public Scene(StateManager parent, GlobalSettings settings) {
 		super(parent, settings);
 		
-		this.setFocusable(true);
+		final Scene s = this;
+		
 		this.addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -112,11 +114,26 @@ public class Scene extends State {
 					// reset
 					resetGame();
 				}break;
+				case KeyEvent.VK_K: {
+					paused = true;
+					((Player)player).kill();
+				}break;
 				case KeyEvent.VK_M: {
 					// music mute
 					if(backgroundmusic.isRunning())
 						backgroundmusic.stop();
 					else backgroundmusic.loop();
+				}break;
+				case KeyEvent.VK_E: {
+					backgroundmusic.stop();
+					s.parent.popState();
+				}break;
+				case KeyEvent.VK_S: {
+					if(paused) {
+						backgroundmusic.stop();
+						stopped = true;
+						JOptionPane.showInputDialog("Input your name:");
+					}
 				}break;
 				default: {
 					// jump
@@ -137,6 +154,13 @@ public class Scene extends State {
 		
 		initGame();
 		
+		this.addActor(new Actor(this, 0.3, 0, 0.5,0.5){
+			private BufferedImage bimage = ( BufferedImage) ResourceLoader.load("res/bg/n.png");
+			@Override public void paintComponent(Graphics g) {
+				((Graphics2D)g).drawImage(bimage ,parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
+			}
+		});
+		
 		bg = new Background(this);
 		fg = new Foreground(this);
 		
@@ -146,7 +170,7 @@ public class Scene extends State {
 	/**
 	 * Initialize the game.
 	 */
-	public void initGame() {
+	public void initGame() {		
 		xposition = 0;
 		childs = new HashSet<>();
 		bg = new Background(this);
@@ -156,6 +180,7 @@ public class Scene extends State {
 		lloader.start();
 		player = new Player(this);
 		paused = false;
+		stopped = false;
 	}
 	/**
 	 * Reset the game.
@@ -431,10 +456,12 @@ public class Scene extends State {
 			
 			if(!classic_mode) fg.paintComponent(g); // paint foreground
 			
-			((Graphics2D) g).drawString("0.0.2-indev", getCoordXFixed(0.85*getXWidth()), getCoordY(0.9));
+			((Graphics2D) g).drawString("1.0.0-final", getCoordXFixed(0.85), getCoordY(0.9));
 			if(paused) {
 				g.setColor(Color.red);
-				((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.45*getXWidth()), getCoordY(0.48));
+				//((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.48), getCoordY(0.48));
+				
+				((Graphics2D) g).drawImage(img_rse, this.getCoordXFixed(0.5)-getWidth(0.5)/2, getCoordY(0.0), getWidth(0.5), getHeight(0.5), null);
 			}
 			
 			

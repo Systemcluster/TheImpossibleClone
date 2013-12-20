@@ -48,22 +48,29 @@ public class Background extends JComponent{
 		for(int i = 0; i < layerUsed * objectsPerLayer; ++i) {
 			
 			for(int j = 0; j <= floorscale; ++j ) {
-				BackgroundActor ba = new BackgroundActor(p, 
-						(p.getXWidth() / floorscale) * j, 
-						(p.getGround() - (lYOffset * (int)(i / objectsPerLayer)) +0.016), 
-						BackgroundActor.Type.DIRT);
-				ba.w = p.getXWidth() / floorscale + 0.01;
-				ba.h = 1.0/floorscale;
-				ba.setSpeed(ba.getSpeed() + (lSpeedOffset * ((int)(i / objectsPerLayer))));
-				if(!mLayers2.containsKey(i))
-					mLayers2.put(i,new HashSet<BackgroundActor>());
-				mLayers2.get((int)(i / objectsPerLayer)).add(ba);
+				addFloor(i,j);
 			}
+			addFloor(i,floorscale+1);
+			
+			
 			
 			addBackgroundActor(new BackgroundActor(p, p.getXWidth() + (p.getXWidth() / objectsPerLayer) * (i % objectsPerLayer) + rand.nextDouble()/2,
 					1, BackgroundActor.Type.TREE), (int)(i / objectsPerLayer));
 			
 		}
+	}
+	
+	private void addFloor(int i, int j) {
+		BackgroundActor ba = new BackgroundActor(p, 
+				(p.getXWidth() / floorscale) * j, 
+				(p.getGround() - (lYOffset * (int)(i / objectsPerLayer)) +0.016), 
+				BackgroundActor.Type.DIRT);
+		ba.w = p.getXWidth() / floorscale + 0.02;
+		ba.h = 1.0/floorscale;
+		ba.setSpeed(ba.getSpeed() + (lSpeedOffset * ((int)(i / objectsPerLayer))));
+		if(!mLayers2.containsKey(i))
+			mLayers2.put(i,new HashSet<BackgroundActor>());
+		mLayers2.get((int)(i / objectsPerLayer)).add(ba);
 	}
 	
 	/**

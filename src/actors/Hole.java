@@ -16,6 +16,7 @@ public class Hole extends Actor{
 		Graphics2D g2D = (Graphics2D) g;
 		g2D.setColor(Color.green);
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y+0.04), parent.getWidth(w), parent.getHeight(h));
+		//g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y+0.04), parent.getWidth(w), parent.getHeight(h));
+		//TODO: implement hole
 	}
 }
