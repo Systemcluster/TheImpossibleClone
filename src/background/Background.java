@@ -18,14 +18,17 @@ public class Background extends JComponent{
 	private static final long serialVersionUID = 1L;
 	
 	private HashMap<Integer,HashSet<BackgroundActor>> mLayers;
+	private HashMap<Integer,HashSet<BackgroundActor>> mLayers2;
 	private Scene p;
 	
 	private double lYOffset = 0.05;
 	private double lSpeedOffset = 0.0005;
 	private double lSize = 6;
 	
-	private double layerUsed = 5;
+	private int layerUsed = 5;
 	private double objectsPerLayer = 2;
+	
+	private int floorscale = 6;
 	
 	Random rand = new Random();
 	
@@ -36,28 +39,29 @@ public class Background extends JComponent{
 	public Background(Scene p){
 		this.p = p;
 		mLayers = new HashMap<>();
+		mLayers2 = new HashMap<>();
 		
 		rand.setSeed(726341+System.currentTimeMillis()); // magic number
 		
+		//floor = new Floor(p);
+		
 		for(int i = 0; i < layerUsed * objectsPerLayer; ++i) {
 			
-			
-			
-			BackgroundActor ba = new BackgroundActor(p, 0 + (int)(i % objectsPerLayer)*p.getXWidth(), 1, BackgroundActor.Type.DIRT);
-			ba.w = p.getXWidth();
-			ba.h = 1;
-			ba.y = (p.getGround() + - (lYOffset * (int)(i / objectsPerLayer)));
-			ba.setSpeed(ba.getSpeed() + (lSpeedOffset * ((int)(i / objectsPerLayer))));
-			if(!mLayers.containsKey(i))
-				mLayers.put(i,new HashSet<BackgroundActor>());
-			mLayers.get((int)(i / objectsPerLayer)).add(ba);
-			
+			for(int j = 0; j <= floorscale; ++j ) {
+				BackgroundActor ba = new BackgroundActor(p, 
+						(p.getXWidth() / floorscale) * j, 
+						(p.getGround() - (lYOffset * (int)(i / objectsPerLayer)) +0.015), 
+						BackgroundActor.Type.DIRT);
+				ba.w = p.getXWidth() / floorscale + 0.01;
+				ba.h = 1.0/floorscale;
+				ba.setSpeed(ba.getSpeed() + (lSpeedOffset * ((int)(i / objectsPerLayer))));
+				if(!mLayers2.containsKey(i))
+					mLayers2.put(i,new HashSet<BackgroundActor>());
+				mLayers2.get((int)(i / objectsPerLayer)).add(ba);
+			}
 			
 			addBackgroundActor(new BackgroundActor(p, p.getXWidth() + (p.getXWidth() / objectsPerLayer) * (i % objectsPerLayer) + rand.nextDouble()/2,
 					1, BackgroundActor.Type.TREE), (int)(i / objectsPerLayer));
-			
-		}
-		for(int i = 0; i < layerUsed; ++i) {
 			
 		}
 	}
@@ -95,6 +99,14 @@ public class Background extends JComponent{
 				}
 			}
 		});
+		iterate2(new Callable(){
+			public void call(BackgroundActor b){
+				b.update();
+				if(b.x + b.w < p.getPosition()){
+					b.x = (p.getPosition() + p.getXWidth());
+				}
+			}
+		});
 	}
 	
 	/**
@@ -102,6 +114,11 @@ public class Background extends JComponent{
 	 * Calls paintComponent(Graphics g) on every BackgroundActor held by the Background 
 	 */
 	public void paintComponent(final Graphics g){
+		iterate2(new Callable(){
+			public void call(BackgroundActor b){
+				b.paintComponent(g);
+			}
+		});
 		iterate(new Callable(){
 			public void call(BackgroundActor b){
 				b.paintComponent(g);
@@ -129,6 +146,15 @@ public class Background extends JComponent{
 		for(int i = mLayers.size(); i >= 0; i--){
 			if(mLayers.containsKey(i)){
 				for(BackgroundActor b : mLayers.get(i)){
+					c.call(b);	
+				}
+			}
+		} 
+	}
+	private void iterate2(Callable c){
+		for(int i = mLayers.size(); i >= 0; i--){
+			if(mLayers.containsKey(i)){
+				for(BackgroundActor b : mLayers2.get(i)){
 					c.call(b);	
 				}
 			}

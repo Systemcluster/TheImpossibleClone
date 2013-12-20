@@ -55,7 +55,7 @@ public class Scene extends State {
 	// with of the scene
 	public double xsize = 2.3;
 	// position of the ground (0 to 1)
-	private double ground = 0.8;
+	private double ground = 0.78;
 	
 	private long score = 0;
 	private int scoredivisor = 10;
