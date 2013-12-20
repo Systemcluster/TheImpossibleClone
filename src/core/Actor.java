@@ -28,6 +28,12 @@ public class Actor extends JComponent {
 		super();
 		this.parent = parent;
 	}
+	
+	public Actor(Scene parent, double x, double y, double w, double h) {
+		this(parent, x, y);
+		this.w = w;
+		this.h = h;
+	}
 	public Actor(Scene parent, double x, double y) {
 		this(parent);
 		this.x = x;

@@ -16,8 +16,10 @@ public class Star extends Actor {
 	private long score = 50;
 
 	public Star(Scene parent, double x, double y) {
-		super(parent, x, y);
+		super(parent, x-0.01, y-0.01);
 		
+		w += 0.02;
+		h += 0.02;
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public class Foreground extends JComponent {
 			removees.clear();
 			
 			if(parent.getPosition() > currpos.get(key)) {
-				childs.add(new ForegroundActor(parent, 
+				childs.add(new ForegroundActor(parent,  
 					parent.getPosition() + parent.getXWidth(), 
 					0.65 + (double)key/10, 
 					0.40 * (1 + key /4),

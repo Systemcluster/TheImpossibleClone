@@ -36,6 +36,5 @@ public class ResourceLoader {
 			loaded.put(path, obj);
 			return obj;
 		}
-	}	
+	}
 }
-	
