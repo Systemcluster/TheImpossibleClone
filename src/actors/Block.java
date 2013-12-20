@@ -17,7 +17,7 @@ public class Block extends Actor{
 	
 	private double overlap_height = 0.005;
 	
-	static BufferedImage bimage = (BufferedImage) ResourceLoader.load("res/flog.png");
+	static BufferedImage bimage = (BufferedImage) ResourceLoader.load("res/log.png");
 	
 	public Block(Scene parent, double x, double y) {
 		super(parent,x,y);
