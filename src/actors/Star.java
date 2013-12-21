@@ -25,7 +25,7 @@ public class Star extends Actor {
 	@Override
 	public void collide(Player p) {
 		if(score != 0) {
-			parent.addScore(score);
+			((Scene)parent).addScore(score);
 			score = 0;
 		}
 	}
@@ -34,7 +34,7 @@ public class Star extends Actor {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
 		if(score != 0) {
-			if(parent.classic_mode) {
+			if(((Scene)parent).classic_mode) {
 				g2D.setColor(Color.yellow);
 				g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h));
 			}

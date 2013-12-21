@@ -9,27 +9,33 @@ import java.util.Random;
 
 import javax.swing.JComponent;
 
-import states.Scene;
+import core.State;
 
 @SuppressWarnings("serial")
 public class Foreground extends JComponent {
 	
 	private double anti_frequency = 0.5;
 	
-	Scene parent;
+	State parent;
 	
 	Random rand = new Random();
+	
+	private double secretProbability = 0.18; 
 	
 	private HashMap<Integer,HashSet<ForegroundActor>> layers = new HashMap<>();
 	private HashMap<Integer, Double> currpos = new HashMap<>();
 	
-	public Foreground(Scene parent) {
+	public Foreground(State parent) {
 		this.parent = parent;
 		rand.setSeed(913247914+System.currentTimeMillis()); // magic number
 		layers.put(new Integer(1), new HashSet<ForegroundActor>());
 		currpos.put(new Integer(1), new Double(0));
 		layers.put(new Integer(2), new HashSet<ForegroundActor>());
 		currpos.put(new Integer(2), new Double(0));
+	}
+	
+	public void setSecretProbability(double p) {
+		this.secretProbability = p;
 	}
 
 	public void update(){
@@ -55,7 +61,8 @@ public class Foreground extends JComponent {
 					0.40 * (1 + key /4),
 					0.40 * (1 + key /4),
 					- 0.0015 - (0.0010 * key),
-					rand.nextDouble()));
+					rand.nextDouble(),
+					this.secretProbability));
 				currpos.put(key, currpos.get(key) + anti_frequency + rand.nextDouble() / (key*2));
 			}
 			

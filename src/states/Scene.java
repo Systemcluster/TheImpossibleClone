@@ -43,9 +43,6 @@ public class Scene extends State {
 	// classic mode
 	public boolean classic_mode = false;
 	
-	// current scroll position
-	private double xposition = 0;
-	
 	// initial scroll speed
 	//0.012
 	public double xscrollspeed = 0.010;
@@ -59,8 +56,6 @@ public class Scene extends State {
 	
 	// with of the scene
 	public double xsize = 2.3;
-	// position of the ground (0 to 1)
-	private double ground = 0.78;
 	
 	private long score = 0;
 	private int scoredivisor = 10;
@@ -81,15 +76,16 @@ public class Scene extends State {
 	private double diff = 0;
 
 	
-	public HashSet<Actor> childs;
 	private Background bg;
 	private Foreground fg;
 	private Actor player;
 	private LevelLoader lloader = null;
 	
-	private AudioClip backgroundmusic = (AudioClip) ResourceLoader.load("res/sound/background01.wav");
+	private AudioClip backgroundmusic = null;
 	
 	private BufferedImage img_rse = (BufferedImage) ResourceLoader.load("res/menu/l_rse.png");
+	
+	private Random rand = new Random(184877+System.currentTimeMillis());
 	
 	public Scene(StateManager parent, GlobalSettings settings) {
 		super(parent, settings);
@@ -125,9 +121,22 @@ public class Scene extends State {
 				}break;
 				case KeyEvent.VK_M: {
 					// music mute
-					if(backgroundmusic.isRunning())
+					if(!s.settings.getMusicMuted()) {
+						s.settings.setMusicMuted(true);
 						backgroundmusic.stop();
-					else backgroundmusic.loop();
+					}
+					else {
+						s.settings.setMusicMuted(false);
+						backgroundmusic.loop();
+					}
+				}break;
+				case KeyEvent.VK_N: {
+					if(!s.settings.getSoundeffectsMuted()) {
+						s.settings.setSoundeffectsMuted(true);
+					}
+					else {
+						s.settings.setSoundeffectsMuted(false);
+					}
 				}break;
 				case KeyEvent.VK_E: {
 					backgroundmusic.stop();
@@ -181,10 +190,12 @@ public class Scene extends State {
 			}
 		});
 		
-		bg = new Background(this);
-		fg = new Foreground(this);
-		
-		backgroundmusic.loop();
+		if(!settings.getMusicMuted()) playSong();
+	}
+	
+	private void playSong() {
+		backgroundmusic = (AudioClip) ResourceLoader.load("res/sound/bgm"+(rand.nextInt(4)+1)+".wav", false);
+		backgroundmusic.start();
 	}
 	
 	/**
@@ -195,6 +206,7 @@ public class Scene extends State {
 		childs = new HashSet<>();
 		bg = new Background(this);
 		fg = new Foreground(this);
+		fg.setSecretProbability(0.04);
 		setScore(0);
 		lloader = new LevelLoader(this, "res/levels/");
 		lloader.start();
@@ -219,7 +231,7 @@ public class Scene extends State {
 	 */
 	public void addScore(long add) {
 		score += add * scoredivisor;
-		((AudioClip) ResourceLoader.load("res/coin.wav")).start();
+		if(!settings.getSoundeffectsMuted()) ((AudioClip) ResourceLoader.load("res/coin.wav")).start();
 	}
 	/**
 	 * Returns the score.
@@ -239,59 +251,12 @@ public class Scene extends State {
 	}
 	
 	/**
-	 * Returns the grid position of the ground.
-	 * @return
-	 * The grid position of the ground.
-	 */
-	public double getGround() {
-		return ground;
-	}
-	
-	/**
-	 * Returns the real position from grid position x.
-	 * @param x
-	 * The grid position to get the real position from.
-	 * @return
-	 * The real position calculated from grid position x.
-	 */
-	public int getCoordX(double x) {
-		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
-		double coord = getWidth() * (x / getXWidth());
-		double scroll = getWidth() * (xposition / getXWidth());
-		return (int)(coord - scroll + 0.5);
-	}
-	
-	/**
-	 * Returns the x position of the scene (the scroll). 
-	 * @return
-	 * The x position of the scene (the scroll).
-	 */
-	public double getPosition() { return xposition; }
-	
-	/**
 	 * Returns the x scroll speed.
 	 * @return
 	 * The x scroll speed.
 	 */
 	public double getScrollSpeed() { return xscrolltmp<xscrollsteps?xscrolltmp:xscrollsteps; }
 	
-	/**
-	 * Adds an actor to the scene.
-	 * @param a
-	 * The actor to be added to the scene.
-	 */
-	public void addActor(Actor a) {
-		childs.add(a);
-	}
-	
-	/**
-	 * Return all actors.
-	 * @return
-	 * All current actors.
-	 */
-	public HashSet<Actor> getActors(){
-		return childs;
-	}
 
 	/**
 	 * Returns if space (jump) is pressed.
@@ -300,16 +265,6 @@ public class Scene extends State {
 	 */
 	public boolean getSpaceState(){
 		return isSpacePressed;
-	}
-	
-	/**
-	 * Resets the background, changes xscrollspeed and increments round.
-	 * Does not reset the player.
-	 */
-	public void resetPlayer() {
-		xscrollspeed += xscrollinc;
-		round += 1;
-		bg.reset();
 	}
 	
 	/**
@@ -393,6 +348,10 @@ public class Scene extends State {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
 		
+		if(!settings.getMusicMuted()) {
+			if(!backgroundmusic.isRunning()) playSong();
+		}
+		
 		
 		//--clear bg--
 		g.setColor(new Color(180, 220, 250));
@@ -407,7 +366,8 @@ public class Scene extends State {
 			// Load next level when scrolled past the current one.
 			if(xposition + getXWidth() >= xsize + 0.1) {
 				lloader.start();
-				resetPlayer();
+				xscrollspeed += xscrollinc;
+				round += 1;
 			}
 		
 			// smooth fast movement so intersections aren't skipped

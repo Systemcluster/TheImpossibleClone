@@ -69,7 +69,7 @@ public class Triangle extends Actor{
 				parent.getCoordY(y)+parent.getHeight(h)
 				};
 		
-		if(parent.classic_mode) {
+		if(((Scene)parent).classic_mode) {
 			g2D.setColor(Color.green);
 			g2D.fillPolygon(a,b,4);
 		}

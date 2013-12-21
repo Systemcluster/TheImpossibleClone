@@ -39,6 +39,9 @@ public abstract class ScoreManager {
 		return p;
 	}
 	
+	static public Score[] getScore() {
+		return (Score[]) score.toArray();
+	}
 	
 	static public int testScore(int score) {
 		if(ScoreManager.score.size() == 0) {

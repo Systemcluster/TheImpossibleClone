@@ -42,7 +42,7 @@ public class Block extends Actor{
 
 		Graphics2D g2D = (Graphics2D) g;
 		
-		if(parent.classic_mode) {
+		if(((Scene)parent).classic_mode) {
 			g2D.setColor(Color.red);
 			g2D.fillRect(parent.getCoordX(x)+draw_offset_x, parent.getCoordY(y)+draw_offset_y, parent.getWidth(w), parent.getHeight(h));
 		}

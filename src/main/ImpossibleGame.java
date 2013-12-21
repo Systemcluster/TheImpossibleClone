@@ -8,6 +8,7 @@ import global.Score;
 import java.awt.image.BufferedImage;
 
 import sound.ResourceLoader;
+import core.ScoreManager;
 
 public class ImpossibleGame implements CollectionGame{
 
@@ -20,22 +21,20 @@ public class ImpossibleGame implements CollectionGame{
 
 	@Override
 	public Score[] getHighscore() {
-		return new Score[]{
+		/*return new Score[]{
 			new Score("Peter Lustig", 5), 
 			new Score("Rick Astley",10),
 			new Score("Roland Kaiser", 9001)
-		};
+		};*/
+		return ScoreManager.getScore();
 	}
 
 	@Override
 	public BufferedImage[] getGamePics() {
-		try{
-			return new BufferedImage[]{
+			return new BufferedImage[] {
 					(BufferedImage)ResourceLoader.load("res/screenshot.png")
-			};
-		} catch (Exception e){
-			return null;
-		}
+					};
+			
 	}
 	
 }

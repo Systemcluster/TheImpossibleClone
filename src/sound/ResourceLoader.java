@@ -11,8 +11,12 @@ import javax.imageio.ImageIO;
 public abstract class ResourceLoader {
 	private static Map<String,Object> loaded = new HashMap<String,Object>();
 	
+	
 	public static Object load(String path) {
-		if(loaded.containsKey(path)){
+		return load(path, true);
+	}
+	public static Object load(String path, boolean cache) {
+		if(cache && loaded.containsKey(path)){
 			return loaded.get(path);
 		}
 		else{
@@ -34,7 +38,7 @@ public abstract class ResourceLoader {
 				System.err.println(ioe.getMessage());
 				obj = null;
 			}
-			loaded.put(path, obj);
+			if(cache) loaded.put(path, obj);
 			return obj;
 		}
 	}

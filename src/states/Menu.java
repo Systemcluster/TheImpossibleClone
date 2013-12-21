@@ -1,5 +1,6 @@
 package states;
 
+import foreground.Foreground;
 import global.GlobalSettings;
 
 import java.awt.Color;
@@ -12,6 +13,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JOptionPane;
 
 import sound.ResourceLoader;
+import background.Background;
 import core.ScoreManager;
 import core.State;
 import core.StateManager;
@@ -23,11 +25,16 @@ public class Menu extends State {
 	
 	double offset = 0;
 	double count = 1.7;
+	
+	Background bg = new Background(this);
+	Foreground fg = new Foreground(this);
 
 	public Menu(StateManager parent, GlobalSettings settings) {
 		super(parent, settings);
 
 		final Menu m = this;
+		
+		fg.setSecretProbability(0.18);
 		
 		this.addKeyListener(new KeyListener() {
 			@Override
@@ -73,11 +80,21 @@ public class Menu extends State {
 		count += 0.03;
 		//offset = Math.sin(count)/40;
 		
+		xposition += 0.0035;
+		
 		//--clear bg--
 		g.setColor(new Color(180, 220, 250));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		//--/clear bg--
-		((Graphics2D) g).drawImage(img_menu, this.getCoordXFixed(0.5)-getWidth(1)/2, getCoordY(-0.02+offset), getWidth(1), getHeight(1), null);
+		
+		
+		bg.update();
+		fg.update();
+		
+		bg.paintComponent(g);
+		fg.paintComponent(g);
+		
+		((Graphics2D) g).drawImage(img_menu, this.getCoordXFixed(0.5)-getWidth(1)/2, getCoordY(-0.01+offset), getWidth(0.95), getHeight(0.95), null);
 	}
 
 }

@@ -63,7 +63,7 @@ public class Player extends Actor {
 	public void kill() {
 		dead = true;
 		System.out.println("Player died");
-		asDie.start();
+		if(!parent.settings.getSoundeffectsMuted())asDie.start();
 	}
 	
 	public boolean jump() {
@@ -97,7 +97,7 @@ public class Player extends Actor {
 
 	public boolean addForce(double force, double maxHeight) {
 		if(canjump) {
-			asJump.start();	
+			if(!parent.settings.getSoundeffectsMuted())asJump.start();	
 			this.force = force;
 			this.maxHeight = y - maxHeight;
 			System.currentTimeMillis();
@@ -116,7 +116,7 @@ public class Player extends Actor {
 	public void fixedUpdate() {
 		canjump = false;
 		
-		if(parent.getSpaceState() && y > maxHeight && initY != 0 && maxHeight != 0){
+		if(((Scene)parent).getSpaceState() && y > maxHeight && initY != 0 && maxHeight != 0){
 			double meh = (y - initY) <= 0 ? (y - initY) : -0.5; // surfjump fix
 			force += weight * (meh/(maxHeight - initY));
 		}
@@ -181,7 +181,7 @@ public class Player extends Actor {
 		Graphics2D g2D = (Graphics2D) g;
 		
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		if(parent.classic_mode) {
+		if(((Scene)parent).classic_mode) {
 			g2D.setColor(Color.WHITE);
 			g2D.fillRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
 			g2D.setColor(Color.black);

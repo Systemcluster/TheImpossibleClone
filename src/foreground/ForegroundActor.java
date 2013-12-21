@@ -5,29 +5,37 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import sound.ResourceLoader;
-import states.Scene;
 import core.Actor;
+import core.State;
 
 
 @SuppressWarnings("serial")
 public class ForegroundActor extends Actor {
 	
+	private static BufferedImage bimage_default = (BufferedImage) ResourceLoader.load("res/fg/treehugetrans.png");
+	private static BufferedImage bimage_secret = (BufferedImage) ResourceLoader.load("res/fg/busch.png");
+	
 	private BufferedImage bimage;
 
 	private double speed;
 	
-	public ForegroundActor(Scene parent, double x, double y) {
+	
+	public ForegroundActor(State parent, double x, double y) {
 		this(parent, x, y, 0.30, 0.30, -0.0024, 0);
 	}
 	
-	public ForegroundActor(Scene parent, double x, double y, double w, double h, double speed, double magicNumber) {
+	public ForegroundActor(State parent, double x, double y, double w, double h, double speed, double magicNumber) {
+		this(parent, x, y, w, h, speed, magicNumber, 0.0);
+	}
+	
+	public ForegroundActor(State parent, double x, double y, double w, double h, double speed, double magicNumber, double secretProbability) {
 		super(parent, x, y, w, h);
 		this.speed = speed;
-		if(magicNumber > 0.92) {
-			bimage = (BufferedImage) ResourceLoader.load("res/fg/busch.png");
+		if(magicNumber < secretProbability) {
+			bimage = bimage_secret;
 		}
 		else {
-			bimage = (BufferedImage) ResourceLoader.load("res/fg/treehugetrans.png");
+			bimage = bimage_default;
 		}
 	}
 	

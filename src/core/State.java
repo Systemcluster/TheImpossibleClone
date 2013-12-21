@@ -1,14 +1,28 @@
 package core;
 
+import java.util.HashSet;
+
 import global.GlobalSettings;
 
 import javax.swing.JPanel;
 
+/**
+ * Base class for Scenes.
+ *
+ */
 @SuppressWarnings("serial")
 public class State extends JPanel {
 	
 	// screen aspect ratio (calculated by screen w/h) 
 	private double ytiles = 1.3;
+	
+	// current scroll position
+	protected double xposition = 0;
+	
+	// position of the ground (0 to 1)
+	private double ground = 0.78;
+	
+	public HashSet<Actor> childs;
 	
 	public GlobalSettings settings;
 	public StateManager parent;
@@ -31,9 +45,50 @@ public class State extends JPanel {
 		System.out.println("Set aspect ratio to "+ytiles);
 	}
 	
+	/**
+	 * Adds an actor to the scene.
+	 * @param a
+	 * The actor to be added to the scene.
+	 */
+	public void addActor(Actor a) {
+		childs.add(a);
+	}
+	
+	/**
+	 * Return all actors.
+	 * @return
+	 * All current actors.
+	 */
+	public HashSet<Actor> getActors(){
+		return childs;
+	}
+	
+	/**
+	 * Returns the x position of the scene (the scroll). 
+	 * @return
+	 * The x position of the scene (the scroll).
+	 */
+	public double getPosition() { return xposition; }
+	
+	/**
+	 * Returns the real x coordinate from screen position x (0-1). 
+	 * @param x
+	 * The screen position x (0-1).
+	 * @return
+	 * The real (pixel) position of x.
+	 */
 	public int getCoordXFixed(double x) {
 		double coord = getWidth()  * x + 0.5;
 		return (int)(coord);
+	}
+	
+	/**
+	 * Returns the grid position of the ground.
+	 * @return
+	 * The grid position of the ground.
+	 */
+	public double getGround() {
+		return ground;
 	}
 	
 	/**
@@ -77,6 +132,20 @@ public class State extends JPanel {
 	 */
 	public double getXWidth() {
 		return ytiles;
+	}
+	
+	/**
+	 * Returns the real position from grid position x.
+	 * @param x
+	 * The grid position to get the real position from.
+	 * @return
+	 * The real position calculated from grid position x.
+	 */
+	public int getCoordX(double x) {
+		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
+		double coord = getWidth() * (x / getXWidth());
+		double scroll = getWidth() * (xposition / getXWidth());
+		return (int)(coord - scroll + 0.5);
 	}
 
 }

@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
-import states.Scene;
 import actors.Player;
 
 /**
@@ -23,19 +22,19 @@ public class Actor extends JComponent {
 	
 	public boolean isGround = false;
 	
-	protected Scene parent;
+	protected State parent;
 	
-	public Actor(Scene parent) {
+	public Actor(State parent) {
 		super();
 		this.parent = parent;
 	}
 	
-	public Actor(Scene parent, double x, double y, double w, double h) {
+	public Actor(State parent, double x, double y, double w, double h) {
 		this(parent, x, y);
 		this.w = w;
 		this.h = h;
 	}
-	public Actor(Scene parent, double x, double y) {
+	public Actor(State parent, double x, double y) {
 		this(parent);
 		this.x = x;
 		this.y = y;
