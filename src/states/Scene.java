@@ -127,7 +127,7 @@ public class Scene extends State {
 					}
 					else {
 						s.settings.setMusicMuted(false);
-						backgroundmusic.loop();
+						playSong();
 					}
 				}break;
 				case KeyEvent.VK_N: {
