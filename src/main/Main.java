@@ -16,7 +16,7 @@ public class Main extends JFrame {
 	public Main(GlobalSettings gs, final MainMenuInterface mmi) {
 		super();
 		
-		setTitle("The Impossible Test");
+		setTitle("The Impossible Clone");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		this.addWindowListener(new WindowListener(){
