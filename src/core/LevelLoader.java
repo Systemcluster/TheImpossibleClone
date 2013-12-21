@@ -36,8 +36,9 @@ public class LevelLoader {
 				}
 				else{
 					System.out.println("Starting random generated level");
-					scene.xsize = 200;
+					scene.xsize = 80;
 					scene.generateObstacles();
+					scene.xscrollspeed += 0.002;
 				}
 			}else{
 				t = new ByteArrayInputStream(loadedLevels.get(current).getBytes());

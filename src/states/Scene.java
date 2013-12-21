@@ -206,6 +206,7 @@ public class Scene extends State {
 		childs = new HashSet<>();
 		bg = new Background(this);
 		fg = new Foreground(this);
+		round = 1;
 		fg.setSecretProbability(0.04);
 		setScore(0);
 		lloader = new LevelLoader(this, "res/levels/");
