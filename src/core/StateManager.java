@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import states.Menu;
+
 @SuppressWarnings("serial")
 public class StateManager extends JPanel {
-	JFrame parent;
-	GlobalSettings settings;
+	private JFrame parent;
+	@SuppressWarnings("unused")
+	private GlobalSettings settings;
 	
-	ArrayList<State> states = new ArrayList<>();
+	private ArrayList<State> states = new ArrayList<>();
 	
 	public StateManager(JFrame parent, GlobalSettings settings) {
 		this.parent = parent;
@@ -51,6 +54,10 @@ public class StateManager extends JPanel {
 		state.resize();
 		state.setFocusable(true);
 		state.requestFocus();
+	}
+	
+	public JFrame getWindow() {
+		return parent;
 	}
 	
 	/**

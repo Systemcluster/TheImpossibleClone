@@ -7,8 +7,8 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import sound.ResourceLoader;
+import states.Scene;
 import core.Actor;
-import core.Scene;
 
 @SuppressWarnings("serial")
 public class Triangle extends Actor{

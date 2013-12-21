@@ -3,8 +3,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import states.Scene;
 import core.Actor;
-import core.Scene;
 
 @SuppressWarnings("serial")
 public class Hole extends Actor{

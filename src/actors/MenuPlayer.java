@@ -1,6 +1,6 @@
 package actors;
 
-import core.Scene;
+import states.Scene;
 
 @SuppressWarnings("serial")
 public class MenuPlayer extends Player {

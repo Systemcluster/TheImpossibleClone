@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import states.Scene;
 import actors.Block;
 import actors.Hole;
 import actors.Star;

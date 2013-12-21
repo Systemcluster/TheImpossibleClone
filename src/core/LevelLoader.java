@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import sound.ResourceLoader;
+import states.Scene;
 
 public class LevelLoader {
 	private static HashMap<Integer,String> loadedLevels = null;
@@ -26,10 +27,10 @@ public class LevelLoader {
 	public void start(){
 		InputStream t = null;
 		try {
-			current++;
+			++current;
 			System.out.println("Loading level "+current);
 			if(!loadedLevels.containsKey(current)){
-				t =(InputStream) ResourceLoader.load(pathToLevel + "level0" + current + ".dat");
+				t = (InputStream)ResourceLoader.load(pathToLevel + "level0" + current + ".dat");
 				if(t != null){
 					loadedLevels.put(current, new Level(scene, t, current).add());
 				}

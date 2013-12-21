@@ -25,9 +25,9 @@ public class State extends JPanel {
 	public void resize() {
 		//fix aspect ratio
 		ytiles = Math.round(
-				new Double(parent.parent.getWidth()) / new Double(parent.parent.getHeight()) * 100
+				new Double(parent.getWindow().getWidth()) / new Double(parent.getWindow().getHeight()) * 100
 				) / 100.0;
-		System.out.println("Using resolution "+parent.parent.getWidth() +"x"+ parent.parent.getHeight());
+		System.out.println("Using resolution "+parent.getWindow().getWidth() +"x"+ parent.getWindow().getHeight());
 		System.out.println("Set aspect ratio to "+ytiles);
 	}
 	

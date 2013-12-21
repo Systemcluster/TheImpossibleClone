@@ -9,7 +9,7 @@ import java.util.Random;
 
 import javax.swing.JComponent;
 
-import core.Scene;
+import states.Scene;
 
 @SuppressWarnings("serial")
 public class Foreground extends JComponent {

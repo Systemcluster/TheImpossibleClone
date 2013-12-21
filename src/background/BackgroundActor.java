@@ -5,8 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import sound.ResourceLoader;
+import states.Scene;
 import core.Actor;
-import core.Scene;
 
 /**
  * Holds a background and its function to alter the movement

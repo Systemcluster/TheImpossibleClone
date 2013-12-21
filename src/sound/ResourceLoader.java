@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-public class ResourceLoader {
+public abstract class ResourceLoader {
 	private static Map<String,Object> loaded = new HashMap<String,Object>();
 	
 	public static Object load(String path) {
@@ -38,4 +38,8 @@ public class ResourceLoader {
 			return obj;
 		}
 	}
+	
+	/*public static InputStream getStream(String path) {
+		return ResourceLoader.class.getClassLoader().getResourceAsStream(path);
+	}*/
 }

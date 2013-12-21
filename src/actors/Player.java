@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 import sound.AudioClip;
 import sound.ResourceLoader;
+import states.Scene;
 import core.Actor;
-import core.Scene;
 
 @SuppressWarnings("serial")
 public class Player extends Actor {

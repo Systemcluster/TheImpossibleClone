@@ -64,6 +64,7 @@ public class Main extends JFrame {
 		Thread t = new Thread() {
 			@Override 
 			public void run() {
+				@SuppressWarnings("unused")
 				double cur2, upd2 = System.currentTimeMillis()-16, dif2;
 				while(obj.isDisplayable()) {
 					try {

@@ -31,7 +31,7 @@ public class ImpossibleGame implements CollectionGame{
 	public BufferedImage[] getGamePics() {
 		try{
 			return new BufferedImage[]{
-					(BufferedImage)ResourceLoader.load("res/screenshot.jpg")
+					(BufferedImage)ResourceLoader.load("res/screenshot.png")
 			};
 		} catch (Exception e){
 			return null;

@@ -7,7 +7,7 @@ import java.util.Random;
 
 import javax.swing.JComponent;
 
-import core.Scene;
+import states.Scene;
 
 /**
  * Represents the background behind the main scene
