@@ -3,22 +3,19 @@ package actors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.util.ArrayList;
 
 import sound.AudioClip;
 import sound.ResourceLoader;
+import states.Scene;
 import core.Actor;
-import core.Scene;
 
+@SuppressWarnings("serial")
 public class Player extends Actor {
 	
-	//TODO : CHANGE VALUES
 	private double maxHeight = 0;
-	//-- TODO
 	
-	private double msAirStart = 0;
 	private double initY = 0;
 	
 	//w = 0.0018
@@ -26,116 +23,102 @@ public class Player extends Actor {
 	private double force = 0;
 	
 	private double rotate = 0;
+	private double rotationspeed = 0.22;
+	
+	private double defaultx = 0.1;
 	
 	private String pathDieSound = "res/sound.wav";
 	private String pathJumpSound = "res/Jump.wav";
 	private AudioClip asJump;
 	private AudioClip asDie;
+	private ArrayList<BufferedImage> runnimation = new ArrayList<>();
+	
+	private boolean canjump = false;
 	
 	public boolean dead = false;
 	
-	private BufferedImage bimage;
-	
 	// force to add to the player on button press (jump)
 	private double jumpforce = -0.017;
+	// height the player cna jump
+	private double jumpheight = 0.21;
 	
 	public Player(Scene parent) {
 		super(parent);
-		x = 0.1;
-		
-		bimage = (BufferedImage) ResourceLoader.load("res/player.png");//ImageIO.read(ResourceLoader.class.getClassLoader().getResource("res/player.png"));
+		x = defaultx;
 		
 		asJump = (AudioClip) ResourceLoader.load(pathJumpSound);
 		asJump.open();
 		asDie = (AudioClip) ResourceLoader.load(pathDieSound);
 		asDie.open();
-		//x = 0.035;
-		//y = 0.035;
-		w = 0.035;
-		h = 0.035;
+		w = 0.040;
+		h = 0.050;
+		
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_01.png"));
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_02.png"));
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_03.png"));
+		runnimation.add((BufferedImage) ResourceLoader.load("res/player/p_04.png"));
 		
 	}
 	
 	public void kill() {
 		dead = true;
-		asDie.start();
+		System.out.println("Player died");
+		if(!parent.settings.getSoundeffectsMuted())asDie.start();
 	}
 	
 	public boolean jump() {
-		return addForce(jumpforce, 0.21);
+		return addForce(jumpforce, jumpheight);
 	}
 	
 	public boolean isGrounded() {
 		return y >= parent.getGround();
-		// TODO: add check if player is on an obstacle
 	}
 	
 	/**
-	 * Checks if player is beneath or over an obstacle
+	 * Checks if player is beneath or slightly over an obstacle.
 	 * @return
 	 * the touched obstacle
 	 */
-	public Actor getTouchedObstacle() {
+	public ArrayList<Actor> getTouchedObstacle() {
 		//0.00025
-		Actor left = new Actor(parent, x, y + force + 0.00025);
+		ArrayList<Actor> touched = new ArrayList<>();
+		Actor left = new Actor(parent, x, y + force, w, h);// + 0.00025);
 		for (Actor child:parent.getActors()){
-			if(left.intersects(child)){
-				child.surf(this);
-				return child;
-			}
-			else {
+			if(child.x > parent.getPosition() - 1 && child.x < parent.getPosition() + parent.getXWidth()) { //only test near actors
+				if(left.intersects(child)){
+					touched.add(child);
+				}
+				else {
+				}
 			}
 		}
-		return null;
+		return touched;
 	}
 
-	// TODO: fix flying bug
 	public boolean addForce(double force, double maxHeight) {
-		//SURFJUMPFIX
-		this.w += 0.05;
-		this.x -= 0.01;
-		if(isGrounded() || (getTouchedObstacle()!=null && getTouchedObstacle().isGround)) {
-			asJump.start();
-			
-			//SURFJUMPFIX
-			this.w -= 0.05;
-			this.x += 0.01;
-			
+		if(canjump) {
+			if(!parent.settings.getSoundeffectsMuted())asJump.start();	
 			this.force = force;
 			this.maxHeight = y - maxHeight;
-			this.msAirStart = System.currentTimeMillis();
+			System.currentTimeMillis();
 			this.initY = y;
-			return true;
 		}
 		
-		//SURFJUMPFIX
-		this.w -= 0.05;
-		this.x += 0.01;
-		
-		return false;
+		return canjump;
 	}
 	
 	@Override
 	public void update() {
-	
-		x += parent.getScrollSpeed();
-		/*double ax=trans.getTranslateX();
-		double ay=trans.getTranslateY();
-		trans.translate(x, y);
-		trans.rotate(0.02, x, y);
-		trans.translate(ax, ay);*/
-		rotate += 2;
+		x = parent.getPosition() + defaultx;
 	}
-
-	@Override
-	public void paintComponent(Graphics g ) {
-
-		//--JUMP--
 	
-		if(parent.getSpaceState() && y > maxHeight ){
+	@Override
+	public void fixedUpdate() {
+		canjump = false;
+		
+		if(((Scene)parent).getSpaceState() && y > maxHeight && initY != 0 && maxHeight != 0){
 			double meh = (y - initY) <= 0 ? (y - initY) : -0.5; // surfjump fix
 			force += weight * (meh/(maxHeight - initY));
-			System.out.println(weight * ((y - initY)/(maxHeight - initY)));
 		}
 		else{
 			force += weight;
@@ -143,47 +126,72 @@ public class Player extends Actor {
 		
 		//-- SURF --
 		try {
-			if(getTouchedObstacle()!=null && force > 0 &&getTouchedObstacle().isGround){
-				if(!this.intersects(getTouchedObstacle()))
-					//0.0002
-					y = getTouchedObstacle().y-h-0.0001;
-				else {
-					// auskommentieren?
-					//force = -1;
+			//surfjump fix
+			this.x -= 0.015;
+			this.w += 0.02;
+			for(Actor touch:getTouchedObstacle()) {
+				if(touch!=null && force > 0 && touch.isGround && !isGrounded()){
+					if(!touch.intersects(this)) {
+						touch.surf(this);
+						y = touch.y-h-0.0001; //0.0002
+						force = 0;
+						canjump = true;
+						/*if(this.x-0.01<touch.x+touch.w)
+							canjump = true;
+							*/
+					}
 				}
-				force = 0;
+				//surfjump fix
+				this.x += 0.015;
+				this.w -= 0.02;
+				if(touch!=null&&touch.intersects(this)) {
+					touch.collide(this);
+				}
+				//surfjump fix
+				this.x -= 0.015;
+				this.w += 0.02;
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
+		finally {
+			//surfjump fix
+			this.x += 0.015;
+			this.w -= 0.02;
+		}
 		//-- /SURF --
-		if(!dead)y+=force;
+		
+		if(!dead)
+			y+=force;
 		
 		//-- GROUND
 		if(isGrounded()) {
 			y = parent.getGround();
 			force = 0;
+			canjump = true;
 		}
 		//-- /GROUND --
-		//--/JUMP--
 		
-		//RENDER
+		if(isGrounded() || getTouchedObstacle().size() != 0)
+			rotate += rotationspeed;
+	}
+
+	@Override
+	public void paintComponent(Graphics g ) {
 		Graphics2D g2D = (Graphics2D) g;
 		
-		g2D.setColor(Color.LIGHT_GRAY);
 		//System.out.println(parent.getCoordX(x)+" "+ parent.getCoordY(y)+" "+ parent.getWidth(w)+" "+ parent.getHeight(h)+" - "+parent.getPosition());
-		g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-		
-		//AffineTransform trans = new AffineTransform();
-		//trans.setTransform(new AffineTransform());
-		
-		//trans.translate(parent.getCoordX(x)+parent.getWidth(w/2), parent.getCoordY(y)+parent.getHeight(h/2));
-		//trans.rotate(Math.toRadians(rotate));
-		//trans.setToScale(2,2);
-		//trans.scale(3, 3);
-		
-		//g2D.drawImage(bimage, trans, null);
-		g2D.drawImage(bimage, parent.getCoordX(x-0.005), parent.getCoordY(y-0.005), parent.getWidth(w+0.01), parent.getHeight(h+0.01), null);
+		if(((Scene)parent).classic_mode) {
+			g2D.setColor(Color.WHITE);
+			g2D.fillRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+			g2D.setColor(Color.black);
+			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+		}
+		else {
+			g2D.setColor(Color.LIGHT_GRAY);
+			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
+			g2D.drawImage(runnimation.get((int) (rotate%4)), parent.getCoordX(x-0.020), parent.getCoordY(y-0.012), parent.getWidth(w+0.04), parent.getHeight(h+0.01), null);
+		}
 
 	}
 	

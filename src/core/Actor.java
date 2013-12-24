@@ -22,13 +22,19 @@ public class Actor extends JComponent {
 	
 	public boolean isGround = false;
 	
-	protected Scene parent;
+	protected State parent;
 	
-	public Actor(Scene parent) {
+	public Actor(State parent) {
 		super();
 		this.parent = parent;
 	}
-	public Actor(Scene parent, double x, double y) {
+	
+	public Actor(State parent, double x, double y, double w, double h) {
+		this(parent, x, y);
+		this.w = w;
+		this.h = h;
+	}
+	public Actor(State parent, double x, double y) {
 		this(parent);
 		this.x = x;
 		this.y = y;
@@ -57,6 +63,16 @@ public class Actor extends JComponent {
 	            (th < ty || th > ry));
 	}
 	
+	/**
+	 * Fixed update once per frame.
+	 */
+	public void fixedUpdate() {
+		
+	}
+	
+	/**
+	 * Multiple updates per frame dependent on speed.
+	 */
 	public void update() {
 		
 	}
@@ -83,33 +99,5 @@ public class Actor extends JComponent {
 		g2D.fillRect(parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h));
 		
 		
-	}
-	
-	public void setRelWidth(double w){
-		this.w = w;
-	}
-	public double getRelWidth(){
-		return w;
-	}
-	
-	public void setRelHeight(double h){
-		this.h = h;
-	}
-	public double getRelHeight(){
-		return h;
-	}
-	
-	public double getRelX() {
-		return x;
-	}
-	public void setRelX(double x) {
-		this.x = x;
-	}
-	
-	public double getRelY() {
-		return y;
-	}
-	public void setRelY(double y) {
-		this.y = y;
 	}
 }

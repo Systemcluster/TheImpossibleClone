@@ -1,17 +1,22 @@
 package sound;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-public class ResourceLoader {
+public abstract class ResourceLoader {
 	private static Map<String,Object> loaded = new HashMap<String,Object>();
 	
+	
 	public static Object load(String path) {
-		if(loaded.containsKey(path)){
+		return load(path, true);
+	}
+	public static Object load(String path, boolean cache) {
+		if(cache && loaded.containsKey(path)){
 			return loaded.get(path);
 		}
 		else{
@@ -27,13 +32,18 @@ public class ResourceLoader {
 			try{
 				if((obj = AudioIO.read(bis)) == null)
 					if((obj = ImageIO.read(bis)) == null)
-						obj = cl.getResourceAsStream(path);
+						if((obj = cl.getResourceAsStream(path)) == null)
+							throw new FileNotFoundException("Couldn't read file: "+path); 
 			}catch(IOException ioe){
+				System.err.println(ioe.getMessage());
 				obj = null;
 			}
-			loaded.put(path, obj);
+			if(cache) loaded.put(path, obj);
 			return obj;
 		}
-	}	
-}
+	}
 	
+	/*public static InputStream getStream(String path) {
+		return ResourceLoader.class.getClassLoader().getResourceAsStream(path);
+	}*/
+}

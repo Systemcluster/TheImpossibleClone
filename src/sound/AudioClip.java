@@ -30,21 +30,30 @@ public class AudioClip{
 			if(!clip.isOpen())
 				clip.open(ais);
 		}catch(Exception e){
-			System.err.println("AudioClip: Sound couldnt be opened");
+			System.err.println("AudioClip: Sound couldn't be opened");
 		}
 	}
 	public void start(){
+		open();
 		clip.setFramePosition(0);
 		clip.start();
 	}
 	
 	public void loop(){
+		open();
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 	public void loop(int count){
+		open();
 		clip.loop(count);
 	}
 	public void close(){
 		clip.close();
+	}
+	public boolean isRunning() {
+		return clip.isRunning();
+	}
+	public void stop() {
+		clip.stop();
 	}
 }

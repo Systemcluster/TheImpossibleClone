@@ -1,57 +1,66 @@
 package core;
 
+import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import sound.ResourceLoader;
+import states.Scene;
 
 public class LevelLoader {
+	private static HashMap<Integer,String> loadedLevels = null;
+	
 	private Scene scene;
-	private ArrayList<Level> levels;
-	private int maxLevel=0;
-	private int current=0;
+	private String pathToLevel;
+	private int current;
+	
 	public LevelLoader(Scene scene, String pathToLevelFolder){
 		this.scene=scene;
-		this.levels = new ArrayList<Level>();
-		InputStream t;
-		int i = 1;
-		for(i = 1;(t = (InputStream) ResourceLoader.load(pathToLevelFolder + "level0" + i + ".dat")) != null;i++){
-			System.out.println(t);
-			levels.add(new Level(scene, t,maxLevel));
+		this.pathToLevel = pathToLevelFolder;
+		current = -1;
+		if(loadedLevels == null){
+			loadedLevels = new HashMap<>();
 		}
-		maxLevel = i;
 	}
 	
 	public void start(){
-		//Level is running?
-		if(current>-1 && !scene.getPaused()){
-			//Load first level
-			load(levels.get(0));
-		}
-		if(scene.getPosition()>scene.xsize) {
-			//Level end, destroyCurrent
-			System.out.println("### LEVEL "+current+" END  ####");
-			destroyCurrent();
-			//Load next Level
-			if(current<=maxLevel){
-				current++;
-				load(levels.get(current));
+		InputStream t = null;
+		try {
+			++current;
+			System.out.println("Loading level "+current);
+			if(!loadedLevels.containsKey(current)){
+				t = (InputStream) ResourceLoader.load(pathToLevel + "level0" + current + ".dat");
+				if(t != null){
+					loadedLevels.put(current, new Level(scene, t).add());
+				}
+				else{
+					System.out.println("Starting random generated level");
+					//scene.xsize = 5;
+					//scene.generateObstacles();
+					LevelGenerator.generateLevel(scene).add();
+					//scene.xscrollspeed += 0.001;
+				}
+			}else{
+				t = new ByteArrayInputStream(loadedLevels.get(current).getBytes());
+				if(t != null){
+					new Level(scene, t).add();
+				}
 			}
-			else {
-				System.out.println("KEINE LEVEL MEHR DA!!!");
-				//scene.paused=true;
-				scene.xsize = 200;
-				scene.generateObstacles();
+		} 
+		catch(IndexOutOfBoundsException e) {
+			System.err.println("Could not load level "+current+", error in LevelLoader:start");
+			e.printStackTrace();
+		}
+		finally {
+			try{
+				if(t != null){
+					t.close();
+				}
+			}
+			catch(IOException e){
+					
 			}
 		}
-		
 	}
-	
-	private void load(Level level) {
-		level.add(scene);
-	}
-	private void destroyCurrent() {
-		scene.childs.clear();
-	}
-
 }
