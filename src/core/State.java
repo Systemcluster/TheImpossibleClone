@@ -32,15 +32,15 @@ public class State extends JPanel {
 		this.settings = settings;
 		
 		ytiles = Math.round(
-				new Double(settings.getResolution()[0]) / new Double(settings.getResolution()[1]) * 100
-				) / 100.0;
+				new Double(settings.getResolution()[0]) / new Double(settings.getResolution()[1]) * 10000.0
+				) / 10000.0;
 	}
 	
 	public void resize() {
 		//fix aspect ratio
 		ytiles = Math.round(
-				new Double(parent.getWindow().getWidth()) / new Double(parent.getWindow().getHeight()) * 100
-				) / 100.0;
+				new Double(parent.getWindow().getWidth()) / new Double(parent.getWindow().getHeight()) * 10000.0
+				) / 10000.0;
 		System.out.println("Using resolution "+parent.getWindow().getWidth() +"x"+ parent.getWindow().getHeight());
 		System.out.println("Set aspect ratio to "+ytiles);
 	}
@@ -92,6 +92,20 @@ public class State extends JPanel {
 	}
 	
 	/**
+	 * Returns the real position from grid position x.
+	 * @param x
+	 * The grid position to get the real position from.
+	 * @return
+	 * The real position calculated from grid position x.
+	 */
+	public int getCoordX(double x) {
+		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
+		double coord = getWidth() * (x / getXWidth());
+		double scroll = getWidth() * (xposition / getXWidth());
+		return (int)(coord - scroll + 0.5);
+	}
+	
+	/**
 	 * Returns the real position from grid position y.
 	 * @param y
 	 * The grid position to get the real position from.
@@ -132,20 +146,6 @@ public class State extends JPanel {
 	 */
 	public double getXWidth() {
 		return ytiles;
-	}
-	
-	/**
-	 * Returns the real position from grid position x.
-	 * @param x
-	 * The grid position to get the real position from.
-	 * @return
-	 * The real position calculated from grid position x.
-	 */
-	public int getCoordX(double x) {
-		//return  (int) (-getPosition()*getWidth() + ((this.getWidth() / (ytiles * ((double)getWidth()/(double)getHeight()))) * x));
-		double coord = getWidth() * (x / getXWidth());
-		double scroll = getWidth() * (xposition / getXWidth());
-		return (int)(coord - scroll + 0.5);
 	}
 
 }

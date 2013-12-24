@@ -14,10 +14,8 @@ import actors.Triangle;
 public class Level {
 	private Scene scene;
 	private InputStream path;
-	public final int nr;
 	
-	public Level(Scene s,InputStream pathToLevelFile, int nr) {
-		this.nr=nr;
+	public Level(Scene s,InputStream pathToLevelFile) {
 		this.scene=s;
 		path=pathToLevelFile;
 		
@@ -40,20 +38,24 @@ public class Level {
 			 * read level speed
 			 * (first line, double)
 			 */
-			scene.xscrollspeed = Double.parseDouble(iss);
+			scene.setStaticScrollSpeed(Double.parseDouble(iss));
 			
 			while(in.hasNextLine()){
 				/**
 				 * Level format (after first line):
 				 * string    ;double    ;double
-				 * block_type;x_position;y_position
+				 * block_type;x_position;y_position;[width;height]
 				 */
 				String nLine = in.nextLine();
 				text += nLine + "\n";    
 				tmp = nLine.split(";");
-				addObstacles(tmp[0],Double.parseDouble(tmp[1]) + scene.getPosition() + scene.getXWidth() ,Double.parseDouble(tmp[2]));
+				Actor a = addObstacle(tmp[0], Double.parseDouble(tmp[1]) + scene.getPosition() + scene.getXWidth(), Double.parseDouble(tmp[2]));
 				if(Double.parseDouble(tmp[1]) + scene.getPosition() > maxwidth) {
 					maxwidth = Double.parseDouble(tmp[1]);
+				}
+				if(a != null && tmp.length >= 5) {
+					a.w = Double.parseDouble(tmp[3]);
+					a.h = Double.parseDouble(tmp[4]);
 				}
 				scene.xsize = maxwidth;
 				//System.out.println("obstcl at "+ Double.parseDouble(tmp[1]) +" "+ s.getPosition() +" "+ s.getXWidth()); 
@@ -61,9 +63,11 @@ public class Level {
 			scene.xsize += scene.getXWidth() + scene.getPosition();
 			
 		}catch(InputMismatchException e) {
-			System.err.println("Error with Rescource File!");
+			System.err.println("Error reading level, wrong input: "+e.getLocalizedMessage());
+		}catch(NumberFormatException e) {
+			System.err.println("Error reading level, wrong number format: "+e.getLocalizedMessage());
 		}catch(NoSuchElementException e) {
-			System.err.println("LEVEL :" + nr + "-"+ e.getMessage());
+			System.err.println("Error reading level, no such element: "+e.getLocalizedMessage());
 		}finally{
 			if(in != null) {
 				in.close();
@@ -72,24 +76,22 @@ public class Level {
 		return text;
 	}
 	
-	private void addObstacles(String type, double x, double y){
-
+	private Actor addObstacle(String type, double x, double y){
+		Actor a = null;
 		switch(type){
-		
-		case "block"	:	scene.addActor(new Block(scene, x, y));
+		case "block"	:	a = new Block(scene, x, y);
 							break;
-		case "triangle"	:	scene.addActor(new Triangle(scene, x, y));
+		case "triangle"	:	a = new Triangle(scene, x, y);
 							break;
-		case "hole"		:	scene.addActor(new Hole(scene, x, y));
+		case "hole"		:	a = new Hole(scene, x, y);
 							break;
-		case "star"		:	scene.addActor(new Star(scene, x, y));
+		case "star"		:	a = new Star(scene, x, y);
 							break;
 		default			:	System.out.println("Error: Not defined type of Obstacle: "+type);
-							break;
+							return null;
 		}
-		
-		
-		
+		scene.addActor(a);
+		return a;
 	}
 	
 }

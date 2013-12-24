@@ -53,6 +53,15 @@ public class Menu extends State {
 				case KeyEvent.VK_S: {
 					JOptionPane.showMessageDialog(m.parent, ScoreManager.getFormatted(), "Scores", JOptionPane.INFORMATION_MESSAGE);
 				}break;
+				case KeyEvent.VK_M: {
+					// music mute
+					if(!m.settings.getMusicMuted()) {
+						m.settings.setMusicMuted(true);
+					}
+					else {
+						m.settings.setMusicMuted(false);
+					}
+				}break;
 				case KeyEvent.VK_C: {
 					
 					if(JOptionPane.showConfirmDialog(m.parent, "Really clear the scoreboard?", "Scores", JOptionPane.YES_NO_OPTION)

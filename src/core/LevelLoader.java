@@ -30,25 +30,27 @@ public class LevelLoader {
 			++current;
 			System.out.println("Loading level "+current);
 			if(!loadedLevels.containsKey(current)){
-				t = (InputStream)ResourceLoader.load(pathToLevel + "level0" + current + ".dat");
+				t = (InputStream) ResourceLoader.load(pathToLevel + "level0" + current + ".dat");
 				if(t != null){
-					loadedLevels.put(current, new Level(scene, t, current).add());
+					loadedLevels.put(current, new Level(scene, t).add());
 				}
 				else{
 					System.out.println("Starting random generated level");
-					scene.xsize = 80;
-					scene.generateObstacles();
-					scene.xscrollspeed += 0.002;
+					//scene.xsize = 5;
+					//scene.generateObstacles();
+					LevelGenerator.generateLevel(scene).add();
+					//scene.xscrollspeed += 0.001;
 				}
 			}else{
 				t = new ByteArrayInputStream(loadedLevels.get(current).getBytes());
 				if(t != null){
-					new Level(scene, t , current).add();
+					new Level(scene, t).add();
 				}
 			}
 		} 
 		catch(IndexOutOfBoundsException e) {
 			System.err.println("Could not load level "+current+", error in LevelLoader:start");
+			e.printStackTrace();
 		}
 		finally {
 			try{

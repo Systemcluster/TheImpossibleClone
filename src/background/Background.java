@@ -94,27 +94,29 @@ public class Background extends JComponent{
 		mLayers.get(layer).add(ba);
 	}
 	
+	private Callable c1 = new Callable(){
+		public void call(BackgroundActor b){
+			b.update();
+			if(b.x + b.w < p.getPosition()){
+				b.x = (p.getPosition() + p.getXWidth())+(rand.nextDouble()/4);
+			}
+		}
+	};
+	private Callable c2 = new Callable(){
+		public void call(BackgroundActor b){
+			b.update();
+			if(b.x + b.w < p.getPosition()){
+				b.x = (p.getPosition() + p.getXWidth());
+			}
+		}
+	};
+	
 	/**
 	 * 
 	 * Calls update() on every BackgroundActor held by the Background 
 	 */
 	public void update(){
-		iterateBoth((new Callable(){
-			public void call(BackgroundActor b){
-				b.update();
-				if(b.x + b.w < p.getPosition()){
-					b.x = (p.getPosition() + p.getXWidth())+(rand.nextDouble()/4);
-				}
-			}
-		}),
-		(new Callable(){
-			public void call(BackgroundActor b){
-				b.update();
-				if(b.x + b.w < p.getPosition()){
-					b.x = (p.getPosition() + p.getXWidth());
-				}
-			}
-		}));
+		iterateBoth(c1, c2);
 	}
 	
 	/**
@@ -122,7 +124,6 @@ public class Background extends JComponent{
 	 * Calls paintComponent(Graphics g) on every BackgroundActor held by the Background 
 	 */
 	public void paintComponent(final Graphics g){
-		
 		// fix floor on window resize
 		if (new Double(p.getWidth()).compareTo(lastWidth) != 0) {
 			System.out.println("generating new floor");
@@ -145,12 +146,12 @@ public class Background extends JComponent{
 	 */
 	private void iterateBoth(Callable c1, Callable c2){
 		for(int i = mLayers.size() > mLayers2.size() ? mLayers.size() : mLayers2.size() ; i >= 0; i--){
-			if(c1!=null&&mLayers2.containsKey(i)){
+			if(mLayers2.containsKey(i)){
 				for(BackgroundActor b : mLayers2.get(i)){
 					c2.call(b);
 				}
 			}
-			if(c2!=null&&mLayers.containsKey(i)){
+			if(mLayers.containsKey(i)){
 				for(BackgroundActor b : mLayers.get(i)){
 					c1.call(b);
 				}
