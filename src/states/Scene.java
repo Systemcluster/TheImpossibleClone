@@ -253,7 +253,7 @@ public class Scene extends State {
 	 * @return
 	 * The x scroll speed, scroll step dependent.
 	 */
-	public double getScrollSpeed() { return xscrolltmp<xscrollsteps?xscrolltmp:xscrollsteps; }
+	public double getScrollSpeed() { return xscrolltmp ;}//<xscrollsteps?xscrolltmp:xscrollsteps; }
 	/**
 	 * Returns the static x scroll speed.
 	 * @return
@@ -324,9 +324,19 @@ public class Scene extends State {
 		
 			// smooth fast movement so intersections aren't skipped
 			// (notice this might cause lag at high movement speed)
-			for(xscrolltmp = xscrollspeed; xscrolltmp > 0 && !paused; xscrolltmp -= xscrollsteps) {
-				xposition = (double) (((int)(xposition*1000000)) + ((int)(getScrollSpeed()*1000000))) / 1000000;
 			
+			int z = (int)(xscrollspeed / xscrollsteps);
+			double r = xscrollspeed%xscrollsteps; 
+			
+			for(int i = 0; i < z; ++i) {
+				xscrolltmp = xscrollsteps;
+				xposition += xscrollsteps;
+				
+				if(i == z-1) {
+					xscrolltmp += r;
+					xposition += r;
+				}
+
 				// update the actors (movement)
 				player.update();
 				
