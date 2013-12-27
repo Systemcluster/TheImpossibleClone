@@ -97,7 +97,7 @@ public class Background extends JComponent{
 	private Callable c1 = new Callable(){
 		public void call(BackgroundActor b){
 			b.update();
-			if(b.x + b.w < p.getPosition()){
+			if(b.x + b.w <= p.getPosition()){
 				b.x = (p.getPosition() + p.getXWidth())+(rand.nextDouble()/4);
 			}
 		}
@@ -105,8 +105,8 @@ public class Background extends JComponent{
 	private Callable c2 = new Callable(){
 		public void call(BackgroundActor b){
 			b.update();
-			if(b.x + b.w < p.getPosition()){
-				b.x = (p.getPosition() + p.getXWidth());
+			if(b.x + b.w <= p.getPosition()){
+				b.x += (p.getXWidth()+b.w);
 			}
 		}
 	};

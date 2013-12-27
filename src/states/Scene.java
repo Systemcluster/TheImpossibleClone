@@ -314,12 +314,12 @@ public class Scene extends State {
 			{
 				// update the actors (movement)
 				player.fixedUpdate();
-				// removed due to performance reasons
-				/*for(Actor c: childs) {
+				
+				for(Actor c: childs) {
 					if(c.x > xposition - 1 && c.x < xposition + getXWidth()) { // only update near actors
 						c.fixedUpdate();
 					}
-				}*/
+				}
 			}
 		
 			// smooth fast movement so intersections aren't skipped
@@ -340,12 +340,12 @@ public class Scene extends State {
 				// update the actors (movement)
 				player.update();
 				
-				// removed due to performance reasons
-				/*for(Actor c: childs) {
+				
+				for(Actor c: childs) {
 					if(c.x > xposition - 1 && c.x <= xposition + getXWidth()) { // only update near actors
 						c.update();
 					}
-				}*/
+				}
 				if(((Player)player).dead) {
 					paused = true;
 					break;

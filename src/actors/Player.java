@@ -190,7 +190,7 @@ public class Player extends Actor {
 		else {
 			g2D.setColor(Color.LIGHT_GRAY);
 			g2D.drawRect(parent.getCoordX(x)+1, parent.getCoordY(y)+1, parent.getWidth(w)-2, parent.getHeight(h)-2);
-			g2D.drawImage(runnimation.get((int) (rotate%4)), parent.getCoordX(x-0.020), parent.getCoordY(y-0.012), parent.getWidth(w+0.04), parent.getHeight(h+0.01), null);
+			g2D.drawImage(runnimation.get((int) (rotate%runnimation.size())), parent.getCoordX(x-0.020), parent.getCoordY(y-0.012), parent.getWidth(w+0.04), parent.getHeight(h+0.01), null);
 		}
 
 	}
