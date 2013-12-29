@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import sound.AudioClip;
 import sound.ResourceLoader;
+import actors.Bike;
 import actors.Player;
 import background.Background;
 import core.Actor;
@@ -185,6 +186,7 @@ public class Scene extends State {
 				((Graphics2D)g).drawImage(bimage ,parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
 			}
 		});
+		addActor(new Bike(this, 0.8, 0.77));
 		
 		if(!settings.getMusicMuted()) playSong();
 	}
