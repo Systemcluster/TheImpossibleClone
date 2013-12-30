@@ -398,7 +398,7 @@ public class Scene extends State {
 			
 			if(!classic_mode) fg.paintComponent(g); // paint foreground
 			
-			((Graphics2D) g).drawString("1.0.0-final", getCoordXFixed(0.85), getCoordY(0.9));
+			((Graphics2D) g).drawString("1.0.1-final", getCoordXFixed(0.85), getCoordY(0.9));
 			if(paused) {
 				g.setColor(Color.red);
 				//((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.48), getCoordY(0.48));

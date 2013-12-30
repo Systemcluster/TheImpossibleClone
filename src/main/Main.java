@@ -64,15 +64,16 @@ public class Main extends JFrame {
 		Thread t = new Thread() {
 			@Override 
 			public void run() {
-				@SuppressWarnings("unused")
-				long prev, curr, diff, comp;
+				long comp, curr;
 				final long waittime = (long)((1.0/60.0)*1000000000.0); // 1/60 second in nanoseconds
 				while(obj.isDisplayable()) {
 					comp = System.nanoTime()+waittime;
 					obj.run();
-					while(System.nanoTime() < comp) {
+					do {
 						// 60 fps frame cap
+						curr = System.nanoTime();
 					}
+					while(curr < comp);
 				}
 			}
 		};
