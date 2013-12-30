@@ -14,8 +14,10 @@ public abstract class LevelGenerator {
 	static Level generateLevel(Scene scene) {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append((scene.getStaticScrollSpeed() + 0.001));
-		System.out.println("Next level with speed "+(scene.getStaticScrollSpeed() + 0.001));
+		double newspeed = (double)((int)(scene.getStaticScrollSpeed()*1000) + 1) / 1000;
+		
+		sb.append(newspeed);
+		System.out.println("Next level with speed "+newspeed);
 		sb.append(System.getProperty("line.separator"));		
 		
 		// generator rv1
