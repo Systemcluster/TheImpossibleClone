@@ -154,7 +154,7 @@ public class Scene extends State {
 							String a = JOptionPane.showInputDialog(s.parent, score.toString(), "Score", JOptionPane.QUESTION_MESSAGE);
 							if(a != null && a.length() > 0) {
 								ScoreManager.setScore(a, (int)getScore());
-								backgroundmusic.stop();
+								if(backgroundmusic!=null)backgroundmusic.stop();
 								s.parent.popState();
 							}
 						}
