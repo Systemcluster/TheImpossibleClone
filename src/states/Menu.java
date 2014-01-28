@@ -104,6 +104,7 @@ public class Menu extends State {
 		fg.paintComponent(g);
 		
 		((Graphics2D) g).drawImage(img_menu, this.getCoordXFixed(0.5)-getWidth(1)/2, getCoordY(-0.01+offset), getWidth(0.95), getHeight(0.95), null);
+		((Graphics2D) g).drawString(versionstring, getCoordXFixed(0.85), getCoordY(0.9));
 	}
 
 }

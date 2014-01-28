@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import sound.AudioClip;
 import sound.ResourceLoader;
+import actors.Bike;
 import actors.Player;
 import background.Background;
 import core.Actor;
@@ -153,7 +154,7 @@ public class Scene extends State {
 							String a = JOptionPane.showInputDialog(s.parent, score.toString(), "Score", JOptionPane.QUESTION_MESSAGE);
 							if(a != null && a.length() > 0) {
 								ScoreManager.setScore(a, (int)getScore());
-								backgroundmusic.stop();
+								if(backgroundmusic!=null)backgroundmusic.stop();
 								s.parent.popState();
 							}
 						}
@@ -185,6 +186,7 @@ public class Scene extends State {
 				((Graphics2D)g).drawImage(bimage ,parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);
 			}
 		});
+		addActor(new Bike(this, 0.8, 0.77));
 		
 		if(!settings.getMusicMuted()) playSong();
 	}
@@ -253,7 +255,7 @@ public class Scene extends State {
 	 * @return
 	 * The x scroll speed, scroll step dependent.
 	 */
-	public double getScrollSpeed() { return xscrolltmp<xscrollsteps?xscrolltmp:xscrollsteps; }
+	public double getScrollSpeed() { return xscrolltmp ;}//<xscrollsteps?xscrolltmp:xscrollsteps; }
 	/**
 	 * Returns the static x scroll speed.
 	 * @return
@@ -314,28 +316,38 @@ public class Scene extends State {
 			{
 				// update the actors (movement)
 				player.fixedUpdate();
-				// removed due to performance reasons
-				/*for(Actor c: childs) {
+				
+				for(Actor c: childs) {
 					if(c.x > xposition - 1 && c.x < xposition + getXWidth()) { // only update near actors
 						c.fixedUpdate();
 					}
-				}*/
+				}
 			}
 		
 			// smooth fast movement so intersections aren't skipped
 			// (notice this might cause lag at high movement speed)
-			for(xscrolltmp = xscrollspeed; xscrolltmp > 0 && !paused; xscrolltmp -= xscrollsteps) {
-				xposition = (double) (((int)(xposition*1000000)) + ((int)(getScrollSpeed()*1000000))) / 1000000;
 			
+			int z = (int)(xscrollspeed / xscrollsteps);
+			double r = xscrollspeed%xscrollsteps; 
+			
+			for(int i = 0; i < z; ++i) {
+				xscrolltmp = xscrollsteps;
+				xposition += xscrollsteps;
+				
+				if(i == z-1) {
+					xscrolltmp += r;
+					xposition += r;
+				}
+
 				// update the actors (movement)
 				player.update();
 				
-				// removed due to performance reasons
-				/*for(Actor c: childs) {
+				
+				for(Actor c: childs) {
 					if(c.x > xposition - 1 && c.x <= xposition + getXWidth()) { // only update near actors
 						c.update();
 					}
-				}*/
+				}
 				if(((Player)player).dead) {
 					paused = true;
 					break;
@@ -385,8 +397,7 @@ public class Scene extends State {
 			}
 			
 			if(!classic_mode) fg.paintComponent(g); // paint foreground
-			
-			((Graphics2D) g).drawString("1.0.0-final", getCoordXFixed(0.85), getCoordY(0.9));
+			((Graphics2D) g).drawString(versionstring, getCoordXFixed(0.85), getCoordY(0.9));
 			if(paused) {
 				g.setColor(Color.red);
 				//((Graphics2D) g).drawString("GAME OVER", getCoordXFixed(0.48), getCoordY(0.48));

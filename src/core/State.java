@@ -26,6 +26,8 @@ public class State extends JPanel {
 	
 	public GlobalSettings settings;
 	public StateManager parent;
+	
+	public static String versionstring = "1.0.2-final";
 		
 	public State(StateManager parent, GlobalSettings settings) {
 		this.parent = parent;

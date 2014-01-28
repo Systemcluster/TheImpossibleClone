@@ -64,25 +64,16 @@ public class Main extends JFrame {
 		Thread t = new Thread() {
 			@Override 
 			public void run() {
-				@SuppressWarnings("unused")
-				double cur2, upd2 = System.currentTimeMillis()-16, dif2;
+				long comp, curr;
+				final long waittime = (long)((1.0/60.0)*1000000000.0); // 1/60 second in nanoseconds
 				while(obj.isDisplayable()) {
-					try {
-						cur2 = System.currentTimeMillis();
-						dif2 = cur2 - upd2;
-						upd2 = cur2;
-						
-						obj.run();
-						
-						//System.out.println((long)(16-(diff)));
-						//long val = (long)dif2-16 > 0 ? (long)dif2-16 : 0;
-						//System.out.println(16-val);
-						//System.out.println(dif2);
-						
-						Thread.sleep((long)(16)); // 16 - val
-					} catch (InterruptedException e) {
-						System.out.println("Hurr Durr MF");
+					comp = System.nanoTime()+waittime;
+					obj.run();
+					do {
+						// 60 fps frame cap
+						curr = System.nanoTime();
 					}
+					while(curr < comp);
 				}
 			}
 		};
