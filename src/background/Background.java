@@ -24,6 +24,8 @@ public class Background extends JComponent{
 	private double lSpeedOffset = 0.00045;
 	private double lSize = 6;
 	
+	private double floorpos = 0.030;
+	
 	private int layerUsed = 5;
 	private double objectsPerLayer = 2;
 	
@@ -64,7 +66,7 @@ public class Background extends JComponent{
 	private void addFloor(int i, int j) {
 		BackgroundActor ba = new BackgroundActor(p, 
 				p.getPosition() + (p.getXWidth() / floorscale) * j, 
-				(p.getGround() - (lYOffset * (int)(i / objectsPerLayer)) +0.016), 
+				(p.getGround() - (lYOffset * (int)(i / objectsPerLayer)) + floorpos), 
 				BackgroundActor.Type.DIRT);
 		ba.w = p.getXWidth() / floorscale + 0.02;
 		ba.h = 1.0/floorscale;
