@@ -6,6 +6,9 @@ import java.awt.Graphics2D;
 import states.Scene;
 import core.Actor;
 
+/**
+ * An obstacle representing a hole.
+ */
 @SuppressWarnings("serial")
 public class Hole extends Actor{
 	public Hole(Scene parent, double x, double y) {

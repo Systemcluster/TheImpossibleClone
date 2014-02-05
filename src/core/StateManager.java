@@ -12,6 +12,9 @@ import javax.swing.JPanel;
 
 import states.Menu;
 
+/**
+ * Class that manages game states.
+ */
 @SuppressWarnings("serial")
 public class StateManager extends JPanel {
 	private JFrame parent;
@@ -43,12 +46,20 @@ public class StateManager extends JPanel {
 		});
 	}
 	
+	/**
+	 * Resizes the current state to the size of the parent JFrame.
+	 */
 	public void onResize() {
 		setSize(parent.getWidth(), parent.getHeight());
 		states.get(0).setSize(parent.getWidth(), parent.getHeight());
 		states.get(0).resize();
 	}
 	
+	/**
+	 * Initializes a state.
+	 * @param state
+	 * The state to initialize.
+	 */
 	private void initState(State state) {
 		state.setSize(parent.getWidth(), parent.getHeight());
 		state.resize();

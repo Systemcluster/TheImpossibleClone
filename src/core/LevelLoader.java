@@ -8,6 +8,12 @@ import java.util.HashMap;
 import sound.ResourceLoader;
 import states.Scene;
 
+/**
+ * The LevelLoader.
+ * Loads a level either from file or from the LevelGenerator.
+ * @see Level
+ * @see LevelGenerator
+ */
 public class LevelLoader {
 	private static HashMap<Integer,String> loadedLevels = null;
 	
@@ -15,6 +21,13 @@ public class LevelLoader {
 	private String pathToLevel;
 	private int current;
 	
+	/**
+	 * Constructor.
+	 * @param scene
+	 * The scene in which the levels should be generated.
+	 * @param pathToLevelFolder
+	 * The folder containing the level files.
+	 */
 	public LevelLoader(Scene scene, String pathToLevelFolder){
 		this.scene=scene;
 		this.pathToLevel = pathToLevelFolder;
@@ -24,6 +37,10 @@ public class LevelLoader {
 		}
 	}
 	
+	/**
+	 * Starts generating or loading a level.
+	 * Each time this method is called the next level is loaded, or generated if no such level exists.
+	 */
 	public void start(){
 		InputStream t = null;
 		try {

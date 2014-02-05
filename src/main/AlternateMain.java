@@ -3,6 +3,9 @@ package main;
 import global.GlobalSettings;
 import global.MainMenuInterface;
 
+/**
+ * Alternate main class to start the application without a host.
+ */
 public class AlternateMain {
 
 	/**

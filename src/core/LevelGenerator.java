@@ -7,10 +7,21 @@ import java.util.Random;
 
 import states.Scene;
 
+/**
+ * LevelGenerator class.
+ * This class provides a method that randomly generates level data and creates a level from it. 
+ */
 public abstract class LevelGenerator {
 	
 	private static Random rand = new Random(System.currentTimeMillis()+19238);
 	
+	/**
+	 * Randomly generates level data and creates a level from it. 
+	 * @param scene
+	 * The scene the level should be generated in.
+	 * @return
+	 * The level that contains the newly generated level data.
+	 */
 	static Level generateLevel(Scene scene) {
 		StringBuilder sb = new StringBuilder();
 		

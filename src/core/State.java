@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 /**
  * Base class for Scenes.
- *
+ * Set up to hold and display actors.
  */
 @SuppressWarnings("serial")
 public class State extends JPanel {
@@ -38,6 +38,9 @@ public class State extends JPanel {
 				) / 10000.0;
 	}
 	
+	/**
+	 * Recalculates the aspect ratio of the window.
+	 */
 	public void resize() {
 		//fix aspect ratio
 		ytiles = Math.round(

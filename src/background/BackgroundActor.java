@@ -40,17 +40,33 @@ public class BackgroundActor extends Actor{
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Updates the position of this actor
+	 */
 	public void update() {
 		x+=speed;
 	}
-
+	
+	/**
+	 * Set the speed of this actor
+	 * 
+	 * @param speed the vertical speed
+	 */
 	public void setSpeed(double speed){
 		this.speed = speed;
 	}
+	
+	/**
+	 * Get the speed of this actor
+	 */
 	public double getSpeed(){
 		return speed;
 	}
 
+	/**
+	 * Paints the actor on the screen
+	 */
 	public void paintComponent(Graphics g){
 		Graphics2D g2D = (Graphics2D) g;		
 		g2D.drawImage(bimage, parent.getCoordX(x), parent.getCoordY(y), parent.getWidth(w), parent.getHeight(h), null);

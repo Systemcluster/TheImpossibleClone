@@ -9,6 +9,11 @@ import sound.ResourceLoader;
 import states.Scene;
 import core.Actor;
 
+/**
+ * An obstacle representing a block.
+ * 
+ * This is an actor the player can "stand" on.
+ */
 @SuppressWarnings("serial")
 public class Block extends Actor{
 

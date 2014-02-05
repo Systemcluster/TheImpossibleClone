@@ -10,6 +10,9 @@ import sound.ResourceLoader;
 import states.Scene;
 import core.Actor;
 
+/**
+ * A triangular obstacle actor.
+ */
 @SuppressWarnings("serial")
 public class Triangle extends Actor{
 	

@@ -10,6 +10,9 @@ import sound.ResourceLoader;
 import states.Scene;
 import core.Actor;
 
+/**
+ * An actor acting as a coin.
+ */
 @SuppressWarnings("serial")
 public class Star extends Actor {
 	

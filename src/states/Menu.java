@@ -18,6 +18,11 @@ import core.ScoreManager;
 import core.State;
 import core.StateManager;
 
+/**
+ * Menu state.
+ * This is the main menu state. 
+ * @see State
+ */
 @SuppressWarnings("serial")
 public class Menu extends State {
 	

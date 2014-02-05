@@ -11,16 +11,33 @@ import actors.Hole;
 import actors.Star;
 import actors.Triangle;
 
+/**
+ * A level.
+ * This class generates a level from an input stream.
+ * The input stream has to contain a correctly formatted level, see add() for details.
+ */
 public class Level {
 	private Scene scene;
 	private InputStream path;
 	
-	public Level(Scene s,InputStream pathToLevelFile) {
+	/**
+	 * Constructor.
+	 * @param s
+	 * The scene the level should be loaded in.
+	 * @param pathToLevelFile
+	 * The input stream containing the level.
+	 */
+	public Level(Scene s, InputStream pathToLevelFile) {
 		this.scene=s;
 		path=pathToLevelFile;
 		
 	}
 	
+	/**
+	 * Adds the level to the scene.
+	 * @return
+	 * A textual representation of the level.
+	 */
 	public String add() {
 		
 		double maxwidth = 1;
@@ -76,6 +93,17 @@ public class Level {
 		return text;
 	}
 	
+	/**
+	 * Adds an actor to the scene.
+	 * @param type
+	 * The textual representation of the obstacle type, lowercase.
+	 * @param x
+	 * The x coordinate of the obstacle.
+	 * @param y
+	 * The y coordinate of the obstacle.
+	 * @return
+	 * The actor that has been added.
+	 */
 	private Actor addObstacle(String type, double x, double y){
 		Actor a = null;
 		switch(type){

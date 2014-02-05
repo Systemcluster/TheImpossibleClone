@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+/**
+ * Class that manages the highscores.
+ */
 public abstract class ScoreManager {
 
 	private static ArrayList<Score> score = new ArrayList<>(); 
@@ -16,6 +19,11 @@ public abstract class ScoreManager {
 	
 	static private Preferences prefs = init();
 			
+	/**
+	 * Initializes and loads the saved scores.
+	 * @return
+	 * A Java preferences handle.
+	 */
 	static private Preferences init() {
 		Preferences p = Preferences.userRoot().node(ScoreManager.class.getClass().getName());
 		try {
@@ -39,10 +47,22 @@ public abstract class ScoreManager {
 		return p;
 	}
 	
+	/**
+	 * Returns the highscore list as an array.
+	 * @return
+	 * The highscore list as an array.
+	 */
 	static public Score[] getScore() {
 		return (Score[]) score.toArray();
 	}
 	
+	/**
+	 * Test if a score is in the highscore list.
+	 * @param score
+	 * The score to test.
+	 * @return
+	 * The place in the highscore list, or -1 if the score is too low.
+	 */
 	static public int testScore(int score) {
 		if(ScoreManager.score.size() == 0) {
 			return 1;
@@ -58,6 +78,11 @@ public abstract class ScoreManager {
 		return -1;
 	}
 	
+	/**
+	 * Clears the highscore list.
+	 * @return
+	 * If the score couldn't be written.
+	 */
 	static public boolean clearScore() {
 		score.clear();
 		try {
@@ -72,6 +97,9 @@ public abstract class ScoreManager {
 		return true;
 	}
 	
+	/**
+	 * Saves the highscore list.
+	 */
 	static private void saveScore() {
 		try {
 			prefs.clear();
@@ -85,7 +113,15 @@ public abstract class ScoreManager {
 		}
 	}
 
-	
+	/**
+	 * Sets a score.
+	 * @param name
+	 * The name of the contestant.
+	 * @param score
+	 * The score of the contestant.
+	 * @return
+	 * The place in the scoreboard of the contestant.
+	 */
 	static public int setScore(String name, int score) {
 		int place = -1;
 		Score add = new Score(name, score);
@@ -119,9 +155,17 @@ public abstract class ScoreManager {
 		return place;
 	}
 	
+	/**
+	 * Prints the scoreboard neatly formatted.
+	 */
 	static public void print() {
 		System.out.println(getFormatted());
 	}
+	/**
+	 * Returns the scoreboard neatly formatted.
+	 * @return
+	 * The scoreboard neatly formatted.
+	 */
 	static public String getFormatted() {
 		StringBuilder sb = new StringBuilder();
 		if(score.size() > 0) {

@@ -11,6 +11,9 @@ import sound.ResourceLoader;
 import states.Scene;
 import core.Actor;
 
+/**
+ * Class representing the player.
+ */
 @SuppressWarnings("serial")
 public class Player extends Actor {
 	
@@ -39,7 +42,7 @@ public class Player extends Actor {
 	
 	// force to add to the player on button press (jump)
 	private double jumpforce = -0.017;
-	// height the player cna jump
+	// height the player can jump
 	private double jumpheight = 0.21;
 	
 	public Player(Scene parent) {
@@ -60,16 +63,29 @@ public class Player extends Actor {
 		
 	}
 	
+	/**
+	 * This kills the player.
+	 */
 	public void kill() {
 		dead = true;
 		System.out.println("Player died");
 		if(!parent.settings.getSoundeffectsMuted())asDie.start();
 	}
 	
+	/**
+	 * Adds, if possible, a jump impulse.
+	 * @return
+	 * If the jump was performed.
+	 */
 	public boolean jump() {
 		return addForce(jumpforce, jumpheight);
 	}
 	
+	/**
+	 * Returns if the player is on the ground.
+	 * @return
+	 * If the player is on the ground.
+	 */
 	public boolean isGrounded() {
 		return y >= parent.getGround();
 	}
@@ -95,6 +111,16 @@ public class Player extends Actor {
 		return touched;
 	}
 
+	/**
+	 * Adds, if possible, a force to the player. This can be used for jump impulses.
+	 * The curve of the jump is calculated by force and maxHeight.
+	 * @param force
+	 * The force to perform on the player.
+	 * @param maxHeight
+	 * The maximum height the jump should reach.
+	 * @return
+	 * If it was possible to perform the jump.
+	 */
 	public boolean addForce(double force, double maxHeight) {
 		if(canjump) {
 			if(!parent.settings.getSoundeffectsMuted())asJump.start();	
@@ -107,11 +133,23 @@ public class Player extends Actor {
 		return canjump;
 	}
 	
+	/**
+	 * Update the players.
+	 * Gets called multiple times a frame.
+	 * 
+	 * This method handles the players x-position.
+	 */
 	@Override
 	public void update() {
 		x = parent.getPosition() + defaultx;
 	}
 	
+	/**
+	 * Update the player, on a fixed timestep.
+	 * Gets called once per frame.
+	 * 
+	 * This method handles the gravitation/force, the collision and the animation.
+	 */
 	@Override
 	public void fixedUpdate() {
 		canjump = false;

@@ -9,7 +9,7 @@ import javax.swing.JComponent;
 import actors.Player;
 
 /**
- * Actor class.
+ * Actor class. Base class for all screen actors like obstacles or the player.
  */
 public class Actor extends JComponent {
 	
@@ -40,6 +40,14 @@ public class Actor extends JComponent {
 		this.y = y;
 	}
 	
+	/**
+	 * Returns if this actor intersects with another.
+	 * Intersection test is performed rectangular.
+	 * @param r 
+	 * The actor to test the collision with.
+	 * @return
+	 * If the two actors intersect.
+	 */
 	public boolean intersects(Actor r) {
 		double tw = this.w;
 		double th = this.h;
@@ -77,9 +85,19 @@ public class Actor extends JComponent {
 		
 	}
 	
+	/**
+	 * This method is called if a collision with a player happened.
+	 * @param p
+	 * The player that intersects.
+	 */
 	public void collide(Player p) {
 		
 	}
+	/**
+	 * This method is called if a player surfs the actor.
+	 * @param p
+	 * The player that surfs.
+	 */
 	public void surf(Player p) {
 		 
 	}

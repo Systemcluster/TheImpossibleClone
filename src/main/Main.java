@@ -10,9 +10,15 @@ import javax.swing.JFrame;
 
 import core.StateManager;
 
+/**
+ * Class that initializes the application and provides the update loop.
+ */
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 	
+	/**
+	 * Initializes the game and starts the update loop.
+	 */
 	public Main(GlobalSettings gs, final MainMenuInterface mmi) {
 		super();
 		
@@ -79,7 +85,9 @@ public class Main extends JFrame {
 		};
 		t.start();
 	}
-	
+	/**
+	 * Method that's called in the update loop.
+	 */
 	private void run() {
 		repaint();
 	}
