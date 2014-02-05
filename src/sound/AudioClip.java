@@ -25,6 +25,9 @@ public class AudioClip{
 		ais = AudioSystem.getAudioInputStream(is); 				
 	}
 	
+	/**
+	 * Opens the sound to operate with it
+	 */
 	public void open(){
 		try{
 			if(!clip.isOpen())
@@ -33,26 +36,51 @@ public class AudioClip{
 			System.err.println("AudioClip: Sound couldn't be opened");
 		}
 	}
+	
+	/**
+	 * Plays the sound immediately once
+	 */
 	public void start(){
 		open();
 		clip.setFramePosition(0);
 		clip.start();
 	}
 	
+	/**
+	 * Plays the sound immediately in an infinite loop
+	 */
 	public void loop(){
 		open();
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
+	
+	/**
+	 * Plays the sound multiple times
+	 * 
+	 * @param count The count how often the sound is played
+	 */
 	public void loop(int count){
 		open();
 		clip.loop(count);
 	}
+	
+	/**
+	 * Close the sound
+	 */
 	public void close(){
 		clip.close();
 	}
+	
+	/**
+	 * Returns whether the sound is running or not
+	 */
 	public boolean isRunning() {
 		return clip.isRunning();
 	}
+	
+	/**
+	 * Stops the playback
+	 */
 	public void stop() {
 		clip.stop();
 	}
