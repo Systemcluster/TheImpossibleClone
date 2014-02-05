@@ -8,6 +8,10 @@ import sound.ResourceLoader;
 import core.Actor;
 import core.State;
 
+/**
+ * An actor introducing the story.
+ * Represents a man on a bike quickly leaving the visible screen.
+ */
 @SuppressWarnings("serial")
 public class Bike extends Actor {
 	

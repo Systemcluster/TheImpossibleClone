@@ -27,8 +27,9 @@ import foreground.Foreground;
 import global.GlobalSettings;
 
 /**
- * Scene class. -/-Base class for Scenes to hold and display actors.-/-
- * update 1: Class to represent the main panel.
+ * Scene state. 
+ * This is the in-game screen.
+ * @see State
  */
 @SuppressWarnings("serial")
 public class Scene extends State {

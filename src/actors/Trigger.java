@@ -6,9 +6,15 @@ import states.Scene;
 import core.Actor;
 import core.State;
 
+/**
+ * A trigger actor with a callback.
+ */
 @SuppressWarnings("serial")
 public class Trigger extends Actor {
 	
+	/**
+	 * The specific callback class.
+	 */
 	private abstract class Callable {
 		public abstract void call(Scene parent, Player player);
 	}

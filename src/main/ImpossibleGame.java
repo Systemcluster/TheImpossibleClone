@@ -10,8 +10,14 @@ import java.awt.image.BufferedImage;
 import sound.ResourceLoader;
 import core.ScoreManager;
 
+/**
+ * Class that provides the interface implementation for the host. 
+ */
 public class ImpossibleGame implements CollectionGame{
 
+	/**
+	 * This runs the game.
+	 */
 	@Override
 	public void runGame(GlobalSettings globalSettings,
 			MainMenuInterface mainMenuRef) {
@@ -19,6 +25,9 @@ public class ImpossibleGame implements CollectionGame{
 		
 	}
 
+	/**
+	 * Returns the highscore list as an array.
+	 */
 	@Override
 	public Score[] getHighscore() {
 		/*return new Score[]{
@@ -29,6 +38,9 @@ public class ImpossibleGame implements CollectionGame{
 		return ScoreManager.getScore();
 	}
 
+	/**
+	 * Returns game images.
+	 */
 	@Override
 	public BufferedImage[] getGamePics() {
 			return new BufferedImage[] {
