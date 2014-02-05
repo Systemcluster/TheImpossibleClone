@@ -38,7 +38,7 @@ public class Background extends JComponent{
 	private interface Callable{
 		public void call(BackgroundActor b);
 	}
-	
+
 	public Background(State p){
 		this.p = p;
 		mLayers = new HashMap<>();
@@ -52,6 +52,9 @@ public class Background extends JComponent{
 		}
 	}
 	
+	/**
+	 * Generates the floor on every layer
+	 */
 	private void generateFloor() {
 		mLayers2.clear();
 		for(int i = 0; i < layerUsed * objectsPerLayer; ++i) {
@@ -63,6 +66,12 @@ public class Background extends JComponent{
 		}
 	}
 	
+	/**
+	 * Adds a floor on a layer
+	 * 
+	 * @param i Layer
+	 * @param j Floor
+	 */
 	private void addFloor(int i, int j) {
 		BackgroundActor ba = new BackgroundActor(p, 
 				p.getPosition() + (p.getXWidth() / floorscale) * j, 
