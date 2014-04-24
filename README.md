@@ -1,4 +1,4 @@
-TheImpossibleCloneJava2D
+The Impossible Clone
 ========================
 
-The Impossible Clone Java2D
+A Java2D game prototype.
